@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { generateSkinDnaProfile } from "@/services/ai/skin-dna";
 import { errorBoundary, createApiError } from "@/lib/api-utils";
 import { apiRateLimit } from "@/lib/rate-limit";
 
-async function handlePost() {
-  const rateLimitResponse = await apiRateLimit(new Request('http://localhost'));
+async function handlePost(request: NextRequest) {
+  const rateLimitResponse = await apiRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse;
 
   try {
@@ -67,7 +67,7 @@ async function handlePost() {
 
 // GET route to quickly retrieve existing Skin DNA without regenerating
 async function handleGet() {
-  const rateLimitResponse = await apiRateLimit(new Request('http://localhost'));
+  const rateLimitResponse = await apiRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse;
 
   try {

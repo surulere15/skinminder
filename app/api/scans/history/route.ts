@@ -1,10 +1,10 @@
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
 import { errorBoundary, createApiError } from "@/lib/api-utils";
 import { apiRateLimit } from "@/lib/rate-limit";
 
-async function handleGet() {
-  const rateLimitResponse = await apiRateLimit(new Request('http://localhost'));
+async function handleGet(request: NextRequest) {
+  const rateLimitResponse = await apiRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse;
 
   try {

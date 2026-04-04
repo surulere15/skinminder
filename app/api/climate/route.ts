@@ -1,5 +1,5 @@
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { NextResponse } from "next/server";
 import { generateClimateAdvice } from "@/services/ai/climate-advice";
 import { errorBoundary, createApiError } from "@/lib/api-utils";
 import { apiRateLimit } from "@/lib/rate-limit";
@@ -11,8 +11,8 @@ const MOCK_CLIMATES = [
   { temp: "95°F", humidity: "15%", uvIndex: 10, description: "Arid Heat", location: "Phoenix" }
 ];
 
-async function handleClimate() {
-  const rateLimitResponse = await apiRateLimit(new Request('http://localhost'));
+async function handleClimate(request: NextRequest) {
+  const rateLimitResponse = await apiRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse;
 
   let skinDna = {
