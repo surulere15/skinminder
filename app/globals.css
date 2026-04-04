@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* SkinMinder Brand DNA - Soft-Premium Beauty-Tech Pivot */
+    --skin-primary: 157 164 255;      /* #9DA4FF - Pearl Lavender */
+    --skin-blue: 157 164 255;         /* Alias for Pearl Lavender */
+    --skin-blue-soft: 235 248 255;    /* #EBF8FF - Powder Blue */
+    --skin-lavender: 243 240 255;     /* #F3F0FF - Soft Background */
+    --skin-mint: 240 255 244;         /* #F0FFF4 - Mint Mist */
+    --skin-bg: 250 251 255;           /* #FAFBFF - Primrose White */
+    --skin-surface: 255 255 255;      /* #FFFFFF - Pure Clinical */
+    --skin-gray: 243 240 255;          /* Linked to Soft Lavender */
+    --skin-text-primary: 45 55 72;    /* #2D3748 - Clinical Slate */
+    --skin-text-secondary: 74 85 104; /* #4A5568 */
+
+    /* Health & Status (Gentle) */
+    --skin-success: 104 211 145;      /* #68D391 - Mint Green */
+    --skin-warning: 246 173 85;       /* #F6AD55 - Soft Amber */
+    --skin-danger: 252 129 129;       /* #FC8181 - Soft Rose */
+
+    /* Standardized Themed Variables */
+    --background: rgb(var(--skin-bg));
+    --foreground: rgb(var(--skin-text-primary));
+
+    --primary: rgb(var(--skin-primary));
+    --primary-foreground: rgb(255 255 255);
+    
+    --secondary: rgb(var(--skin-blue-soft));
+    --secondary-foreground: rgb(var(--skin-text-primary));
+
+    --muted: rgb(var(--skin-lavender));
+    --muted-foreground: rgb(var(--skin-text-secondary));
+
+    --accent: rgb(var(--skin-mint));
+    --accent-foreground: rgb(var(--skin-text-primary));
+
+    --card: rgb(var(--skin-surface));
+    --card-foreground: rgb(var(--skin-text-primary));
+
+    --border: rgb(var(--skin-lavender));
+    --input: rgb(var(--skin-lavender));
+    --ring: rgb(var(--skin-primary));
+
+    --radius: 16px; 
+    --max-width: 1280px;
+
+    /* Gentle Elevation Shadow */
+    --shadow-soft: 0 10px 40px -10px rgba(157, 164, 255, 0.15);
+
+    /* The Soft Studio Experience (High-Key Capture) */
+    --scan-bg: rgb(var(--skin-bg));
+    --scan-pearl: rgb(var(--skin-primary));
+    --scan-mint: rgb(var(--skin-success));
+    --scan-surface: rgb(var(--skin-surface));
+
+    /* Typography Hierarchy Tokens */
+    --text-hero: 48px;
+    --text-section: 30px;
+    --text-card: 20px;
+    --text-body: 16px;
+    --text-micro: 12px;
+    --text-metric: 36px;
+
+    /* Spacing Scale Tokens */
+    --space-4: 4px;
+    --space-8: 8px;
+    --space-16: 16px;
+    --space-24: 24px;
+    --space-32: 32px;
+    --space-48: 48px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+  /* Clinical Stability Surface */
+  .glass-panel {
+    @apply bg-skin-surface/90 backdrop-blur-3xl border border-white/5 shadow-2xl;
+  }
+
+  .glass-card {
+    @apply relative overflow-hidden bg-skin-surface border border-white/5 rounded-2xl shadow-lg;
+  }
+
+  .skin-card {
+    @apply bg-skin-surface border border-skin-lavender rounded-[16px] p-6;
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Reliable Medical Action */
+  .clinical-btn {
+    @apply relative overflow-hidden transition-all duration-200 
+           bg-skin-primary text-white font-semibold rounded-xl
+           shadow-[0_4px_12px_rgba(111,139,255,0.25)]
+           hover:brightness-110 active:scale-[0.98];
+  }
+  
+  .clinical-ghost {
+    @apply relative overflow-hidden transition-all duration-200 
+           bg-white/5 border border-white/5 text-content-secondary font-medium rounded-xl
+           hover:bg-white/10 hover:text-content-primary;
+  }
+
+  /* Structural Hierarchy Weights */
+  .h1 { font-size: var(--text-hero); @apply font-black tracking-tighter uppercase italic; }
+  .h2 { font-size: var(--text-section); @apply font-bold tracking-tight; }
+  .h3 { font-size: var(--text-card); @apply font-bold; }
+  
+  .label { 
+    font-size: var(--text-micro); 
+    @apply font-bold uppercase tracking-[0.4em]; 
+  }
+  
+  .body { 
+    font-size: var(--text-body); 
+    @apply font-normal leading-relaxed text-skin-muted; 
+  }
+
+  .metric-value {
+    font-size: var(--text-metric);
+    @apply font-black italic tabular-nums;
+  }
+
+  /* Specular Light Sweep Animation */
+  .light-sweep {
+    @apply absolute inset-0 -translate-x-[100%] pointer-events-none -z-10;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 60%,
+      transparent 100%
+    );
+  }
+
+  .group:hover .light-sweep {
+    animation: sweep 1.5s ease-in-out;
+  }
+}
+
+@keyframes sweep {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.2; }
+  50% { transform: scale(1.05); opacity: 0.35; }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 10s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  @apply animate-pulse;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.hover-lift {
+  @apply transition-transform duration-300 hover:-translate-y-1;
+}
+
+/* Soft-Premium Motifs (Beauty-Tech Standard) */
+.bg-soft-studio {
+  background: radial-gradient(
+    circle at 50% -20%,
+    rgba(157, 164, 255, 0.08) 0%,
+    transparent 60%
+  );
+}
+
+.bg-diffuse-glow {
+  background: radial-gradient(
+    circle at center,
+    rgba(157, 164, 255, 0.05) 0%,
+    transparent 70%
+  );
+}
+
+.soft-pearl-border {
+  @apply border border-white/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)];
+}
+
+.pearlized-surface {
+  @apply bg-white/40 backdrop-blur-md border border-white/20 shadow-sm;
+}
+
+@keyframes slow-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.02); opacity: 0.6; }
+}
+
+.animate-slow-breathe {
+  animation: slow-breathe 4s ease-in-out infinite;
+}
+
+.max-container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -1,0 +1,12 @@
+const { createCanvas } = require('canvas');
+const fs = require('fs');
+const canvas = createCanvas(400, 200);
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = 'white';
+ctx.fillRect(0, 0, 400, 200);
+ctx.fillStyle = 'black';
+ctx.font = '16px Arial';
+ctx.fillText('Ingredients: Water (Aqua), Glycerin, Niacinamide,', 20, 50);
+ctx.fillText('Fragrance (Parfum), Salicylic Acid, Ceramides', 20, 80);
+const buffer = canvas.toBuffer('image/png');
+fs.writeFileSync('/Users/sam/Projects/skinminder/public/test-label.png', buffer);
