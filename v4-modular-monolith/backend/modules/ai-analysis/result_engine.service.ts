@@ -87,7 +87,14 @@ export class ResultEngineService {
         // Network Effect: Population Intelligence & Twin Matching
         const hydPercentile = await this.benchmarks.calculateCohortPercentile('hydration_score', results.global_hydration, { archetype: archetype.main });
         const pigPercentile = await this.benchmarks.calculateCohortPercentile('pigmentation_score', results.global_pigmentation, { archetype: archetype.main });
-        const twinCount = await this.skinTwins.getTwinCount({ hydration: results.global_hydration, pigmentation: results.global_pigmentation, texture: results.global_texture });
+        const twinResult = await this.skinTwins.findTwins('current-user', { 
+          hydration: results.global_hydration, 
+          pigmentation: results.global_pigmentation, 
+          texture: results.global_texture,
+          oilBalance: results.global_oil,
+          irritation: 0.5,
+          elasticity: 0.7
+        });
 
         // North Star: Behavioral Design (Anticipation Loop)
         const nextComparison = this.calculateNextCheckWindow(results);
@@ -106,7 +113,7 @@ export class ResultEngineService {
                 pigmentationPercentile: pigPercentile,
                 archetypeDistribution: 18 // Mocking PIH distribution
             },
-            skinTwinCount: twinCount,
+            skinTwinCount: twinResult.twinCount,
             confidence: {
                 score: Number((quality.lightingScore * 0.7 + quality.sharpnessScore * 0.3).toFixed(2)),
                 lighting: this.getQualityLabel(quality.lightingScore),

@@ -6,6 +6,7 @@ import "@/lib/validate-env";
 import { CookieConsent } from "@/components/ui/cookie-consent";
 import { PushProvider } from "@/lib/push-context";
 import { ServiceWorkerRegistration } from "@/components/ui/service-worker-registration";
+import { SubscriptionProvider } from "@/lib/subscription";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -78,10 +79,23 @@ export default function RootLayout({
           outfit.variable
         )}
       >
+        {process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER === "postHog" && process.env.NEXT_PUBLIC_POSTHOG_KEY && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                !function(t,e){if(!t.e){t.e=function(){(t.e=[].push(arguments))[0]!==arguments[0]?t.e.apply(t.e,arguments):void 0},t.e.q=[],t.e.v=2}}(window,document);
+                window.posthog = window.posthog || {};
+                window.posthog.init('${process.env.NEXT_PUBLIC_POSTHOG_KEY}', { api_host: 'https://app.posthog.com', autocapture: true });
+              `,
+            }}
+          />
+        )}
         <main className="relative flex min-h-screen flex-col">
           <PushProvider>
             <ServiceWorkerRegistration />
-            {children}
+            <SubscriptionProvider>
+              {children}
+            </SubscriptionProvider>
           </PushProvider>
         </main>
         <CookieConsent />
