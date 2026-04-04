@@ -1,0 +1,108 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done"
+  },
+  "nav": {
+    "home": "Home",
+    "scan": "Scan",
+    "progress": "Progress",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Your Skin Journey",
+    "subtitle": "Track what's working",
+    "quickScan": "Quick Scan",
+    "viewProgress": "View Progress",
+    "lastScan": "Last scan",
+    "noScans": "No scans yet",
+    "startTracking": "Start tracking your skin"
+  },
+  "scan": {
+    "title": "Scan Your Skin",
+    "capture": "Take Photo",
+    "tips": "Tips for a good scan",
+    "tipNaturalLight": "Use natural light",
+    "tipSteady": "Hold steady",
+    "tipNeutral": "Keep a neutral expression",
+    "analyzing": "Analyzing your skin...",
+    "processing": "Processing your scan",
+    "complete": "Scan complete!",
+    "result": "Your Results",
+    "scanAgain": "Scan Again"
+  },
+  "results": {
+    "title": "Your Skin Analysis",
+    "observations": "What we found",
+    "interpretation": "What it means",
+    "routine": "Your routine",
+    "safety": "Safety notes",
+    "confidence": "Confidence",
+    "confidenceHigh": "High visibility",
+    "confidenceMedium": "Moderate visibility",
+    "confidenceLow": "Limited visibility"
+  },
+  "progress": {
+    "title": "Your Progress",
+    "timeline": "Timeline",
+    "improvement": "Improvement",
+    "stable": "Stable",
+    "declining": "Needs attention",
+    "weeklyGoal": "Weekly goal",
+    "scanStreak": "Scan streak",
+    "days": "days"
+  },
+  "routine": {
+    "title": "Your Routine",
+    "morning": "Morning",
+    "evening": "Evening",
+    "weekly": "Weekly",
+    "cleanser": "Cleanser",
+    "moisturizer": "Moisturizer",
+    "sunscreen": "Sunscreen",
+    "treatment": "Treatment"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "account": "Account",
+    "help": "Help & Support",
+    "logout": "Log out"
+  },
+  "auth": {
+    "login": "Log in",
+    "signup": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "forgot": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "onboarding": {
+    "welcome": "Welcome to SkinMinder",
+    "step1Title": "What's your main concern?",
+    "step2Title": "Your first scan",
+    "complete": "You're ready!"
+  },
+  "safety": {
+    "disclaimer": "This is for cosmetic guidance only, not a medical diagnosis.",
+    "consultProfessional": "Consult a dermatologist for medical concerns.",
+    "notForDiagnosis": "Not a medical diagnosis"
+  },
+  "retention": {
+    "scanAgain": "Scan again in 1 week to track progress",
+    "keepGoing": "Keep up the good work!",
+    "streak": "You're on a streak!"
+  }
+}

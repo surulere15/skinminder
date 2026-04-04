@@ -7,6 +7,7 @@ import { CookieConsent } from "@/components/ui/cookie-consent";
 import { PushProvider } from "@/lib/push-context";
 import { ServiceWorkerRegistration } from "@/components/ui/service-worker-registration";
 import { SubscriptionProvider } from "@/lib/subscription";
+import { I18nProvider } from "@/lib/i18n/use-i18n";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -91,12 +92,14 @@ export default function RootLayout({
           />
         )}
         <main className="relative flex min-h-screen flex-col">
-          <PushProvider>
-            <ServiceWorkerRegistration />
-            <SubscriptionProvider>
-              {children}
-            </SubscriptionProvider>
-          </PushProvider>
+          <I18nProvider>
+            <PushProvider>
+              <ServiceWorkerRegistration />
+              <SubscriptionProvider>
+                {children}
+              </SubscriptionProvider>
+            </PushProvider>
+          </I18nProvider>
         </main>
         <CookieConsent />
       </body>

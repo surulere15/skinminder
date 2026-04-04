@@ -1,0 +1,108 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "continue": "Continuer",
+    "back": "Retour",
+    "next": "Suivant",
+    "done": "Terminé"
+  },
+  "nav": {
+    "home": "Accueil",
+    "scan": "Analyse",
+    "progress": "Progrès",
+    "history": "Historique",
+    "settings": "Paramètres"
+  },
+  "home": {
+    "title": "Votre parcours cutané",
+    "subtitle": "Suivez ce qui fonctionne",
+    "quickScan": "Analyse rapide",
+    "viewProgress": "Voir les progrès",
+    "lastScan": "Dernière analyse",
+    "noScans": "Aucune analyse",
+    "startTracking": "Commencez à suivre votre peau"
+  },
+  "scan": {
+    "title": "Analysez votre peau",
+    "capture": "Prendre une photo",
+    "tips": "Conseils pour une bonne analyse",
+    "tipNaturalLight": "Utilisez la lumière naturelle",
+    "tipSteady": "Restez immobile",
+    "tipNeutral": "Gardez une expression neutre",
+    "analyzing": "Analyse de votre peau...",
+    "processing": "Traitement de votre analyse",
+    "complete": "Analyse terminée !",
+    "result": "Vos résultats",
+    "scanAgain": "Nouvelle analyse"
+  },
+  "results": {
+    "title": "Votre analyse cutanée",
+    "observations": "Ce que nous avons trouvé",
+    "interpretation": "Ce que cela signifie",
+    "routine": "Votre routine",
+    "safety": "Notes de sécurité",
+    "confidence": "Confiance",
+    "confidenceHigh": "Bonne visibilité",
+    "confidenceMedium": "Visibilité modérée",
+    "confidenceLow": "Visibilité limitée"
+  },
+  "progress": {
+    "title": "Vos progrès",
+    "timeline": "Chronologie",
+    "improvement": "Amélioration",
+    "stable": "Stable",
+    "declining": "À surveiller",
+    "weeklyGoal": "Objectif hebdomadaire",
+    "scanStreak": "Série d'analyses",
+    "days": "jours"
+  },
+  "routine": {
+    "title": "Votre routine",
+    "morning": "Matin",
+    "evening": "Soir",
+    "weekly": "Hebdomadaire",
+    "cleanser": "Nettoyant",
+    "moisturizer": "Hydratant",
+    "sunscreen": "Écran solaire",
+    "treatment": "Traitement"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "notifications": "Notifications",
+    "privacy": "Confidentialité",
+    "account": "Compte",
+    "help": "Aide et support",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": "Connexion",
+    "signup": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgot": "Mot de passe oublié ?",
+    "noAccount": "Pas de compte ?",
+    "hasAccount": "Déjà un compte ?"
+  },
+  "onboarding": {
+    "welcome": "Bienvenue sur SkinMinder",
+    "step1Title": "Quelle est votre préoccupation principale ?",
+    "step2Title": "Votre première analyse",
+    "complete": "Vous êtes prêt !"
+  },
+  "safety": {
+    "disclaimer": "Ceci est un accompagnement cosmétique uniquement, pas un diagnostic médical.",
+    "consultProfessional": "Consulter un dermatologue pour les préoccupations médicales.",
+    "notForDiagnosis": "Pas un diagnostic médical"
+  },
+  "retention": {
+    "scanAgain": "Faites une nouvelle analyse dans une semaine pour suivre vos progrès",
+    "keepGoing": "Continuez ainsi !",
+    "streak": "Vous êtes sur une série !"
+  }
+}

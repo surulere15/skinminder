@@ -16,14 +16,17 @@ import {
   Loader2,
   ChevronRight,
   Sparkles,
+  Globe,
 } from "lucide-react";
 import { useProfile } from "@/hooks/use-profile";
+import { useI18n } from "@/lib/i18n/use-i18n";
 import { cn } from "@/lib/utils";
 
 const SKIN_TYPES = ["Dry", "Oily", "Combination", "Sensitive", "Normal"];
 
 export default function SettingsPage() {
   const { profile, isLoading, updateProfile } = useProfile();
+  const { t, locale, setLocale, supportedLocales } = useI18n();
   const [isSaving, setIsSaving] = useState(false);
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
@@ -143,6 +146,38 @@ export default function SettingsPage() {
                 <><Save className="mr-2" size={18} /> Save Changes</>
               )}
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Language */}
+      <Card className="border-none bg-white/5 border border-skin-border/10 shadow-xl shadow-black/5 rounded-[3rem] overflow-hidden relative z-10">
+        <CardHeader className="p-8 pb-0 text-left">
+          <CardTitle className="text-2xl font-outfit font-black tracking-tight text-skin-dark">
+            Language
+          </CardTitle>
+          <CardDescription className="font-bold text-skin-muted opacity-80">
+            Choose your preferred language.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-8">
+          <div className="flex flex-wrap gap-3">
+            {supportedLocales.map((loc) => (
+              <button
+                key={loc.code}
+                onClick={() => setLocale(loc.code)}
+                className={cn(
+                  "flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all border-2",
+                  locale === loc.code
+                    ? "border-skin-violet bg-skin-violet/5 text-skin-violet shadow-sm"
+                    : "border-skin-border/20 bg-transparent text-skin-muted hover:border-skin-border/40 hover:text-skin-dark"
+                )}
+              >
+                <Globe size={16} />
+                <span>{loc.flag}</span>
+                <span>{loc.name}</span>
+              </button>
+            ))}
           </div>
         </CardContent>
       </Card>
