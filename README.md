@@ -1,6 +1,14 @@
 # SkinMinder: Venture-Scale AI Skincare Intelligence
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
+[![CI](https://github.com/surulere15/skinminder/actions/workflows/ci.yml/badge.svg)](https://github.com/surulere15/skinminder/actions/workflows/ci.yml)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 SkinMinder is a production-grade, venture-scale AI skincare platform built with Next.js 14, Supabase, and Claude 3.5 Sonnet. It provides high-fidelity skin analysis, personalized morning/evening protocols, and a robust seller ecosystem for skincare brands.
+
+> **Disclaimer**: This is a cosmetic wellness platform. All analyses are for informational purposes only and do not constitute medical diagnosis.
 
 ## 🚀 Core Features
 
@@ -27,45 +35,101 @@ SkinMinder is a production-grade, venture-scale AI skincare platform built with 
 
 ## 🛠 Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), Tailwind CSS, Framer Motion, shadcn/ui.
-- **Backend**: Next.js API Routes, Supabase (PostgreSQL), Edge Runtime.
-- **AI**: Anthropic Claude 3.5 Sonnet (Vision and Text), Zod-validated schemas.
-- **Infrastructure**: Supabase Auth/DB, Cloudinary (Image Hosting), @napi-rs/canvas (Image Generation).
+- **Frontend**: Next.js 14 (App Router), Tailwind CSS, Framer Motion, shadcn/ui
+- **Backend**: Next.js API Routes, Supabase (PostgreSQL), Edge Runtime
+- **AI**: Anthropic Claude 3.5 Sonnet (Vision and Text), Zod-validated schemas
+- **Infrastructure**: Supabase Auth/DB, Cloudinary (Image Hosting), @napi-rs/canvas (Image Generation)
 
 ## 📂 Project Structure
 
-- `app/`: Next.js App Router with Route Groups (`(public)`, `(auth)`, `(app)`, `(seller)`).
-- `services/ai/`: Core AI orchestration and service modules.
-- `prompts/`: Separated system prompts for version-controlled AI logic.
-- `schemas/`: Zod schemas defining all data contracts (AI outputs, DB inputs).
-- `lib/`: Shared utilities, constants, and Supabase clients.
-- `components/`: Atomic UI components and feature-specific layout modules.
+```
+skinminder/
+├── app/                    # Next.js App Router with Route Groups
+│   ├── (public)/          # Public-facing pages
+│   ├── (auth)/            # Authentication flows
+│   ├── (app)/             # Authenticated app pages
+│   └── (seller)/          # Seller/brand portal
+├── services/ai/           # Core AI orchestration and service modules
+├── prompts/               # Separated system prompts for version-controlled AI logic
+├── schemas/               # Zod schemas defining all data contracts
+├── lib/                   # Shared utilities, constants, and Supabase clients
+├── components/            # Atomic UI components and feature-specific layout modules
+├── supabase/migrations/   # Database migrations
+└── tests/                 # Test suites
+```
 
 ## 🚦 Getting Started
 
+### Prerequisites
+
+- Node.js >= 18.18.0
+- pnpm >= 9.0.0
+
+### Installation
+
 1. **Clone & Install**:
    ```bash
+   git clone https://github.com/surulere15/skinminder.git
+   cd skinminder
    pnpm install
    ```
 
-2. **Environment Variables**:
-   Create a `.env.local` based on `.env.example`:
+2. **Environment Variables**: Create a `.env.local` based on `.env.example`:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Required variables:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
    - `ANTHROPIC_API_KEY`
    - `CLOUDINARY_URL`
 
-3. **Database Setup**:
-   Run the migrations in `supabase/migrations/` in order.
+3. **Database Setup**: Run the migrations in `supabase/migrations/` in order.
 
 4. **Run Development**:
    ```bash
    pnpm dev
    ```
 
+5. **Run Tests**:
+   ```bash
+   pnpm test
+   ```
+
+## 📸 Screenshots
+
+> _Screenshots coming soon_
+
+<!-- Add screenshots here once available:
+![Dashboard](public/landing/dashboard.png)
+![Skin Analysis](public/landing/analysis.png)
+-->
+
+## 🤝 Contributing
+
+We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔒 Security
+
+If you discover a security vulnerability, please review our [Security Policy](SECURITY.md).
+
 ## ⚖️ Legal & Privacy
-This is a cosmetic wellness platform. All analyses are for information only and do not constitute medical diagnosis. Data is encrypted and private by default.
+
+Data is encrypted and private by default. All skin analyses are for informational purposes only and do not constitute medical diagnosis.
 
 ---
-© 2026 SkinMinder. Built for the future of wellness.
+
+<p align="center">
+  &copy; 2026 SkinMinder. Built for the future of wellness.
+</p>

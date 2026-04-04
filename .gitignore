@@ -1,23 +1,68 @@
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
 .next/
+out/
 dist/
+build/
+*.tsbuildinfo
+
+# Environment files
 .env
 .env.local
 .env.*.local
+!.env.example
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
 coverage/
-.vercel/
-.npm-cache-final/
-.npm-cache-fix/
-.npm-cache-vendor/
+.nyc_output/
+
+# Cache
+.npm/
 .npm-cache/
-.npm_cache/
-.npm_cache/
-.npx-cache/
-build/
-*.tsbuildinfo
 .pnpm-store/
+.npx/
+.nuxt/
+.vercel/
+
+# Package manager lockfiles (pick one)
+# If using npm: keep package-lock.json, remove pnpm-lock.yaml
+# If using pnpm: keep pnpm-lock.yaml, remove package-lock.json
+
+# Tarballs
+*.tgz
+
+# Test files
+test_face.jpg
+test_*.jpg
+test_*.png
+
+# Scaffold/deprecated directories
+architecture-scaffold/
+v3-scaffold/
+npm-cache/
+
+# Misc
 __styled_jsx__/
 Library/
-.nuxt/

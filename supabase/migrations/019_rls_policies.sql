@@ -53,13 +53,6 @@ CREATE POLICY "Users can manage own active routine" ON user_active_routine
 -- Analytics: Allow service role to read all for dashboards
 -- This is handled at application level, not RLS
 
--- Create service role bypass function for admin operations
-CREATE OR REPLACE FUNCTION auth.uid()
-RETURNS uuid
-AS $$
-  -- This is handled by Supabase auth
-  NULL
-$$ LANGUAGE sql STABLE;
-
 -- Note: Service role key bypasses RLS automatically in Supabase
 -- Only use service role for admin operations, never expose to client
+-- Do NOT override auth.uid() - this is managed by Supabase Auth
