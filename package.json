@@ -8,11 +8,19 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:mobile": "pnpm --filter skinminder-mobile start",
     "build": "next build",
+    "build:mobile": "pnpm --filter skinminder-mobile exec expo export",
     "start": "next start",
+    "start:mobile": "pnpm --filter skinminder-mobile start",
     "lint": "next lint",
+    "lint:mobile": "pnpm --filter skinminder-mobile lint",
     "test": "vitest",
-    "db:seed": "tsx db/seed/run.ts"
+    "test:mobile": "pnpm --filter skinminder-mobile test",
+    "db:seed": "tsx db/seed/run.ts",
+    "typecheck": "tsc --noEmit",
+    "typecheck:mobile": "pnpm --filter skinminder-mobile exec tsc --noEmit",
+    "clean": "rm -rf node_modules .next && pnpm --filter skinminder-mobile exec rm -rf node_modules .expo"
   },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.62",
