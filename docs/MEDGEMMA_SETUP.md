@@ -1,52 +1,105 @@
-# Self-Hosting MedGemma with Ollama
+# MedGemma Self-Hosting Setup
 
-## Setup
-
-1. **Install Ollama**
-   ```bash
-   curl -fsSL https://ollama.com/install.sh | sh
-   ```
-
-2. **Pull MedGemma model**
-   ```bash
-   ollama pull medgemma:4b
-   # or vision model
-   ollama pull alibayram/medgemma:4b
-   ```
-
-3. **Start Ollama server**
-   ```bash
-   ollama serve
-   ```
-
-## API Usage
+## Quick Start
 
 ```bash
-# Text generation
-curl http://localhost:11434/api/generate -d '{
-  "model": "medgemma:4b",
-  "prompt": "Analyze this skin concern: dry skin with redness"
-}'
+# Install Ollama (Mac/Linux/Windows)
+curl -fsSL https://ollama.com/install.sh | sh
 
-# Vision (if using multimodal model)
-curl http://localhost:11434/api/generate -d '{
-  "model": "alibayram/medgemma:4b",
-  "prompt": "Analyze this skin image",
-  "images": ["<base64_image>"]
-}'
+# Pull fast model (2B = fastest, 4B = better quality)
+ollama pull gemma:2b
+
+# Start server
+ollama serve
 ```
 
 ## Environment Variables
 
-Add to your `.env.local`:
-```
+Add to `.env.local`:
+```env
+# Use Ollama instead of Anthropic
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=medgemma:4b
-# Remove ANTHROPIC_API_KEY to use Ollama instead
+OLLAMA_MODEL=gemma:2b
+
+# Remove or comment out:
+# ANTHROPIC_API_KEY=...
 ```
 
-## Cost
+## Performance Tuning (Sub-3s Latency)
 
-- **Hardware**: GPU with 8GB+ VRAM (RTX 3070/4060 or better)
-- **Electricity**: ~50W idle, ~150W under load
-- **Cost per month**: ~$0 (if you have GPU) vs $25+/month for API
+### 1. Keep Model Loaded
+```typescript
+// Ollama keeps model in memory with keep_alive: -1
+keep_alive: -1  // Infinite, or set to "5m" for 5 minutes
+```
+
+### 2. Use Structured Outputs (Faster Parsing)
+```typescript
+const schema = {
+  type: "object",
+  properties: {
+    observations: { type: "string", maxLength: 150 },
+    interpretation: { type: "string", maxLength: 150 },
+    routine: { type: "string", maxLength: 150 },
+    safety: { type: "string", maxLength: 100 },
+  },
+  required: ["observations", "interpretation", "routine", "safety"],
+};
+```
+
+### 3. Tight Generation Settings
+```typescript
+options: {
+  num_predict: 120,    // Cap output tokens
+  temperature: 0.2,   // Lower = more deterministic
+  stop: ['---', '---END---'],
+}
+```
+
+### 4. Stream for Perceived Speed
+```typescript
+stream: true  // Shows output as it arrives
+```
+
+## Benchmarking
+
+Ollama returns timing metrics - log these to understand where time goes:
+
+```typescript
+{
+  total_duration:    // Total request time
+  load_duration:     // Model load time (cold start)
+  prompt_eval_duration: // Prompt processing
+  eval_duration:     // Output generation
+  prompt_eval_count: // Prompt tokens
+  eval_count:        // Output tokens
+}
+```
+
+## Model Comparison
+
+| Model | Size | Speed | Quality |
+|-------|------|-------|---------|
+| gemma:2b | ~1GB | Fastest | Good |
+| gemma:4b | ~4GB | Fast | Better |
+| medgemma:4b | ~4GB | Medium | Medical-tuned |
+
+## Architecture Pattern
+
+For instant feel:
+1. **Phase 1** (< 1s): Return "Scanning..." immediately
+2. **Phase 2** (2-3s): Stream analysis results
+
+## Preload on Startup
+
+```typescript
+// Warm the model before first request
+import { preloadModel } from '@/lib/ollama-client';
+preloadModel();  // Call at app startup
+```
+
+## Troubleshooting
+
+- **Slow first request**: Model cold - ensure keep_alive is set
+- **High latency**: Reduce num_predict, use smaller model
+- **Parse errors**: Use structured output format
