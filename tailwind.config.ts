@@ -55,6 +55,13 @@ const config: Config = {
           slate: 'rgb(var(--skin-text-primary) / <alpha-value>)',
           muted: 'rgb(var(--skin-text-secondary) / <alpha-value>)',
           border: 'rgb(var(--skin-lavender) / <alpha-value>)',
+          violet: 'rgb(var(--skin-primary) / <alpha-value>)',
+          pearl: 'rgb(var(--skin-bg) / <alpha-value>)',
+          dark: 'rgb(var(--text-primary) / <alpha-value>)',
+          graphite: 'rgb(var(--skin-graphite) / <alpha-value>)',
+          rose: 'rgb(var(--status-danger) / <alpha-value>)',
+          gold: 'rgb(var(--accent-gold) / <alpha-value>)',
+          glow: 'rgb(var(--skin-primary) / <alpha-value>)',
         },
         content: {
           primary: 'rgb(var(--skin-text-primary) / <alpha-value>)',

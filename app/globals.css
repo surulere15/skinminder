@@ -4,73 +4,69 @@
 
 @layer base {
   :root {
-    /* SkinMinder Brand DNA - Soft-Premium Beauty-Tech Pivot */
-    --skin-primary: 157 164 255;      /* #9DA4FF - Pearl Lavender */
-    --skin-blue: 157 164 255;         /* Alias for Pearl Lavender */
-    --skin-blue-soft: 235 248 255;    /* #EBF8FF - Powder Blue */
-    --skin-lavender: 243 240 255;     /* #F3F0FF - Soft Background */
-    --skin-mint: 240 255 244;         /* #F0FFF4 - Mint Mist */
-    --skin-bg: 250 251 255;           /* #FAFBFF - Primrose White */
-    --skin-surface: 255 255 255;      /* #FFFFFF - Pure Clinical */
-    --skin-gray: 243 240 255;          /* Linked to Soft Lavender */
-    --skin-text-primary: 45 55 72;    /* #2D3748 - Clinical Slate */
-    --skin-text-secondary: 74 85 104; /* #4A5568 */
-
-    /* Health & Status (Gentle) */
-    --skin-success: 104 211 145;      /* #68D391 - Mint Green */
-    --skin-warning: 246 173 85;       /* #F6AD55 - Soft Amber */
-    --skin-danger: 252 129 129;       /* #FC8181 - Soft Rose */
-
-    /* Standardized Themed Variables */
-    --background: rgb(var(--skin-bg));
-    --foreground: rgb(var(--skin-text-primary));
-
-    --primary: rgb(var(--skin-primary));
-    --primary-foreground: rgb(255 255 255);
+    /* SkinMinder VisionOS Glass Design System (2026 Premium) */
     
-    --secondary: rgb(var(--skin-blue-soft));
-    --secondary-foreground: rgb(var(--skin-text-primary));
+    /* Base Palette - Soft neutral, no pure white */
+    --glass-bg: 247 248 250;           /* #F7F8FA - soft neutral */
+    --glass-surface: 255 255 255;       /* #FFFFFF - translucent surface */
+    --glass-border: 255 255 255;         /* white for border */
+    
+    /* Glass Opacity Layers */
+    --glass-1: rgba(255, 255, 255, 0.4);
+    --glass-2: rgba(255, 255, 255, 0.6);
+    --glass-3: rgba(255, 255, 255, 0.75);
+    --glass-4: rgba(255, 255, 255, 0.85);
+    
+    /* Subtle Accent - Gold (premium, not loud) */
+    --accent-gold: 198 168 91;          /* #C6A85B */
+    
+    /* Text Hierarchy */
+    --text-primary: 28 28 30;           /* #1C1C1E - high contrast */
+    --text-secondary: 107 114 128;      /* #6B7280 - soft gray */
+    --text-tertiary: 156 163 175;       /* #9CA3AF - subtle */
+    
+    /* Status Colors - Soft, medical tone */
+    --status-success: 104 211 145;      /* #68D391 - mint */
+    --status-warning: 246 173 85;       /* #F6AD55 - soft amber */
+    --status-danger: 252 129 129;       /* #FC8181 - soft rose */
+    
+    /* SkinMinder Brand */
+    --skin-primary: 157 164 255;
+    --skin-violet: 157 164 255;
+    --skin-pearl: 250 251 255;
+    --skin-muted: 107 114 128;
+    --skin-dark: 28 28 30;
+    --skin-graphite: 55 65 81;
+    
+    /* Standardized Themed Variables */
+    --background: var(--glass-bg);
+    --foreground: var(--text-primary);
 
-    --muted: rgb(var(--skin-lavender));
-    --muted-foreground: rgb(var(--skin-text-secondary));
+    --primary: var(--skin-primary);
+    --primary-foreground: 255 255 255;
+    
+    --secondary: var(--glass-2);
+    --secondary-foreground: var(--text-primary);
 
-    --accent: rgb(var(--skin-mint));
-    --accent-foreground: rgb(var(--skin-text-primary));
+    --muted: var(--glass-2);
+    --muted-foreground: var(--text-secondary);
 
-    --card: rgb(var(--skin-surface));
-    --card-foreground: rgb(var(--skin-text-primary));
+    --accent: var(--accent-gold);
+    --accent-foreground: var(--text-primary);
 
-    --border: rgb(var(--skin-lavender));
-    --input: rgb(var(--skin-lavender));
-    --ring: rgb(var(--skin-primary));
+    --card: var(--glass-3);
+    --card-foreground: var(--text-primary);
 
-    --radius: 16px; 
+    --border: rgba(255, 255, 255, 0.4);
+    --input: var(--glass-2);
+    --ring: var(--skin-primary);
+
+    --radius: 20px;
     --max-width: 1280px;
 
-    /* Gentle Elevation Shadow */
-    --shadow-soft: 0 10px 40px -10px rgba(157, 164, 255, 0.15);
-
-    /* The Soft Studio Experience (High-Key Capture) */
-    --scan-bg: rgb(var(--skin-bg));
-    --scan-pearl: rgb(var(--skin-primary));
-    --scan-mint: rgb(var(--skin-success));
-    --scan-surface: rgb(var(--skin-surface));
-
-    /* Typography Hierarchy Tokens */
-    --text-hero: 48px;
-    --text-section: 30px;
-    --text-card: 20px;
-    --text-body: 16px;
-    --text-micro: 12px;
-    --text-metric: 36px;
-
-    /* Spacing Scale Tokens */
-    --space-4: 4px;
-    --space-8: 8px;
-    --space-16: 16px;
-    --space-24: 24px;
-    --space-32: 32px;
-    --space-48: 48px;
+    /* Soft elevation - no heavy shadows */
+    --shadow-glass: 0 4px 24px -6px rgba(0, 0, 0, 0.08);
+    --shadow-float: 0 8px 32px -8px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -86,153 +82,120 @@
 }
 
 @layer components {
-  /* Clinical Stability Surface */
-  .glass-panel {
-    @apply bg-skin-surface/90 backdrop-blur-3xl border border-white/5 shadow-2xl;
-  }
-
+  /* VisionOS Glass Card - Core Component */
   .glass-card {
-    @apply relative overflow-hidden bg-skin-surface border border-white/5 rounded-2xl shadow-lg;
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(255, 255, 255, 0.5) 100%
+    );
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-glass);
   }
 
-  .skin-card {
-    @apply bg-skin-surface border border-skin-lavender rounded-[16px] p-6;
-    box-shadow: var(--shadow-soft);
+  /* Glass Panel - Larger surface */
+  .glass-panel {
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.65) 0%,
+      rgba(255, 255, 255, 0.35) 100%
+    );
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: var(--shadow-float);
   }
 
-  /* Reliable Medical Action */
+  /* Pearlized surface - Subtle edge glow */
+  .pearlized {
+    @apply relative overflow-hidden;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 
+      inset 0 1px 1px rgba(255, 255, 255, 0.6),
+      0 2px 8px -2px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Soft Surface - No blur */
+  .soft-surface {
+    @apply bg-white/60 border border-white/40;
+    box-shadow: 0 2px 12px -4px rgba(0, 0, 0, 0.08);
+  }
+
+  /* VisionOS-style floating layer */
+  .glass-float {
+    @apply relative;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(40px) saturate(250%);
+    -webkit-backdrop-filter: blur(40px) saturate(250%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 
+      0 24px 48px -12px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  /* Clinical Button - Premium feel */
   .clinical-btn {
     @apply relative overflow-hidden transition-all duration-200 
-           bg-skin-primary text-white font-semibold rounded-xl
-           shadow-[0_4px_12px_rgba(111,139,255,0.25)]
-           hover:brightness-110 active:scale-[0.98];
+           bg-skin-violet text-white font-semibold rounded-2xl
+           shadow-lg shadow-skin-violet/20
+           hover:brightness-105 active:scale-[0.98];
   }
-  
-  .clinical-ghost {
+
+  /* Glass Ghost Button */
+  .glass-ghost {
     @apply relative overflow-hidden transition-all duration-200 
-           bg-white/5 border border-white/5 text-content-secondary font-medium rounded-xl
-           hover:bg-white/10 hover:text-content-primary;
+           bg-white/30 border border-white/40 font-medium rounded-2xl;
+    color: rgb(var(--text-primary));
+  }
+  .glass-ghost:hover {
+    @apply bg-white/50 border-white/60;
   }
 
-  /* Structural Hierarchy Weights */
-  .h1 { font-size: var(--text-hero); @apply font-black tracking-tighter uppercase italic; }
-  .h2 { font-size: var(--text-section); @apply font-bold tracking-tight; }
-  .h3 { font-size: var(--text-card); @apply font-bold; }
-  
-  .label { 
-    font-size: var(--text-micro); 
-    @apply font-bold uppercase tracking-[0.4em]; 
-  }
-  
-  .body { 
-    font-size: var(--text-body); 
-    @apply font-normal leading-relaxed text-skin-muted; 
-  }
+  /* Typography - Clean hierarchy */
+  .text-premium { @apply font-semibold tracking-tight; }
+  .text-heading { @apply font-semibold tracking-tight; color: rgb(var(--text-primary)); }
+  .text-body-soft { @apply font-normal; color: rgb(var(--text-secondary)); }
+  .text-micro { @apply text-xs font-medium uppercase tracking-wider; }
 
-  .metric-value {
-    font-size: var(--text-metric);
-    @apply font-black italic tabular-nums;
-  }
-
-  /* Specular Light Sweep Animation */
-  .light-sweep {
-    @apply absolute inset-0 -translate-x-[100%] pointer-events-none -z-10;
+  /* Gradient Backgrounds */
+  .bg-glass-gradient {
     background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(255, 255, 255, 0) 40%,
-      rgba(255, 255, 255, 0.2) 50%,
-      rgba(255, 255, 255, 0) 60%,
-      transparent 100%
+      180deg,
+      #F7F8FA 0%,
+      #EDEFF3 100%
     );
   }
 
-  .group:hover .light-sweep {
-    animation: sweep 1.5s ease-in-out;
+  .bg-glass-mesh {
+    background: 
+      radial-gradient(circle at 20% 20%, rgba(157, 164, 255, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(198, 168, 91, 0.04) 0%, transparent 50%),
+      linear-gradient(180deg, #F7F8FA 0%, #EDEFF3 100%);
   }
-}
 
-@keyframes sweep {
-  0% { transform: translateX(-100%) skewX(-15deg); }
-  100% { transform: translateX(200%) skewX(-15deg); }
-}
+  /* Soft pearl border - mimics VisionOS edge glow */
+  .pearl-edge {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  }
 
-@keyframes shimmer {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(100%); }
-}
+  /* Subtle hover lift */
+  .hover-lift-glass {
+    @apply transition-all duration-300;
+  }
+  .hover-lift-glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.12);
+  }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
-}
-
-@keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.2; }
-  50% { transform: scale(1.05); opacity: 0.35; }
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite;
-}
-
-.animate-float {
-  animation: float 10s ease-in-out infinite;
-}
-
-.animate-breathe {
-  animation: breathe 8s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  @apply animate-pulse;
-}
-
-.text-balance {
-  text-wrap: balance;
-}
-
-.hover-lift {
-  @apply transition-transform duration-300 hover:-translate-y-1;
-}
-
-/* Soft-Premium Motifs (Beauty-Tech Standard) */
-.bg-soft-studio {
-  background: radial-gradient(
-    circle at 50% -20%,
-    rgba(157, 164, 255, 0.08) 0%,
-    transparent 60%
-  );
-}
-
-.bg-diffuse-glow {
-  background: radial-gradient(
-    circle at center,
-    rgba(157, 164, 255, 0.05) 0%,
-    transparent 70%
-  );
-}
-
-.soft-pearl-border {
-  @apply border border-white/40 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4)];
-}
-
-.pearlized-surface {
-  @apply bg-white/40 backdrop-blur-md border border-white/20 shadow-sm;
-}
-
-@keyframes slow-breathe {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.02); opacity: 0.6; }
-}
-
-.animate-slow-breathe {
-  animation: slow-breathe 4s ease-in-out infinite;
-}
-
-.max-container {
-  width: 100%;
-  max-width: var(--max-width);
-  margin-left: auto;
-  margin-right: auto;
+  .glass-hover {
+    @apply transition-all duration-200 hover:bg-white/70;
+  }
 }
