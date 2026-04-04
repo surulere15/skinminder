@@ -1,29 +1,37 @@
 import * as Haptics from "expo-haptics";
 
+function safeHaptics(fn: () => Promise<void>) {
+  try {
+    fn().catch(() => {});
+  } catch {
+    // Haptics not supported on this device — silently ignore
+  }
+}
+
 export function hapticLight() {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  safeHaptics(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
 }
 
 export function hapticMedium() {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  safeHaptics(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium));
 }
 
 export function hapticHeavy() {
-  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+  safeHaptics(() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy));
 }
 
 export function hapticSuccess() {
-  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  safeHaptics(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
 }
 
 export function hapticWarning() {
-  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+  safeHaptics(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning));
 }
 
 export function hapticError() {
-  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+  safeHaptics(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
 }
 
 export function hapticSelection() {
-  Haptics.selectionAsync();
+  safeHaptics(() => Haptics.selectionAsync());
 }

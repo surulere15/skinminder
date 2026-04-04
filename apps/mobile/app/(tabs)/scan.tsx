@@ -53,6 +53,11 @@ export default function ScanScreen() {
   }
 
   const pickFromLibrary = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission Required", "SkinMinder needs photo library access to upload images for analysis.");
+      return;
+    }
     hapticMedium();
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: "images",
