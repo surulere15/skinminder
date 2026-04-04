@@ -130,7 +130,18 @@ export class ResultEngineService {
      */
     private segmentRegions(metrics: SkinMetrics): SkinRegionalMetrics {
         const variance = () => (Math.random() * 10 - 5); // +/- 5% variance
-        const m = (score: number) => ({ score: score + variance(), severity: this.interpretationLayer.getSeverityFromScore(score + variance()) });
+        
+        const mapSeverity = (score: number): "healthy" | "mild" | "moderate" | "severe" => {
+            const sev = this.interpretationLayer.getSeverityFromScore(score);
+            if (sev === "optimal") return "healthy";
+            if (sev === "mild") return "mild";
+            return "moderate";
+        };
+        
+        const m = (score: number) => ({ 
+            score: score + variance(), 
+            severity: mapSeverity(score + variance()) 
+        });
 
         return {
             forehead: { 
