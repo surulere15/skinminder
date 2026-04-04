@@ -1,9 +1,31 @@
 import { supabase } from "./supabase";
 import * as ImageManipulator from "expo-image-manipulator";
+import NetInfo from "@react-native-community/netinfo";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://api.skinminder.ai";
 const API_TIMEOUT = 30000;
 const UPLOAD_TIMEOUT = 60000;
+
+interface NetworkInfo {
+  isConnected: boolean;
+  isInternetReachable: boolean | null;
+  type: "wifi" | "cellular" | "ethernet" | "none" | "unknown" | null;
+}
+
+async function getNetworkInfo(): Promise<NetworkInfo> {
+  const state = await NetInfo.fetch();
+  return {
+    isConnected: state.isConnected ?? false,
+    isInternetReachable: state.isInternetReachable,
+    type: state.type,
+  };
+}
+
+interface RNFileObject {
+  uri: string;
+  name: string;
+  type: string;
+}
 
 function createTimeoutSignal(timeout: number): AbortSignal {
   const controller = new AbortController();
@@ -32,16 +54,23 @@ export async function compressImage(uri: string): Promise<string> {
 export async function uploadImage(uri: string, retries = 3): Promise<string> {
   const compressedUri = await compressImage(uri);
 
+  const network = await getNetworkInfo();
+  if (network.type === "cellular" && network.isInternetReachable) {
+    console.warn("Uploading on cellular network — may be slow and use data.");
+  }
+
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
       const formData = new FormData();
       const filename = `scan_${Date.now()}.jpg`;
 
-      formData.append("file", {
+      const file: RNFileObject = {
         uri: compressedUri,
         name: filename,
         type: "image/jpeg",
-      } as any);
+      };
+
+      formData.append("file", file as any);
 
       const response = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
