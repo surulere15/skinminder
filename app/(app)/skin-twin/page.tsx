@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { SkinScoreRing } from "@/components/ui/skin-score-ring";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   TrendingUp,
@@ -114,9 +115,23 @@ export default function SkinTwinPage() {
             {data.scanCount} integrated cycle{data.scanCount !== 1 ? 's' : ''} sequenced. Your biological transition, visualized.
           </p>
         </div>
-        <Badge variant="premium" className="px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">
-           Neural Identity: {data.scanCount} Cycles
-        </Badge>
+        
+        {/* Apple-style Skin Score Ring */}
+        <div className="flex items-center gap-6">
+          {data.trends?.find((t: any) => t.metric === "Skin Score") && (
+            <div className="glass-card p-6 rounded-3xl">
+              <SkinScoreRing 
+                score={data.trends.find((t: any) => t.metric === "Skin Score").recentAvg}
+                size={120}
+                strokeWidth={10}
+                label="Overall"
+              />
+            </div>
+          )}
+          <Badge variant="premium" className="px-6 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">
+            Neural Identity: {data.scanCount} Cycles
+          </Badge>
+        </div>
       </header>
 
       {/* Trend Cards */}
