@@ -2,12 +2,37 @@ import Anthropic from '@anthropic-ai/sdk';
 import { VISION_ANALYSIS_SYSTEM_PROMPT, buildVisionAnalysisUserPrompt } from '@/prompts/vision-analysis';
 import { visionAnalysisSchema } from '@/schemas/scan';
 import { isMockMode, getMockDelay, shouldUseMockImage } from '@/lib/config';
+import { generateSkinAnalysisWithOllama, shouldUseOllama } from '@/lib/ollama-client';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export async function analyzeSkinImage(imageUrl: string, bodyArea: string) {
+  // Priority: Ollama (MedGemma) > Anthropic > Mock
+  if (shouldUseOllama()) {
+    console.log("Using Ollama (MedGemma) for vision analysis");
+    try {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const buffer = Buffer.from(await blob.arrayBuffer());
+      const base64Image = buffer.toString('base64');
+      
+      const result = await generateSkinAnalysisWithOllama(base64Image, bodyArea);
+      return {
+        hydration: result.hydration,
+        pigmentation: result.pigmentation,
+        texture: result.texture,
+        oilBalance: result.oilBalance,
+        irritation: result.irritation,
+        acneCount: Math.floor(result.irritation * 5),
+        analysisNotes: result.analysisNotes,
+      };
+    } catch (error) {
+      console.error("Ollama failed, falling back:", error);
+    }
+  }
+
   if (!process.env.ANTHROPIC_API_KEY || shouldUseMockImage(imageUrl)) {
     console.warn("MOCK_VISION: Returning mock analysis data.");
     await new Promise((resolve) => setTimeout(resolve, getMockDelay()));

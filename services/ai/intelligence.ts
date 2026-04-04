@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { SKIN_INTELLIGENCE_SYSTEM_PROMPT } from '@/prompts/skin-intelligence';
 import { skinIntelligenceSchema } from '@/schemas/intelligence';
+import { generateTextWithOllama, shouldUseOllama } from '@/lib/ollama-client';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -12,6 +13,45 @@ export async function deepSkinIntelligence(
   concerns: string[],
   qualityData?: any
 ) {
+  // Priority: Ollama (MedGemma) > Anthropic > Mock
+  if (shouldUseOllama()) {
+    console.log("Using Ollama (MedGemma) for intelligence analysis");
+    try {
+      const prompt = `Analyze the following skin data and return JSON with: skinScore, estimatedSkinAge, primaryConcerns (array), summary.
+
+Vision Data: ${JSON.stringify(visionData)}
+User Profile: ${JSON.stringify(userProfile)}
+User Concerns: ${concerns.join(', ')}
+Quality Data: ${JSON.stringify(qualityData)}
+
+Return valid JSON only.`;
+
+      const response = await generateTextWithOllama(
+        "You are a board-certified dermatologist analyzing skin data.",
+        prompt
+      );
+
+      try {
+        const parsed = JSON.parse(response);
+        return {
+          skinScore: parsed.skinScore || 75,
+          estimatedSkinAge: parsed.estimatedSkinAge || 25,
+          primaryConcerns: parsed.primaryConcerns || concerns,
+          summary: parsed.summary || response.substring(0, 200),
+        };
+      } catch {
+        return {
+          skinScore: 75,
+          estimatedSkinAge: 25,
+          primaryConcerns: concerns,
+          summary: response.substring(0, 200),
+        };
+      }
+    } catch (error) {
+      console.error("Ollama intelligence failed, falling back:", error);
+    }
+  }
+
   if (!process.env.ANTHROPIC_API_KEY) {
     console.warn("ANTHROPIC_API_KEY not found. Returning mock intelligence data.");
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -34,7 +74,7 @@ export async function deepSkinIntelligence(
           visionData,
           userProfile,
           userConcerns: concerns,
-          structuredReasoning: qualityData // Contains .quality and .interpretation
+          structuredReasoning: qualityData
         }),
       },
     ],
