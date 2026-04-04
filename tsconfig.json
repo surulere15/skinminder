@@ -42,6 +42,8 @@
     "node_modules",
     "architecture-scaffold",
     "v3-scaffold",
-    "scripts"
+    "v4-modular-monolith",
+    "scripts",
+    "apps/mobile"
   ]
 }

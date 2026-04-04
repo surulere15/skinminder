@@ -87,7 +87,8 @@ Use encouraging, hopeful language. Suggest real, well-known products. Return ONL
 
     const content = response.content[0].type === 'text' ? response.content[0].text : '{}';
     const parsed = JSON.parse(content);
-    return recommendationsSchema.parse(parsed);
+    const validated = recommendationsSchema.parse(parsed);
+    return validated as unknown as RecommendationsResponse;
   } catch (error: any) {
     console.error('Recommendations AI Service Error:', error);
     return {

@@ -66,7 +66,7 @@ async function handlePost(request: NextRequest) {
 }
 
 // GET route to quickly retrieve existing Skin DNA without regenerating
-async function handleGet() {
+async function handleGet(request: NextRequest) {
   const rateLimitResponse = await apiRateLimit(request);
   if (rateLimitResponse) return rateLimitResponse;
 
