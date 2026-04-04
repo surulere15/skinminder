@@ -8,6 +8,21 @@ export {
 } from './vision-analysis';
 
 export {
+  GLOBAL_SYSTEM_PROMPT,
+  SKIN_ANALYSIS_PROMPT,
+  buildAnalysisPrompt,
+  PROGRESS_COMPARISON_PROMPT,
+  buildProgressPrompt,
+  SENSITIVE_SKIN_PROMPT,
+  ACNE_FOCUSED_PROMPT,
+  DARK_SPOTS_PROMPT,
+  ROUTINE_EXPLANATION_PROMPT,
+  ESCALATION_PROMPT,
+  CONFIDENCE_CALIBRATION,
+  ELITE_OUTPUT_FORMAT,
+} from './medical-grade';
+
+export {
   SKIN_INTELLIGENCE_SYSTEM_PROMPT,
   buildSkinIntelligenceUserPrompt,
 } from './skin-intelligence';
