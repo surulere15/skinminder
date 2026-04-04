@@ -6,7 +6,28 @@ import { generateFaceHash } from '@/lib/security/hashing';
  * 
  * Handles image quality assessment and pre-analysis normalization.
  * Prevents "Dataset Drift" by ensuring consistent inputs for AI analysis.
+ * 
+ * Quality thresholds are configurable via environment variables:
+ * - QUALITY_MIN_LIGHTING (default: 0.35)
+ * - QUALITY_MAX_SHADOW_GRADIENT (default: 0.4)
+ * - QUALITY_MIN_SHARPNESS (default: 0.15)
+ * - QUALITY_MAX_TILT (default: 15)
+ * - QUALITY_MIN_COVERAGE (default: 0.30)
+ * - QUALITY_MAX_OCCLUSION (default: 0.35)
+ * - QUALITY_MAX_BACKGROUND_ENTROPY (default: 0.6)
+ * - QUALITY_DUPLICATE_WINDOW_MS (default: 60000) - prevent rapid re-scans
  */
+
+const THRESHOLDS = {
+    minLighting: parseFloat(process.env.QUALITY_MIN_LIGHTING || '0.35'),
+    maxShadowGradient: parseFloat(process.env.QUALITY_MAX_SHADOW_GRADIENT || '0.4'),
+    minSharpness: parseFloat(process.env.QUALITY_MIN_SHARPNESS || '0.15'),
+    maxTilt: parseFloat(process.env.QUALITY_MAX_TILT || '15'),
+    minCoverage: parseFloat(process.env.QUALITY_MIN_COVERAGE || '0.30'),
+    maxOcclusion: parseFloat(process.env.QUALITY_MAX_OCCLUSION || '0.35'),
+    maxBackgroundEntropy: parseFloat(process.env.QUALITY_MAX_BACKGROUND_ENTROPY || '0.6'),
+    duplicateWindowMs: parseInt(process.env.QUALITY_DUPLICATE_WINDOW_MS || '60000', 10),
+};
 
 export interface ScanQualityResult {
     isAcceptable: boolean;
@@ -126,9 +147,9 @@ export class NormalizationService {
             const occlusionScore = this.calculateOcclusionScore(data, w, h);
             const backgroundEntropy = this.calculateBackgroundEntropy(data, w, h);
             
-            // Hard Gate Thresholds
-            if (occlusionScore > 0.35) throw new Error("CAPTURE_REJECTED: Face obscured (hair/hand). Clear the area.");
-            if (backgroundEntropy > 0.6) throw new Error("CAPTURE_REJECTED: Environment too noisy. Move to a plain background.");
+            // Hard Gate Thresholds (configurable via env)
+            if (occlusionScore > THRESHOLDS.maxOcclusion) throw new Error("CAPTURE_REJECTED: Face obscured (hair/hand). Clear the area.");
+            if (backgroundEntropy > THRESHOLDS.maxBackgroundEntropy) throw new Error("CAPTURE_REJECTED: Environment too noisy. Move to a plain background.");
 
             const exposureCompensation = this.calculateExposureCompensation(lumSamples);
             
@@ -149,11 +170,11 @@ export class NormalizationService {
 
             const faceDetected = true; 
 
-            // Readiness Thresholds
-            const lightingAcceptable = lightingScore > 0.35 && shadowGradient < 0.4;
-            const sharpnessAcceptable = sharpnessScore > 0.15;
-            const tiltAcceptable = tiltAngle < 15;
-            const coverageAcceptable = faceCoverage > 0.30;
+            // Readiness Thresholds (configurable via env)
+            const lightingAcceptable = lightingScore > THRESHOLDS.minLighting && shadowGradient < THRESHOLDS.maxShadowGradient;
+            const sharpnessAcceptable = sharpnessScore > THRESHOLDS.minSharpness;
+            const tiltAcceptable = tiltAngle < THRESHOLDS.maxTilt;
+            const coverageAcceptable = faceCoverage > THRESHOLDS.minCoverage;
             
             const isAcceptable = lightingAcceptable && sharpnessAcceptable && faceDetected && tiltAcceptable && coverageAcceptable;
 
@@ -162,8 +183,8 @@ export class NormalizationService {
 
             let feedback = undefined;
             if (!isAcceptable) {
-                if (lightingScore <= 0.35) feedback = "Lighting is too low. Please move to a brighter environment.";
-                else if (shadowGradient >= 0.4) feedback = "Too many shadows on your face. Try more even, natural light.";
+                if (lightingScore <= THRESHOLDS.minLighting) feedback = "Lighting is too low. Please move to a brighter environment.";
+                else if (shadowGradient >= THRESHOLDS.maxShadowGradient) feedback = "Too many shadows on your face. Try more even, natural light.";
                 else if (!sharpnessAcceptable) feedback = "Image is too blurry. Please hold steady and focus on your skin.";
                 else if (!tiltAcceptable || !coverageAcceptable) feedback = "Position your face clearly within the frame.";
             }
@@ -381,5 +402,12 @@ export class NormalizationService {
                 whiteBalance: "Corrected (Digital)"
             }
         };
+    }
+
+    /**
+     * Get current thresholds for logging/debugging
+     */
+    getThresholds() {
+        return THRESHOLDS;
     }
 }

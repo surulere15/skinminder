@@ -57,6 +57,27 @@ async function handlePost(request: NextRequest) {
     throw new Error(analysis.error || 'Failed to analyze skin');
   }
 
+  // Duplicate scan detection - check for recent scans with same face hash
+  if (supabase && analysis.quality?.faceHash) {
+    const duplicateWindowMs = parseInt(process.env.QUALITY_DUPLICATE_WINDOW_MS || '60000', 10);
+    const windowStart = new Date(Date.now() - duplicateWindowMs).toISOString();
+    
+    const { data: recentScan } = await supabase
+      .from('skin_scans')
+      .select('id, created_at')
+      .eq('user_id', finalUserId)
+      .eq('face_hash', analysis.quality.faceHash)
+      .gte('created_at', windowStart)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (recentScan) {
+      console.warn(`[Scan] Duplicate detected: user ${finalUserId} scanned same face within ${duplicateWindowMs}ms`);
+      throw createApiError('You recently scanned this face. Please wait before scanning again.', 429, 'DUPLICATE_SCAN');
+    }
+  }
+
   const aiData = analysis.data;
 
   let scanData: any = {
