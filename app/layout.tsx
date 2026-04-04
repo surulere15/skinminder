@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import "@/lib/validate-env";
 import { CookieConsent } from "@/components/ui/cookie-consent";
+import { PushProvider } from "@/lib/push-context";
+import { ServiceWorkerRegistration } from "@/components/ui/service-worker-registration";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -77,7 +79,10 @@ export default function RootLayout({
         )}
       >
         <main className="relative flex min-h-screen flex-col">
-          {children}
+          <PushProvider>
+            <ServiceWorkerRegistration />
+            {children}
+          </PushProvider>
         </main>
         <CookieConsent />
       </body>
