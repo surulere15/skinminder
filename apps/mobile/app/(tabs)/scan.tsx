@@ -5,12 +5,12 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import Animated, { FadeIn, ZoomIn, SlideInDown } from "react-native-reanimated";
-import { uploadImage, analyzeSkin } from "../src/lib/api";
-import { useScanStore } from "../src/stores/scan";
-import { useAuthStore } from "../src/stores/auth";
-import { COLORS } from "../src/constants/theme";
-import { hapticMedium, hapticSuccess, hapticLight, hapticError } from "../src/lib/haptics";
-import { AmbientBackground } from "../src/components/ui/DecorativeElements";
+import { uploadImage, analyzeSkin } from "../../src/lib/api";
+import { useScanStore } from "../../src/stores/scan";
+import { useAuthStore } from "../../src/stores/auth";
+import { COLORS } from "../../src/constants/theme";
+import { hapticMedium, hapticSuccess, hapticLight, hapticError } from "../../src/lib/haptics";
+import { AmbientBackground } from "../../src/components/ui/DecorativeElements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { width } = Dimensions.get("window");

@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useOnboardingStore } from "../../../src/stores/onboarding";
+import { useOnboardingStore } from "../../src/stores/onboarding";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { COLORS } from "../../../src/constants/theme";
-import { hapticLight } from "../../../src/lib/haptics";
+import { COLORS } from "../../src/constants/theme";
+import { hapticLight } from "../../src/lib/haptics";
 
 const AGE_RANGES = ["18-24", "25-34", "35-44", "45-54", "55+"];
 

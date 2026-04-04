@@ -74,7 +74,7 @@ export default function HomeScreen() {
 
           {!isOnline && (
             <Animated.View entering={FadeIn.duration(300)} className="flex-row items-center gap-2 px-4 py-3 rounded-[14px] mb-6" style={{ backgroundColor: COLORS.warningSubtle, borderWidth: 1, borderColor: "rgba(251, 191, 36, 0.2)" }}>
-              <Ionicons name="wifi-off" size={14} color={COLORS.warning} />
+              <Ionicons name="wifi" as any size={14} color={COLORS.warning} />
               <Text className="text-warning text-[13px] font-medium">Offline — showing cached data</Text>
             </Animated.View>
           )}
@@ -205,6 +205,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
     </AmbientBackground>
+    </GestureHandlerRootView>
   );
 }
 

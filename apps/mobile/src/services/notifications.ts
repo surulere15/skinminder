@@ -71,7 +71,7 @@ async function registerPushToken(token: string) {
 export async function scheduleReminder(title: string, body: string, seconds: number) {
   await Notifications.scheduleNotificationAsync({
     content: { title, body, data: { type: "routine_reminder" } },
-    trigger: { seconds },
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds, repeats: false },
   });
 }
 
@@ -82,7 +82,7 @@ export async function scheduleDailyRoutine(time: { hour: number; minute: number 
       body: "Open SkinMinder to follow your personalized steps.",
       data: { type: "daily_routine" },
     },
-    trigger: { hour: time.hour, minute: time.minute, repeats: true },
+    trigger: { type: Notifications.SchedulableTriggerInputTypes.WEEKLY, hour: time.hour, minute: time.minute, weekday: undefined as any },
   });
 }
 

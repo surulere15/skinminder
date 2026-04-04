@@ -49,7 +49,7 @@ export default function SignInScreen() {
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 bg-bg">
-      <ScrollView contentContainerClassName="flex-grow justify-center px-6" showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: "center", paddingHorizontal: 24 }} showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInUp.duration(600).springify()} className="items-center mb-12">
           <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-5" style={{ backgroundColor: COLORS.primarySubtle, borderWidth: 1, borderColor: COLORS.primaryMedium }}>
             <Ionicons name="sparkles" size={28} color={COLORS.primary} />

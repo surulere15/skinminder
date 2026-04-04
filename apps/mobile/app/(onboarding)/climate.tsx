@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useOnboardingStore } from "../../../src/stores/onboarding";
-import { useAuthStore } from "../../../src/stores/auth";
-import { supabase } from "../../../src/lib/supabase";
+import { useOnboardingStore } from "../../src/stores/onboarding";
+import { useAuthStore } from "../../src/stores/auth";
+import { supabase } from "../../src/lib/supabase";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { COLORS } from "../../../src/constants/theme";
-import { hapticLight, hapticSuccess, hapticError } from "../../../src/lib/haptics";
+import { COLORS } from "../../src/constants/theme";
+import { hapticLight, hapticSuccess, hapticError } from "../../src/lib/haptics";
 
 const CLIMATES = [
   { id: "tropical", label: "Tropical", icon: "sunny", desc: "Hot & humid year-round" },

@@ -9,7 +9,7 @@ const UPLOAD_TIMEOUT = 60000;
 interface NetworkInfo {
   isConnected: boolean;
   isInternetReachable: boolean | null;
-  type: "wifi" | "cellular" | "ethernet" | "none" | "unknown" | null;
+  type: string | null;
 }
 
 async function getNetworkInfo(): Promise<NetworkInfo> {

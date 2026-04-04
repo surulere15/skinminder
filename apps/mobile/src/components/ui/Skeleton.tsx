@@ -15,9 +15,10 @@ interface SkeletonProps {
   height?: number;
   borderRadius?: number;
   style?: any;
+  className?: string;
 }
 
-export function Skeleton({ width = "100%", height = 16, borderRadius = RADIUS.sm, style }: SkeletonProps) {
+export function Skeleton({ width = "100%", height = 16, borderRadius = RADIUS.sm, style, className }: SkeletonProps) {
   const opacity = useSharedValue(0.4);
 
   React.useEffect(() => {
@@ -34,6 +35,7 @@ export function Skeleton({ width = "100%", height = 16, borderRadius = RADIUS.sm
 
   return (
     <Animated.View
+      className={className}
       style={[
         {
           width,
