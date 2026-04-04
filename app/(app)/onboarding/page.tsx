@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sparkles, ArrowRight, ArrowLeft, Check, User, Target, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { trackOnboardingEvent } from "@/lib/analytics";
 
 const WEDGE_CONCERNS = [
   'acne', 'dryness', 'oiliness', 'aging', 'dark spots', 'redness', 'texture', 'uneven tone'
@@ -19,11 +20,23 @@ export default function OnboardingPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  const handleNext = () => setStep((s) => s + 1);
+  useEffect(() => {
+    trackOnboardingEvent('onboarding_started');
+  }, []);
+
+  const handleNext = () => {
+    trackOnboardingEvent('onboarding_step_completed', { step_number: step });
+    setStep((s) => s + 1);
+  };
   const handleBack = () => setStep((s) => s - 1);
 
   const handleComplete = async () => {
     setIsLoading(true);
+    trackOnboardingEvent('onboarding_completed', { 
+      step_number: step,
+      completion_percentage: 100 
+    });
+    
     const { data: { user } } = await supabase.auth.getUser();
     
     if (user) {
@@ -46,7 +59,13 @@ export default function OnboardingPage() {
           {WEDGE_CONCERNS.map((c) => (
             <button
               key={c}
-              onClick={() => setConcern(c)}
+              onClick={() => {
+                setConcern(c);
+                trackOnboardingEvent('onboarding_step_completed', { 
+                  step: 'concern_selection',
+                  step_number: 1 
+                });
+              }}
               className={`p-4 rounded-2xl border-2 transition-all text-sm font-bold capitalize ${
                 concern === c ? "border-primary bg-muted/50 shadow-sm" : "border-transparent bg-muted/50"
               }`}
