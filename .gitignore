@@ -46,9 +46,8 @@ coverage/
 .nuxt/
 .vercel/
 
-# Package manager lockfiles (pick one)
-# If using npm: keep package-lock.json, remove pnpm-lock.yaml
-# If using pnpm: keep pnpm-lock.yaml, remove package-lock.json
+# Package manager lockfiles (using pnpm)
+package-lock.json
 
 # Tarballs
 *.tgz

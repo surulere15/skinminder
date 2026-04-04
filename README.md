@@ -35,10 +35,18 @@ SkinMinder is a production-grade, venture-scale AI skincare platform built with 
 
 ## 🛠 Tech Stack
 
+### Web App
 - **Frontend**: Next.js 14 (App Router), Tailwind CSS, Framer Motion, shadcn/ui
 - **Backend**: Next.js API Routes, Supabase (PostgreSQL), Edge Runtime
 - **AI**: Anthropic Claude 3.5 Sonnet (Vision and Text), Zod-validated schemas
 - **Infrastructure**: Supabase Auth/DB, Cloudinary (Image Hosting), @napi-rs/canvas (Image Generation)
+
+### Mobile App (`apps/mobile/`)
+- **Framework**: React Native + Expo (iOS & Android)
+- **Navigation**: Expo Router (file-based)
+- **Styling**: NativeWind (Tailwind CSS for RN)
+- **State**: Zustand + AsyncStorage (offline cache)
+- **Shared Backend**: Same Supabase, AI pipeline, and Cloudinary as web
 
 ## 📂 Project Structure
 
@@ -55,7 +63,8 @@ skinminder/
 ├── lib/                   # Shared utilities, constants, and Supabase clients
 ├── components/            # Atomic UI components and feature-specific layout modules
 ├── supabase/migrations/   # Database migrations
-└── tests/                 # Test suites
+├── tests/                 # Test suites
+└── apps/mobile/           # React Native + Expo mobile app (iOS & Android)
 ```
 
 ## 🚦 Getting Started
@@ -96,6 +105,15 @@ skinminder/
    ```bash
    pnpm test
    ```
+
+### Mobile App
+
+```bash
+cd apps/mobile
+pnpm install
+cp .env.example .env.local
+pnpm start
+```
 
 ## 📸 Screenshots
 
