@@ -290,52 +290,48 @@ export default function TryResultsPage() {
             transition={{ duration: 1 }}
             className="max-container"
           >
-            <div className="space-y-48 sm:space-y-48">
-              <div className="text-center space-y-16">
-                 <div className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-primary opacity-60 italic">Clinical Master Calibration Active</div>
-                 <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-skin-slate uppercase italic">The Analysis.</h2>
+            <div className="space-y-32">
+              <div className="text-center space-y-8">
+                 <div className="text-xs font-medium text-muted-foreground">Your scan results</div>
+                 <h2 className="text-4xl md:text-6xl font-bold">What we found</h2>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                  <MetricCard label="Hydration" value={Math.round((scan.hydration_score || 0.62) * 100)} trend="up" showConfidence={false} />
+                  <MetricCard label="Hydration" value={Math.round((scan.hydration_score || 0.62) * 100)} trend="up" showConfidence={true} />
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                  <MetricCard label="Pigmentation" value={Math.round((scan.pigmentation_score || 0.45) * 100)} trend="stable" showConfidence={false} />
+                  <MetricCard label="Pigmentation" value={Math.round((scan.pigmentation_score || 0.45) * 100)} trend="stable" showConfidence={true} />
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-                  <MetricCard label="Texture" value={Math.round((scan.texture_score || 0.72) * 100)} trend="up" showConfidence={false} />
+                  <MetricCard label="Texture" value={Math.round((scan.texture_score || 0.72) * 100)} trend="up" showConfidence={true} />
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                  <MetricCard label="Oil Balance" value={Math.round((scan.oil_balance || 0.58) * 100)} trend="stable" showConfidence={false} />
+                  <MetricCard label="Oil Balance" value={Math.round((scan.oil_balance || 0.58) * 100)} trend="stable" showConfidence={true} />
                 </motion.div>
               </div>
 
-              {/* Progressive Disclosure: Deep Analytics */}
-              <AnimatePresence>
-                {showDetailedMetrics && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-8 overflow-hidden pt-12 border-t border-[rgb(var(--skin-lavender))]/10"
-                  >
-                     {[
-                      { l: "UV Sensitivity", v: 34, u: "EXPOSURE_H" },
-                      { l: "Dermal Density", v: 82, u: "DENSE_OPTIM" },
-                      { l: "Bio Reactions", v: 12, u: "REACT_LOW" },
-                      { l: "Elastic Force", v: 76, u: "VEL_NOMINAL" }
-                    ].map((m, i) => (
-                      <div key={i} className="p-8 rounded-[2rem] bg-white border border-skin-lavender text-left group/metric hover:border-skin-primary/30 transition-all shadow-soft">
-                        <p className="text-skin-slate/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">{m.l}</p>
-                        <p className="text-3xl font-black italic tracking-tighter text-skin-slate group-hover/metric:text-skin-primary transition-colors">
-                          {m.v}% <span className="text-[10px] text-skin-primary uppercase tracking-widest ml-3">[{m.u}]</span>
-                        </p>
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {/* Next Steps */}
+              <div className="bg-muted/30 rounded-2xl p-8 border border-border">
+                <h3 className="text-lg font-semibold mb-4">What to do next</h3>
+                <ul className="space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary">1.</span>
+                    <span>Use a gentle cleanser and moisturizer daily</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary">2.</span>
+                    <span>Apply sunscreen every morning (SPF 30+)</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-primary">3.</span>
+                    <span>Scan again in 1 week to track your progress</span>
+                  </li>
+                </ul>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  <strong>Note:</strong> This is for cosmetic guidance only, not a medical diagnosis.
+                </p>
+              </div>
 
               <div className="flex justify-center">
                 <Button 
@@ -384,33 +380,33 @@ export default function TryResultsPage() {
             transition={{ duration: 1 }}
             className="w-full max-container relative z-10"
           >
-            <div className="grid md:grid-cols-2 gap-24 items-center">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
               <TrendCard 
-                label="Skin Journey"
-                value="Longitudinal Analysis"
-                description="Expert calibration indicates a high probability of successful texture optimization through consistent hydration and stabilization."
+                label="Your First Scan"
+                value="Baseline Recorded"
+                description="Your skin metrics are now saved. Scan weekly to see how your skin changes over time."
                 progress={15}
-                className="shadow-soft bg-white"
+                className="bg-card"
               />
-              <div className="space-y-12 text-left md:pl-12">
-                 <div className="space-y-8">
-                    <div className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-primary">Intelligence Protocol Engaged</div>
-                    <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-skin-slate leading-[0.85] uppercase italic">Baseline<br />Established.</h2>
-                    <p className="text-skin-slate/40 text-xl italic font-bold max-w-lg">
-                       Your biometric signature has been authenticated and archived. Analysis identifies stable pathways for your skin's unique journey.
+              <div className="space-y-6 text-left md:pl-12">
+                 <div className="space-y-4">
+                    <div className="text-sm font-medium text-primary">First scan complete</div>
+                    <h2 className="text-3xl md:text-4xl font-bold">Your baseline is set.</h2>
+                    <p className="text-muted-foreground max-w-lg">
+                       Now you have a baseline to compare against. Come back weekly to see if your skin is improving, staying the same, or needs attention.
                     </p>
                  </div>
-                 <div className="flex flex-col gap-8">
-                    <div className="flex items-center gap-6 py-5 border-b border-skin-lavender">
-                       <div className="w-2 h-2 rounded-full bg-skin-primary shadow-soft" />
-                       <span className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-slate/30">Sync Window: <span className="text-skin-primary italic ml-3">14 Day Interval</span></span>
+                 <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-3 py-2 border-b border-border">
+                       <div className="w-2 h-2 rounded-full bg-primary" />
+                       <span className="text-sm text-muted-foreground">Next scan: <span className="font-medium">in 7 days</span></span>
                     </div>
-                    <div className="flex items-center gap-6 py-5 border-b border-skin-lavender">
-                       <div className="w-2 h-2 rounded-full bg-skin-primary/40" />
-                       <span className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-slate/30">Projection: <span className="text-skin-slate italic ml-3">Hydration +4.2%</span></span>
+                    <div className="flex items-center gap-3 py-2 border-b border-border">
+                       <div className="w-2 h-2 rounded-full bg-muted-foreground/40" />
+                       <span className="text-sm text-muted-foreground">Tracking: <span className="font-medium">hydration, texture, pigmentation</span></span>
                     </div>
                  </div>
-              </div>
+               </div>
             </div>
           </motion.div>
         </section>
@@ -425,27 +421,25 @@ export default function TryResultsPage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ margin: "-100px", once: true }}
             transition={{ duration: 1.5, type: "spring", bounce: 0.1 }}
-            className="max-container text-center space-y-16 relative z-10"
+            className="max-container text-center space-y-12 relative z-10"
           >
-            <div className="space-y-12">
-              <div className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-primary">Secure Archive Encryption</div>
-              <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-skin-slate leading-[0.85] uppercase italic">
-                Refine Your<br /><span className="text-skin-primary">Skin Future.</span>
+            <div className="space-y-6">
+              <h1 className="text-3xl md:text-5xl font-bold">
+                Track your progress over time
               </h1>
-              <p className="text-skin-slate/30 text-2xl font-black italic max-w-2xl mx-auto uppercase tracking-tighter">
-                Authorize your analysis signature to the elite SkinMinder network for 24/7 intelligent monitoring.
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+                Create an account to save your scans and see how your skin improves week over week.
               </p>
             </div>
 
-            <div className="flex flex-col items-center gap-12">
+            <div className="flex flex-col items-center gap-8">
               <Link href="/signup" className="w-full sm:w-auto">
-                <Button size="lg" className="h-24 px-12 rounded-[16px] bg-skin-primary hover:bg-skin-primary/90 text-white shadow-soft text-2xl font-black uppercase italic tracking-tighter hover:scale-[1.05] active:scale-[0.98] transition-all flex items-center justify-center gap-8 group">
-                  AUTHORIZE SECURE ACCESS <ShieldCheck size={32} strokeWidth={2} className="group-hover:rotate-12 transition-transform" />
+                <Button size="lg" className="h-14 px-8 text-lg font-semibold">
+                  Create free account
                 </Button>
               </Link>
-              <div className="flex items-center gap-12">
-                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-slate/20 hover:text-skin-primary transition-colors">Recall Identity</button>
-                <Link href="/try" className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-slate/20 hover:text-skin-primary transition-colors">Start New Analysis</Link>
+              <div className="flex items-center gap-8">
+                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-sm text-muted-foreground hover:text-foreground">Scan another</button>
               </div>
             </div>
           </motion.div>
@@ -453,18 +447,16 @@ export default function TryResultsPage() {
 
       </div>
 
-      <footer className="mt-40 py-32 border-t border-skin-lavender bg-white relative">
-        <div className="fixed inset-0 bg-soft-studio opacity-10 pointer-events-none" />
-        <div className="max-w-4xl mx-auto px-6 text-center space-y-20 relative z-10">
-          <div className="space-y-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-primary/40 italic">PROFESSIONAL BEAUTY-TECH FRAMEWORK v2.5</p>
-            <p className="text-skin-slate/20 text-sm italic max-w-2xl mx-auto uppercase tracking-tighter font-bold">
-              SkinMinder is an elite beauty-tech assessment interface. It provides high-precision data reveals based on biometric capture. Not a replacement for professional clinical diagnosis.
+      <footer className="mt-20 py-12 border-t border-border bg-card">
+        <div className="max-w-4xl mx-auto px-6 text-center space-y-6">
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              SkinMinder provides cosmetic guidance only. Not a medical diagnosis. 
+              Consult a dermatologist for skin concerns.
             </p>
           </div>
-          <div className="flex flex-col items-center gap-6">
-             <div className="w-12 h-px bg-skin-lavender" />
-             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-skin-slate/10 italic">© 2026 SKINMINDER ATELIER GROUP</p>
+          <div className="flex flex-col items-center gap-4">
+             <p className="text-xs text-muted-foreground">© 2026 SkinMinder</p>
           </div>
         </div>
       </footer>
