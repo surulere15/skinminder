@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, RefreshControl } from "react-native";
+import { View, Text, TouchableOpacity, RefreshControl, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../src/stores/auth";
@@ -8,7 +8,6 @@ import { useEffect, useState, useCallback } from "react";
 import Animated, { FadeInDown, FadeInUp, FadeIn } from "react-native-reanimated";
 import { COLORS, SHADOWS } from "../../src/constants/theme";
 import { hapticMedium } from "../../src/lib/haptics";
-import { ScrollView } from "react-native-gesture-handler";
 import { FullScreenSkeleton } from "../../src/components/ui/Skeleton";
 import { AmbientBackground } from "../../src/components/ui/DecorativeElements";
 

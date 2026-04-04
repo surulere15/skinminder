@@ -6,6 +6,7 @@ import { useOnboardingStore } from "../../src/stores/onboarding";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS } from "../../src/constants/theme";
+import { hapticMedium } from "../../src/lib/haptics";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,7 @@ export default function SignInScreen() {
   const { signIn, isLoading } = useAuthStore();
 
   const handleSignIn = async () => {
+    hapticMedium();
     try {
       await signIn(email, password);
       const { isComplete } = useOnboardingStore.getState();

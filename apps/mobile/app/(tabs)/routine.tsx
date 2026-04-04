@@ -6,6 +6,8 @@ import { useScanStore } from "../../src/stores/scan";
 import Animated, { FadeInDown, FadeInUp, Layout } from "react-native-reanimated";
 import { COLORS } from "../../src/constants/theme";
 import { hapticLight } from "../../src/lib/haptics";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AmbientBackground } from "../../src/components/ui/DecorativeElements";
 
 export default function RoutineScreen() {
   const { user } = useAuthStore();
@@ -42,8 +44,10 @@ export default function RoutineScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-      <View className="px-6 pt-16">
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AmbientBackground>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+          <View className="px-6 pt-16">
         <Text className="text-text text-[28px] font-bold tracking-tight mb-1">Your Routine</Text>
         <Text className="text-text-tertiary text-[15px] mb-6">Version {routine.version}{routine.climate_adjusted ? " • Climate Adjusted" : ""}</Text>
 
@@ -94,7 +98,9 @@ export default function RoutineScreen() {
             </Animated.View>
           ))}
         </View>
-      </View>
-    </ScrollView>
+        </View>
+        </ScrollView>
+      </AmbientBackground>
+    </GestureHandlerRootView>
   );
 }

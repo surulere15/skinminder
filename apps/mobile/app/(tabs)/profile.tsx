@@ -5,6 +5,7 @@ import * as LocalAuthentication from "expo-local-authentication";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { COLORS } from "../../src/constants/theme";
 import { hapticLight } from "../../src/lib/haptics";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function ProfileScreen() {
   const { user, signOut } = useAuthStore();
@@ -29,8 +30,10 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-      <View className="px-6 pt-16">
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View className="flex-1 bg-bg">
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+          <View className="px-6 pt-16">
         <Text className="text-text text-[28px] font-bold tracking-tight mb-8">Profile</Text>
 
         <Animated.View entering={FadeInDown.duration(500).springify()} className="rounded-[22px] p-6 items-center mb-6" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
@@ -84,7 +87,9 @@ export default function ProfileScreen() {
         </Animated.View>
 
         <Text className="text-text-quaternary text-center text-[13px] mt-10">SkinMinder v1.0.0</Text>
+        </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </GestureHandlerRootView>
   );
 }

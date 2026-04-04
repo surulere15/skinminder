@@ -7,6 +7,8 @@ import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS } from "../../src/constants/theme";
 import { FullScreenSkeleton } from "../../src/components/ui/Skeleton";
 import { hapticMedium } from "../../src/lib/haptics";
+import { AmbientBackground } from "../../src/components/ui/DecorativeElements";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function DashboardScreen() {
   const { user } = useAuthStore();
@@ -33,12 +35,14 @@ export default function DashboardScreen() {
   }
 
   return (
-    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} progressBackgroundColor={COLORS.surfaceCard} />
-      }
-    >
-      <View className="px-6 pt-16">
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AmbientBackground>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} progressBackgroundColor={COLORS.surfaceCard} />
+          }
+        >
+          <View className="px-6 pt-16">
         <Animated.View entering={FadeInDown.duration(500).springify()} className="flex-row justify-between items-center mb-8">
           <Text className="text-text text-[28px] font-bold tracking-tight">Intelligence</Text>
           <TouchableOpacity
@@ -130,8 +134,10 @@ export default function DashboardScreen() {
             )}
           </>
         )}
-      </View>
-    </ScrollView>
+        </View>
+        </ScrollView>
+      </AmbientBackground>
+    </GestureHandlerRootView>
   );
 }
 

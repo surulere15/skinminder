@@ -5,6 +5,7 @@ import { useAuthStore } from "../../src/stores/auth";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS } from "../../src/constants/theme";
+import { hapticMedium } from "../../src/lib/haptics";
 
 export default function SignUpScreen() {
   const [name, setName] = useState("");
@@ -13,6 +14,7 @@ export default function SignUpScreen() {
   const { signUp, isLoading } = useAuthStore();
 
   const handleSignUp = async () => {
+    hapticMedium();
     try {
       await signUp(email, password, name);
       router.replace("/(onboarding)/welcome");

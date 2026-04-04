@@ -3,6 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS } from "../src/constants/theme";
 import { hapticLight } from "../src/lib/haptics";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { AmbientBackground } from "../src/components/ui/DecorativeElements";
 
 export default function SellerScreen() {
   const stats = [
@@ -21,8 +23,10 @@ export default function SellerScreen() {
   ];
 
   return (
-    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-      <View className="px-6 pt-16">
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AmbientBackground>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+          <View className="px-6 pt-16">
         <Animated.View entering={FadeInDown.duration(500).springify()} className="flex-row justify-between items-center mb-8">
           <View>
             <Text className="text-text-tertiary text-[15px]">Brand Portal</Text>
@@ -121,7 +125,9 @@ export default function SellerScreen() {
             <Text className="text-black font-semibold text-[15px]">View Full Report</Text>
           </TouchableOpacity>
         </Animated.View>
-      </View>
-    </ScrollView>
+        </View>
+        </ScrollView>
+      </AmbientBackground>
+    </GestureHandlerRootView>
   );
 }
