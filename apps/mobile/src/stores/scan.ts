@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import type { SkinScan, Routine, SkinDna } from "../types";
 import { getRoutine, getScanHistory, getSkinDna } from "../lib/api";
-import { getCachedScans, getCachedRoutine, getCachedDna, hydrateOfflineCache } from "../lib/offline";
+import { getCachedScans, getCachedRoutine, getCachedDna, hydrateOfflineCache, cacheRoutine, cacheDna } from "../lib/offline";
 
 interface ScanState {
   scans: SkinScan[];
   routine: Routine | null;
   dna: SkinDna | null;
   isLoading: boolean;
-  isOffline: boolean;
+  isShowingCachedData: boolean;
   error: string | null;
   fetchScans: (userId: string) => Promise<void>;
   fetchRoutine: (userId: string) => Promise<void>;
@@ -23,11 +23,11 @@ export const useScanStore = create<ScanState>((set, get) => ({
   routine: null,
   dna: null,
   isLoading: false,
-  isOffline: false,
+  isShowingCachedData: false,
   error: null,
 
   loadFromCache: async () => {
-    const [cachedScans, cachedRoutine, cachedDna] = await Promise.all([
+    const [{ data: cachedScans }, cachedRoutine, cachedDna] = await Promise.all([
       getCachedScans(),
       getCachedRoutine(),
       getCachedDna(),
@@ -37,7 +37,7 @@ export const useScanStore = create<ScanState>((set, get) => ({
       scans: cachedScans || [],
       routine: cachedRoutine,
       dna: cachedDna,
-      isOffline: !!(cachedScans || cachedRoutine || cachedDna),
+      isShowingCachedData: !!(cachedScans || cachedRoutine || cachedDna),
     });
   },
 
@@ -45,12 +45,11 @@ export const useScanStore = create<ScanState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const scans = await getScanHistory(userId);
-      set({ scans, isOffline: false });
-      return scans;
+      set({ scans, isShowingCachedData: false });
+      await import("../lib/offline").then(({ cacheScans }) => cacheScans(scans));
     } catch (e: any) {
-      set({ error: e.message, isOffline: true });
+      set({ error: e.message, isShowingCachedData: true });
       await get().loadFromCache();
-      return null;
     } finally {
       set({ isLoading: false });
     }
@@ -59,26 +58,22 @@ export const useScanStore = create<ScanState>((set, get) => ({
   fetchRoutine: async (userId: string) => {
     try {
       const routine = await getRoutine(userId);
-      set({ routine, isOffline: false });
-      return routine;
+      set({ routine, isShowingCachedData: false });
+      if (routine) await cacheRoutine(routine);
     } catch {
-      set({ routine: null });
       const cached = await getCachedRoutine();
-      if (cached) set({ routine: cached, isOffline: true });
-      return null;
+      if (cached) set({ routine: cached, isShowingCachedData: true });
     }
   },
 
   fetchDna: async (userId: string) => {
     try {
       const dna = await getSkinDna(userId);
-      set({ dna, isOffline: false });
-      return dna;
+      set({ dna, isShowingCachedData: false });
+      if (dna) await cacheDna(dna);
     } catch {
-      set({ dna: null });
       const cached = await getCachedDna();
-      if (cached) set({ dna: cached, isOffline: true });
-      return null;
+      if (cached) set({ dna: cached, isShowingCachedData: true });
     }
   },
 
@@ -91,14 +86,10 @@ export const useScanStore = create<ScanState>((set, get) => ({
   },
 
   refreshAll: async (userId: string) => {
-    const [scans, routine, dna] = await Promise.all([
+    await Promise.all([
       get().fetchScans(userId),
       get().fetchRoutine(userId),
       get().fetchDna(userId),
     ]);
-
-    if (scans) {
-      await hydrateOfflineCache(scans, routine, dna);
-    }
   },
 }));

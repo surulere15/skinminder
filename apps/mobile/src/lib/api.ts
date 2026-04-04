@@ -1,53 +1,137 @@
 import { supabase } from "./supabase";
+import * as ImageManipulator from "expo-image-manipulator";
 
-const API_URL = "https://api.skinminder.ai";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://api.skinminder.ai";
+const API_TIMEOUT = 30000;
+const UPLOAD_TIMEOUT = 60000;
 
-export async function uploadImage(uri: string): Promise<string> {
-  const formData = new FormData();
-  const filename = `scan_${Date.now()}.jpg`;
-
-  formData.append("file", {
-    uri,
-    name: filename,
-    type: "image/jpeg",
-  } as any);
-
-  const response = await fetch(`${API_URL}/api/upload`, {
-    method: "POST",
-    body: formData,
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Upload failed: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.url;
+function createTimeoutSignal(timeout: number): AbortSignal {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), timeout);
+  return controller.signal;
 }
 
-export async function analyzeSkin(imageUrl: string, metadata: Record<string, any>) {
-  const { data: { session } } = await supabase.auth.getSession();
+async function parseError(response: Response): Promise<string> {
+  try {
+    const body = await response.json();
+    return body.error || body.message || body.detail || `Request failed (${response.status})`;
+  } catch {
+    return `Request failed (${response.status})`;
+  }
+}
 
-  const response = await fetch(`${API_URL}/api/scan`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.access_token}`,
-    },
-    body: JSON.stringify({
-      image_url: imageUrl,
-      metadata,
-    }),
-  });
+export async function compressImage(uri: string): Promise<string> {
+  const result = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 1920 } }],
+    { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+  );
+  return result.uri;
+}
 
-  if (!response.ok) {
-    throw new Error(`Analysis failed: ${response.statusText}`);
+export async function uploadImage(uri: string, retries = 3): Promise<string> {
+  const compressedUri = await compressImage(uri);
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const formData = new FormData();
+      const filename = `scan_${Date.now()}.jpg`;
+
+      formData.append("file", {
+        uri: compressedUri,
+        name: filename,
+        type: "image/jpeg",
+      } as any);
+
+      const response = await fetch(`${API_URL}/api/upload`, {
+        method: "POST",
+        body: formData,
+        signal: createTimeoutSignal(UPLOAD_TIMEOUT),
+      });
+
+      if (!response.ok) {
+        const message = await parseError(response);
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, 1000 * attempt));
+          continue;
+        }
+        throw new Error(message);
+      }
+
+      const data = await response.json();
+      return data.url;
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, 1000 * attempt));
+          continue;
+        }
+        throw new Error("Upload timed out. Please check your connection and try again.");
+      }
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+      throw error;
+    }
   }
 
-  return response.json();
+  throw new Error("Upload failed after multiple attempts.");
+}
+
+export async function analyzeSkin(imageUrl: string, metadata: Record<string, any>, retries = 2): Promise<any> {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session?.access_token) {
+    throw new Error("Session expired. Please sign in again.");
+  }
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(`${API_URL}/api/scan`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          image_url: imageUrl,
+          metadata,
+        }),
+        signal: createTimeoutSignal(API_TIMEOUT),
+      });
+
+      if (!response.ok) {
+        const message = await parseError(response);
+        if (response.status === 401) {
+          throw new Error("Session expired. Please sign in again.");
+        }
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, 1500 * attempt));
+          continue;
+        }
+        throw new Error(message);
+      }
+
+      return response.json();
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        if (attempt < retries) {
+          await new Promise((r) => setTimeout(r, 1500 * attempt));
+          continue;
+        }
+        throw new Error("Analysis timed out. The AI is busy — please try again in a moment.");
+      }
+      if (error.message.includes("Session expired")) throw error;
+      if (attempt < retries) {
+        await new Promise((r) => setTimeout(r, 1500 * attempt));
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  throw new Error("Analysis failed after multiple attempts.");
 }
 
 export async function getRoutine(userId: string) {
@@ -60,7 +144,10 @@ export async function getRoutine(userId: string) {
     .limit(1)
     .single();
 
-  if (error) throw error;
+  if (error) {
+    if (error.code === "PGRST116") return null;
+    throw new Error("Failed to load routine. Please try again.");
+  }
   return data;
 }
 
@@ -72,7 +159,9 @@ export async function getScanHistory(userId: string) {
     .order("created_at", { ascending: false })
     .limit(50);
 
-  if (error) throw error;
+  if (error) {
+    throw new Error("Failed to load scan history. Please check your connection.");
+  }
   return data;
 }
 
@@ -83,6 +172,8 @@ export async function getSkinDna(userId: string) {
     .eq("user_id", userId)
     .single();
 
-  if (error && error.code !== "PGRST116") throw error;
+  if (error && error.code !== "PGRST116") {
+    throw new Error("Failed to load skin DNA profile.");
+  }
   return data;
 }

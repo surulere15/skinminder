@@ -1,23 +1,8 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
-import { useAuthStore } from "../../src/stores/auth";
-import { supabase } from "../../src/lib/supabase";
 import { COLORS } from "../../src/constants/theme";
 
 export default function TabsLayout() {
-  const { refreshUser } = useAuthStore();
-
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) refreshUser();
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) refreshUser();
-    });
-    return () => subscription.unsubscribe();
-  }, []);
-
   return (
     <Tabs
       screenOptions={{

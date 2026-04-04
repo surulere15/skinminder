@@ -10,22 +10,23 @@ import { COLORS, SHADOWS } from "../../src/constants/theme";
 import { hapticMedium } from "../../src/lib/haptics";
 import { FullScreenSkeleton } from "../../src/components/ui/Skeleton";
 import { AmbientBackground } from "../../src/components/ui/DecorativeElements";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
   const { scans, routine, dna, refreshAll, loadFromCache, isLoading } = useScanStore();
-  const isConnected = useConnectivity();
+  const { isOnline } = useConnectivity();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (user?.id) {
-      if (isConnected) refreshAll(user.id);
+      if (isOnline) refreshAll(user.id);
       else loadFromCache();
     }
-  }, [user?.id, isConnected]);
+  }, [user?.id]);
 
   const onRefresh = useCallback(async () => {
-    if (!user?.id || !isConnected) return;
+    if (!user?.id || !isOnline) return;
     setRefreshing(true);
     hapticMedium();
     await refreshAll(user.id);
@@ -40,20 +41,21 @@ export default function HomeScreen() {
   }
 
   return (
-    <AmbientBackground>
-      <ScrollView
-        className="flex-1"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            tintColor={COLORS.primary}
-            colors={[COLORS.primary]}
-            progressBackgroundColor={COLORS.surfaceCard}
-          />
-        }
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AmbientBackground>
+        <ScrollView
+          className="flex-1"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={COLORS.primary}
+              colors={[COLORS.primary]}
+              progressBackgroundColor={COLORS.surfaceCard}
+            />
+          }
       >
         <View className="px-6 pt-16">
           <Animated.View entering={FadeInDown.duration(500).springify()} className="flex-row justify-between items-center mb-8">
@@ -70,7 +72,7 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </Animated.View>
 
-          {!isConnected && (
+          {!isOnline && (
             <Animated.View entering={FadeIn.duration(300)} className="flex-row items-center gap-2 px-4 py-3 rounded-[14px] mb-6" style={{ backgroundColor: COLORS.warningSubtle, borderWidth: 1, borderColor: "rgba(251, 191, 36, 0.2)" }}>
               <Ionicons name="wifi-off" size={14} color={COLORS.warning} />
               <Text className="text-warning text-[13px] font-medium">Offline — showing cached data</Text>
@@ -134,20 +136,20 @@ export default function HomeScreen() {
                     <Text className="text-primary text-[15px] font-medium">{dna.archetype}</Text>
                   </View>
                   <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: COLORS.primarySubtle }}>
-                    <Text className="text-primary text-[12px] font-semibold">{dna.vulnerabilities.length}</Text>
+                    <Text className="text-primary text-[12px] font-semibold">{dna.vulnerabilities?.length ?? 0}</Text>
                   </View>
                 </View>
                 <View className="flex-row flex-wrap gap-2">
-                  {dna.vulnerabilities.slice(0, 4).map((v: string, i: number) => (
-                    <View key={i} className="px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                      <Text className="text-text-tertiary text-[12px]">{v}</Text>
-                    </View>
-                  ))}
-                  {dna.vulnerabilities.length > 4 && (
-                    <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                      <Text className="text-text-quaternary text-[12px]">+{dna.vulnerabilities.length - 4}</Text>
-                    </View>
-                  )}
+                {dna.vulnerabilities?.slice(0, 4).map((v: string, i: number) => (
+                  <View key={i} className="px-3 py-1.5 rounded-full" style={{ backgroundColor: COLORS.surfaceCard }}>
+                    <Text className="text-text-tertiary text-[12px]">{v}</Text>
+                  </View>
+                ))}
+                {(dna.vulnerabilities?.length ?? 0) > 4 && (
+                  <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: COLORS.surfaceCard }}>
+                    <Text className="text-text-quaternary text-[12px]">+{(dna.vulnerabilities?.length ?? 0) - 4}</Text>
+                  </View>
+                )}
                 </View>
               </View>
             </Animated.View>
@@ -168,7 +170,7 @@ export default function HomeScreen() {
                       <Ionicons name="sunny" size={16} color={COLORS.warning} />
                       <Text className="text-text-secondary text-[13px] font-medium">Morning</Text>
                     </View>
-                    <Text className="text-text text-[24px] font-bold">{routine.morning.length}</Text>
+                    <Text className="text-text text-[24px] font-bold">{routine.morning?.length ?? 0}</Text>
                     <Text className="text-text-quaternary text-[12px] mt-0.5">steps</Text>
                   </View>
                   <View className="flex-1 p-4 rounded-[16px]" style={{ backgroundColor: "rgba(96, 165, 250, 0.06)" }}>
@@ -176,7 +178,7 @@ export default function HomeScreen() {
                       <Ionicons name="moon" size={16} color={COLORS.info} />
                       <Text className="text-text-secondary text-[13px] font-medium">Evening</Text>
                     </View>
-                    <Text className="text-text text-[24px] font-bold">{routine.evening.length}</Text>
+                    <Text className="text-text text-[24px] font-bold">{routine.evening?.length ?? 0}</Text>
                     <Text className="text-text-quaternary text-[12px] mt-0.5">steps</Text>
                   </View>
                 </View>

@@ -27,7 +27,8 @@ export default function DashboardScreen() {
     setRefreshing(false);
   }, [user?.id]);
 
-  const avgScore = scans.length ? Math.round(scans.reduce((a, s) => a + s.overall_score, 0) / scans.length) : 0;
+  const validScans = scans.filter((s) => s.overall_score != null);
+  const avgScore = validScans.length ? Math.round(validScans.reduce((a, s) => a + s.overall_score!, 0) / validScans.length) : 0;
   const latestScan = scans[0];
 
   if (isLoading && scans.length === 0) {
@@ -98,11 +99,11 @@ export default function DashboardScreen() {
                   </View>
                 </View>
                 <View className="flex-row flex-wrap gap-2">
-                  {dna.vulnerabilities.map((v: string, i: number) => (
-                    <View key={i} className="px-3.5 py-2 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
-                      <Text className="text-text-tertiary text-[13px]">{v}</Text>
-                    </View>
-                  ))}
+                {dna.vulnerabilities?.map((v: string, i: number) => (
+                  <View key={i} className="px-3.5 py-2 rounded-full" style={{ backgroundColor: COLORS.surfaceCard }}>
+                    <Text className="text-text-tertiary text-[13px]">{v}</Text>
+                  </View>
+                ))}
                 </View>
               </Animated.View>
             )}

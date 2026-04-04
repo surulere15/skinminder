@@ -4,17 +4,18 @@ import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import Animated, { FadeIn, FadeOut, ZoomIn, SlideInDown, SlideInUp } from "react-native-reanimated";
+import Animated, { FadeIn, ZoomIn, SlideInDown } from "react-native-reanimated";
 import { uploadImage, analyzeSkin } from "../src/lib/api";
 import { useScanStore } from "../src/stores/scan";
 import { useAuthStore } from "../src/stores/auth";
 import { COLORS } from "../src/constants/theme";
-import { hapticMedium, hapticSuccess, hapticLight } from "../src/lib/haptics";
+import { hapticMedium, hapticSuccess, hapticLight, hapticError } from "../src/lib/haptics";
 import { AmbientBackground } from "../src/components/ui/DecorativeElements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { width } = Dimensions.get("window");
-const CAMERA_SIZE = width - 48;
+
+type AnalysisStage = "uploading" | "analyzing" | "generating";
 
 export default function ScanScreen() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -22,8 +23,10 @@ export default function ScanScreen() {
   const [facing, setFacing] = useState<CameraType>("front");
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
+  const [analysisStage, setAnalysisStage] = useState<AnalysisStage>("uploading");
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const cameraRef = useRef<any>(null);
   const { addScan, refreshAll } = useScanStore();
   const { user } = useAuthStore();
@@ -55,7 +58,7 @@ export default function ScanScreen() {
       mediaTypes: "images",
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 0.9,
+      quality: 0.8,
     });
     if (!result.canceled && result.assets[0]) {
       setCapturedImage(result.assets[0].uri);
@@ -63,39 +66,51 @@ export default function ScanScreen() {
   };
 
   const handleCapture = useCallback(async () => {
-    if (!cameraRef.current) return;
+    if (!cameraRef.current || !cameraReady) return;
     hapticMedium();
     try {
       const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.9,
+        quality: 0.8,
         skipProcessing: false,
       });
       setCapturedImage(photo.uri);
       setCameraActive(false);
       hapticSuccess();
-    } catch (error) {
-      console.error("Capture failed:", error);
+    } catch (error: any) {
+      hapticError();
+      Alert.alert("Capture Failed", error.message || "Could not capture photo. Please try again.");
     }
-  }, []);
+  }, [cameraReady]);
 
   const handleAnalyze = async () => {
-    if (!capturedImage) return;
+    if (!capturedImage || isSubmitting) return;
+    if (!user?.id) {
+      Alert.alert("Sign In Required", "Please sign in to analyze your skin.");
+      return;
+    }
+
+    setIsSubmitting(true);
     setAnalyzing(true);
+    setAnalysisStage("uploading");
     hapticMedium();
 
     try {
       const imageUrl = await uploadImage(capturedImage);
-      const result = await analyzeSkin(imageUrl, { user_id: user?.id, source: "mobile" });
+      setAnalysisStage("analyzing");
+      const result = await analyzeSkin(imageUrl, { user_id: user.id, source: "mobile" });
+      setAnalysisStage("generating");
       setAnalysisResult(result);
       if (result.scan) {
         addScan(result.scan);
-        if (user?.id) refreshAll(user.id);
+        refreshAll(user.id);
       }
       hapticSuccess();
     } catch (error: any) {
-      Alert.alert("Analysis Failed", error.message);
+      hapticError();
+      Alert.alert("Analysis Failed", error.message || "Something went wrong. Please try again.");
     } finally {
       setAnalyzing(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -103,18 +118,39 @@ export default function ScanScreen() {
     hapticLight();
     setCapturedImage(null);
     setAnalysisResult(null);
+    setIsSubmitting(false);
+  };
+
+  const stageMessages: Record<AnalysisStage, { title: string; subtitle: string }> = {
+    uploading: { title: "Uploading image...", subtitle: "Compressing and sending securely" },
+    analyzing: { title: "Analyzing your skin", subtitle: "AI is processing 6 skin dimensions" },
+    generating: { title: "Generating report", subtitle: "Building your personalized insights" },
   };
 
   if (analyzing) {
+    const msg = stageMessages[analysisStage];
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <AmbientBackground>
-          <View className="flex-1 bg-bg justify-center items-center">
+          <View className="flex-1 bg-bg justify-center items-center px-8">
             <Animated.View entering={ZoomIn.duration(400)} className="w-20 h-20 rounded-full items-center justify-center mb-6" style={{ backgroundColor: COLORS.primarySubtle }}>
               <ActivityIndicator size="large" color={COLORS.primary} />
             </Animated.View>
-            <Animated.Text entering={FadeIn.delay(200)} className="text-text text-xl font-bold">Analyzing your skin</Animated.Text>
-            <Animated.Text entering={FadeIn.delay(400)} className="text-text-tertiary mt-2">AI is processing 6 skin dimensions...</Animated.Text>
+            <Animated.Text entering={FadeIn.delay(100)} className="text-text text-xl font-bold text-center">{msg.title}</Animated.Text>
+            <Animated.Text entering={FadeIn.delay(200)} className="text-text-tertiary mt-2 text-center">{msg.subtitle}</Animated.Text>
+            <View className="flex-row gap-1.5 mt-6">
+              {(["uploading", "analyzing", "generating"] as const).map((stage, i) => {
+                const stages: AnalysisStage[] = ["uploading", "analyzing", "generating"];
+                const isActive = stages.indexOf(analysisStage) >= i;
+                return (
+                  <View
+                    key={stage}
+                    className="w-8 h-1 rounded-full"
+                    style={{ backgroundColor: isActive ? COLORS.primary : "rgba(255,255,255,0.1)" }}
+                  />
+                );
+              })}
+            </View>
           </View>
         </AmbientBackground>
       </GestureHandlerRootView>
@@ -148,9 +184,9 @@ export default function ScanScreen() {
                 </View>
               </Animated.View>
 
-              <Animated.View entering={SlideInDown.delay(600).duration(500).springify()} className="rounded-[22px] p-6 mb-5 items-center" style={{ backgroundColor: "rgba(201, 169, 110, 0.06)", borderColor: "rgba(201, 169, 110, 0.15)", borderWidth: 1 }}>
+              <Animated.View entering={SlideInDown.delay(600).duration(500).springify()} className="rounded-[22px] p-6 mb-5 items-center" style={{ backgroundColor: COLORS.primaryCard, borderColor: COLORS.primaryBorder, borderWidth: 1 }}>
                 <Text className="text-text-tertiary text-[13px] uppercase tracking-wider mb-3">Overall Score</Text>
-                <View className="w-[88px] h-[88px] rounded-full items-center justify-center" style={{ backgroundColor: "rgba(201, 169, 110, 0.12)" }}>
+                <View className="w-[88px] h-[88px] rounded-full items-center justify-center" style={{ backgroundColor: COLORS.primaryIcon }}>
                   <Text className="text-[36px] font-bold text-primary">{scan.overall_score || 0}</Text>
                 </View>
               </Animated.View>
@@ -172,27 +208,27 @@ export default function ScanScreen() {
 
   if (cameraActive) {
     return (
-      <View className="absolute inset-0 bg-black">
+      <View className="absolute inset-0" style={{ backgroundColor: COLORS.background }}>
         <CameraView
           ref={(ref) => (cameraRef.current = ref)}
           style={{ flex: 1 }}
           facing={facing}
           onCameraReady={() => setCameraReady(true)}
         >
-          <Animated.View entering={FadeIn.duration(300)} className="flex-1 justify-between bg-black/40">
+          <Animated.View entering={FadeIn.duration(300)} className="flex-1 justify-between" style={{ backgroundColor: "rgba(0,0,0,0.4)" }}>
             <View className="pt-16 px-6 flex-row justify-between items-center">
               <TouchableOpacity onPress={() => setCameraActive(false)}>
-                <Ionicons name="close" size={28} color="white" />
+                <Ionicons name="close" size={28} color={COLORS.text} />
               </TouchableOpacity>
-              <Text className="text-white/80 text-[15px] font-medium">Position your face in the frame</Text>
+              <Text className="text-text-secondary text-[15px] font-medium">Position your skin in the frame</Text>
               <TouchableOpacity onPress={() => setFacing((f) => (f === "front" ? "back" : "front"))}>
-                <Ionicons name="camera-reverse" size={26} color="white" />
+                <Ionicons name="camera-reverse" size={26} color={COLORS.text} />
               </TouchableOpacity>
             </View>
 
             <View className="items-center mb-8">
-              <View className="w-[280px] h-[280px] rounded-[32px] items-center justify-center" style={{ borderWidth: 2, borderColor: "rgba(255,255,255,0.4)" }}>
-                <View className="w-[260px] h-[260px] rounded-[28px]" style={{ borderWidth: 1, borderColor: "rgba(255,255,255,0.15)" }} />
+              <View className="w-[280px] h-[280px] rounded-[32px] items-center justify-center" style={{ borderWidth: 2, borderColor: COLORS.borderLight }}>
+                <View className="w-[260px] h-[260px] rounded-[28px]" style={{ borderWidth: 1, borderColor: COLORS.border }} />
               </View>
             </View>
 
@@ -203,14 +239,14 @@ export default function ScanScreen() {
                 onPress={handleCapture}
                 disabled={!cameraReady}
               >
-                <View className="w-[60px] h-[60px] rounded-full" style={{ backgroundColor: cameraReady ? COLORS.primary : "#ccc" }} />
+                <View className="w-[60px] h-[60px] rounded-full" style={{ backgroundColor: cameraReady ? COLORS.primary : COLORS.textQuaternary }} />
               </TouchableOpacity>
               <View className="flex-row gap-12">
                 <TouchableOpacity onPress={pickFromLibrary}>
-                  <Ionicons name="images" size={28} color="rgba(255,255,255,0.7)" />
+                  <Ionicons name="images" size={28} color={COLORS.textSecondary} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setCameraActive(false)}>
-                  <Ionicons name="arrow-down" size={28} color="rgba(255,255,255,0.7)" />
+                  <Ionicons name="arrow-down" size={28} color={COLORS.textSecondary} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -238,7 +274,7 @@ export default function ScanScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity className="rounded-[22px] p-10 items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }} onPress={pickFromLibrary}>
-                  <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: "rgba(96, 165, 250, 0.1)" }}>
+                  <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: COLORS.infoSubtle }}>
                     <Ionicons name="images" size={32} color={COLORS.info} />
                   </View>
                   <Text className="text-text text-[17px] font-semibold mb-1">Choose from Library</Text>
@@ -249,11 +285,11 @@ export default function ScanScreen() {
               <View>
                 <Image source={{ uri: capturedImage }} className="w-full rounded-[22px] mb-5" style={{ aspectRatio: 1 }} />
                 <View className="flex-row gap-3">
-                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }} onPress={resetScan}>
+                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }} onPress={resetScan} disabled={isSubmitting}>
                     <Text className="text-text-secondary font-semibold text-[17px]">Retake</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.primary }} onPress={handleAnalyze}>
-                    <Text className="text-black font-semibold text-[17px]">Analyze</Text>
+                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.primary, opacity: isSubmitting ? 0.5 : 1 }} onPress={handleAnalyze} disabled={isSubmitting}>
+                    <Text className="text-black font-semibold text-[17px]">{isSubmitting ? "Processing..." : "Analyze"}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -272,7 +308,7 @@ function ScoreRow({ label, score, color, delay }: { label: string; score: number
         <Text className="text-text-secondary text-[15px]">{label}</Text>
         <Text className="text-[15px] font-semibold" style={{ color }}>{score}</Text>
       </View>
-      <View className="h-[6px] rounded-full overflow-hidden" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
+      <View className="h-[6px] rounded-full overflow-hidden" style={{ backgroundColor: COLORS.surfaceDisabled }}>
         <Animated.View
           entering={FadeIn.delay(delay).duration(800)}
           className="h-full rounded-full"

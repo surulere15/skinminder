@@ -2,7 +2,8 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
 import { supabase } from "../lib/supabase";
-import { useRouter } from "expo-router";
+
+let isInitialized = false;
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -13,12 +14,15 @@ Notifications.setNotificationHandler({
 });
 
 export async function initNotifications() {
+  if (isInitialized) return;
+  isInitialized = true;
+
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#a18b6f",
+      lightColor: "#c9a96e",
     });
   }
 
@@ -35,9 +39,13 @@ export async function initNotifications() {
       return null;
     }
 
-    const token = (await Notifications.getExpoPushTokenAsync()).data;
-    await registerPushToken(token);
-    return token;
+    try {
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      await registerPushToken(token);
+      return token;
+    } catch (error) {
+      console.warn("Push notification setup failed:", error);
+    }
   }
 }
 
@@ -53,20 +61,16 @@ async function registerPushToken(token: string) {
     });
 
     if (error) {
-      console.error("Failed to register push token:", error);
+      console.warn("Failed to register push token:", error);
     }
   } catch (error) {
-    console.error("Error registering push token:", error);
+    console.warn("Error registering push token:", error);
   }
 }
 
 export async function scheduleReminder(title: string, body: string, seconds: number) {
   await Notifications.scheduleNotificationAsync({
-    content: {
-      title,
-      body,
-      data: { type: "routine_reminder" },
-    },
+    content: { title, body, data: { type: "routine_reminder" } },
     trigger: { seconds },
   });
 }
@@ -78,11 +82,7 @@ export async function scheduleDailyRoutine(time: { hour: number; minute: number 
       body: "Open SkinMinder to follow your personalized steps.",
       data: { type: "daily_routine" },
     },
-    trigger: {
-      hour: time.hour,
-      minute: time.minute,
-      repeats: true,
-    },
+    trigger: { hour: time.hour, minute: time.minute, repeats: true },
   });
 }
 

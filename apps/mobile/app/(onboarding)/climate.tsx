@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useOnboardingStore } from "../../../src/stores/onboarding";
@@ -24,20 +24,33 @@ export default function ClimateStep() {
     if (!climate || !user) return;
     hapticLight();
 
+    const state = useOnboardingStore.getState();
+    if (!state.skinType || state.concerns.length === 0 || !state.ageRange) {
+      Alert.alert("Incomplete Profile", "Please complete all previous steps before continuing.");
+      return;
+    }
+
     try {
-      await supabase.from("profiles").update({
-        skin_type: useOnboardingStore.getState().skinType,
-        concerns: useOnboardingStore.getState().concerns,
-        age_range: useOnboardingStore.getState().ageRange,
+      const { error } = await supabase.from("profiles").update({
+        skin_type: state.skinType,
+        concerns: state.concerns,
+        age_range: state.ageRange,
         climate,
       }).eq("id", user.id);
 
+      if (error) throw error;
+
       hapticSuccess();
-      await complete();
-      router.replace("/(tabs)");
-    } catch {
-      await complete();
-      router.replace("/(tabs)");
+      const success = await complete();
+      if (success) {
+        router.replace("/(tabs)");
+      }
+    } catch (err: any) {
+      hapticError();
+      Alert.alert("Save Failed", err.message || "Could not save your profile. Please try again.", [
+        { text: "Retry", onPress: handleComplete },
+        { text: "Skip", onPress: async () => { await complete(); router.replace("/(tabs)"); } },
+      ]);
     }
   };
 

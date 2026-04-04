@@ -1,85 +1,123 @@
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ONBOARDING_KEY = "skinminder_onboarding_complete";
+const ONBOARDING_KEY = "skinminder_onboarding_data";
 
-interface OnboardingState {
+interface OnboardingData {
   isComplete: boolean;
-  isLoading: boolean;
   currentStep: number;
   skinType: string | null;
   concerns: string[];
   ageRange: string | null;
   gender: string | null;
   climate: string | null;
-  setStep: (step: number) => void;
-  setSkinType: (type: string) => void;
-  toggleConcern: (concern: string) => void;
-  setAgeRange: (range: string) => void;
-  setGender: (gender: string) => void;
-  setClimate: (climate: string) => void;
-  complete: () => Promise<void>;
-  reset: () => Promise<void>;
-  checkStatus: () => Promise<void>;
 }
 
-export const useOnboardingStore = create<OnboardingState>((set, get) => ({
+const defaultState: OnboardingData = {
   isComplete: false,
-  isLoading: false,
   currentStep: 0,
   skinType: null,
   concerns: [],
   ageRange: null,
   gender: null,
   climate: null,
+};
 
-  setStep: (step) => set({ currentStep: step }),
+interface OnboardingActions {
+  setStep: (step: number) => void;
+  setSkinType: (type: string) => void;
+  toggleConcern: (concern: string) => void;
+  setAgeRange: (range: string) => void;
+  setGender: (gender: string) => void;
+  setClimate: (climate: string) => void;
+  complete: () => Promise<boolean>;
+  reset: () => Promise<void>;
+  checkStatus: () => Promise<void>;
+}
 
-  setSkinType: (type) => set({ skinType: type }),
+type OnboardingState = OnboardingData & OnboardingActions;
 
-  toggleConcern: (concern) =>
-    set((state) => {
-      const concerns = state.concerns.includes(concern)
-        ? state.concerns.filter((c) => c !== concern)
-        : [...state.concerns, concern];
-      return { concerns };
-    }),
+async function persistState(state: OnboardingData) {
+  try {
+    await AsyncStorage.setItem(ONBOARDING_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.warn("Failed to persist onboarding state:", e);
+  }
+}
 
-  setAgeRange: (range) => set({ ageRange: range }),
+export const useOnboardingStore = create<OnboardingState>((set, get) => ({
+  ...defaultState,
 
-  setGender: (gender) => set({ gender }),
+  setStep: (step) => {
+    const next = { ...get(), currentStep: step };
+    set(next);
+    persistState(next);
+  },
 
-  setClimate: (climate) => set({ climate }),
+  setSkinType: (type) => {
+    const next = { ...get(), skinType: type };
+    set(next);
+    persistState(next);
+  },
 
-  complete: async () => {
-    set({ isLoading: true });
-    try {
-      await AsyncStorage.setItem(ONBOARDING_KEY, "true");
-      set({ isComplete: true });
-    } finally {
-      set({ isLoading: false });
+  toggleConcern: (concern) => {
+    const concerns = get().concerns.includes(concern)
+      ? get().concerns.filter((c) => c !== concern)
+      : [...get().concerns, concern];
+    const next = { ...get(), concerns };
+    set(next);
+    persistState(next);
+  },
+
+  setAgeRange: (range) => {
+    const next = { ...get(), ageRange: range };
+    set(next);
+    persistState(next);
+  },
+
+  setGender: (gender) => {
+    const next = { ...get(), gender };
+    set(next);
+    persistState(next);
+  },
+
+  setClimate: (climate) => {
+    const next = { ...get(), climate };
+    set(next);
+    persistState(next);
+  },
+
+  complete: async (): Promise<boolean> => {
+    const state = get();
+    if (!state.skinType || state.concerns.length === 0 || !state.ageRange || !state.climate) {
+      return false;
     }
+    const next = { ...state, isComplete: true };
+    set(next);
+    await persistState(next);
+    return true;
   },
 
   reset: async () => {
-    await AsyncStorage.removeItem(ONBOARDING_KEY);
-    set({
-      isComplete: false,
-      currentStep: 0,
-      skinType: null,
-      concerns: [],
-      ageRange: null,
-      gender: null,
-      climate: null,
-    });
+    set(defaultState);
+    try {
+      await AsyncStorage.removeItem(ONBOARDING_KEY);
+    } catch {
+      // ignore
+    }
   },
 
   checkStatus: async () => {
     try {
       const value = await AsyncStorage.getItem(ONBOARDING_KEY);
-      set({ isComplete: value === "true" });
+      if (value) {
+        const parsed = JSON.parse(value) as OnboardingData;
+        set({ ...defaultState, ...parsed });
+      } else {
+        set(defaultState);
+      }
     } catch {
-      set({ isComplete: false });
+      set(defaultState);
     }
   },
 }));
