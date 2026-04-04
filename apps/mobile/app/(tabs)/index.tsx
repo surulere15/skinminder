@@ -1,24 +1,48 @@
-import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../src/stores/auth";
 import { useScanStore } from "../../src/stores/scan";
+import { useOnboardingStore } from "../../src/stores/onboarding";
+import { useConnectivity } from "../../src/hooks/useConnectivity";
 import { useEffect } from "react";
 import { getRelativeTime } from "../../src/lib/utils";
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
-  const { scans, routine, dna, refreshAll } = useScanStore();
+  const { scans, routine, dna, isLoading, refreshAll, loadFromCache } = useScanStore();
+  const { isComplete, checkStatus } = useOnboardingStore();
+  const isConnected = useConnectivity();
 
   useEffect(() => {
-    if (user?.id) refreshAll(user.id);
-  }, [user?.id]);
+    checkStatus();
+    if (!isComplete && user?.id) {
+      router.replace("/(onboarding)/welcome");
+      return;
+    }
+    if (user?.id) {
+      if (isConnected) {
+        refreshAll(user.id);
+      } else {
+        loadFromCache();
+      }
+    }
+  }, [user?.id, isComplete, isConnected]);
+
+  if (!isComplete) return null;
 
   const latestScan = scans[0];
 
   return (
     <ScrollView className="flex-1 bg-surface">
       <View className="px-6 pt-14 pb-6">
+        {!isConnected && (
+          <View className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-2 mb-4 flex-row items-center gap-2">
+            <Ionicons name="wifi-off" size={16} color="#fbbf24" />
+            <Text className="text-yellow-400 text-sm">Offline — showing cached data</Text>
+          </View>
+        )}
+
         <View className="flex-row justify-between items-center mb-8">
           <View>
             <Text className="text-gray-400 text-sm">Good morning</Text>
@@ -50,13 +74,12 @@ export default function HomeScreen() {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            className="bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl p-6 mb-6 items-center"
-            style={{ backgroundColor: "#a18b6f" }}
+            className="bg-surface-card rounded-2xl p-6 mb-6 border border-surface-border items-center"
             onPress={() => router.push("/scan")}
           >
-            <Ionicons name="camera" size={48} color="#0A0A0A" />
-            <Text className="text-surface text-xl font-bold mt-3">Analyze Your Skin</Text>
-            <Text className="text-surface/70 text-center mt-1">
+            <Ionicons name="camera" size={48} color="#a18b6f" />
+            <Text className="text-white text-xl font-bold mt-3">Analyze Your Skin</Text>
+            <Text className="text-gray-400 text-center mt-1">
               Take a photo to get your personalized skin intelligence report
             </Text>
           </TouchableOpacity>
