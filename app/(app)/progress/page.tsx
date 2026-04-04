@@ -126,6 +126,39 @@ export default function ProgressPage() {
   const scoreChange = lastScan && firstScan ? lastScan.score - firstScan.score : 0;
   const hydrationChange = lastScan && firstScan ? lastScan.hydration - firstScan.hydration : 0;
 
+  // Determine if change is meaningful (not just image variance)
+  const MIN_CHANGE_THRESHOLD = 5;
+  const isScoreMeaningful = Math.abs(scoreChange) >= MIN_CHANGE_THRESHOLD;
+  const hasReliableTrend = chartData.length >= 3;
+
+  // Get trend message and styling
+  const getTrendInfo = () => {
+    if (!hasReliableTrend) {
+      return { 
+        message: "Scan at least 3 times for reliable trend detection", 
+        className: "bg-skin-surface border-white/10 text-content-muted" 
+      };
+    }
+    if (!isScoreMeaningful) {
+      return { 
+        message: "No meaningful change detected yet - keep scanning consistently", 
+        className: "bg-skin-surface border-white/10 text-content-muted" 
+      };
+    }
+    if (scoreChange > 0) {
+      return { 
+        message: "Your routine is working. Keep it up!", 
+        className: "bg-green-500/10 border-green-500/20 text-green-600" 
+      };
+    }
+    return { 
+      message: "Consider adjusting your routine based on your latest scan", 
+      className: "bg-amber-500/10 border-amber-500/20 text-amber-600" 
+    };
+  };
+
+  const trendInfo = getTrendInfo();
+
   return (
     <div className="flex-1 space-y-12 p-4 md:p-8 pt-6 pb-20 bg-background min-h-screen text-content-primary">
       <div className="flex items-center justify-between border-b border-white/5 pb-10">
@@ -137,6 +170,13 @@ export default function ProgressPage() {
           <p className="text-content-muted font-bold uppercase tracking-widest text-[10px]">Mapping your biological dermal trajectory.</p>
         </div>
       </div>
+
+      {/* Trend Message Banner */}
+      {scans.length > 0 && (
+        <div className={cn("p-4 rounded-xl border text-sm font-medium", trendInfo.className)}>
+          {trendInfo.message}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Trend Summary Cards */}
