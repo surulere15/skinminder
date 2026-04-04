@@ -1,24 +1,43 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { useEffect } from "react";
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from "react-native";
+import { useEffect, useState, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../src/stores/auth";
 import { useScanStore } from "../../src/stores/scan";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS, SHADOWS } from "../../src/constants/theme";
+import { FullScreenSkeleton } from "../../src/components/ui/Skeleton";
+import { hapticMedium } from "../../src/lib/haptics";
 
 export default function DashboardScreen() {
   const { user } = useAuthStore();
   const { scans, dna, isLoading, refreshAll } = useScanStore();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (user?.id) refreshAll(user.id);
   }, [user?.id]);
 
+  const onRefresh = useCallback(async () => {
+    if (!user?.id) return;
+    setRefreshing(true);
+    hapticMedium();
+    await refreshAll(user.id);
+    setRefreshing(false);
+  }, [user?.id]);
+
   const avgScore = scans.length ? Math.round(scans.reduce((a, s) => a + s.overall_score, 0) / scans.length) : 0;
   const latestScan = scans[0];
 
+  if (isLoading && scans.length === 0) {
+    return <FullScreenSkeleton />;
+  }
+
   return (
-    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={COLORS.primary} colors={[COLORS.primary]} progressBackgroundColor={COLORS.surfaceCard} />
+      }
+    >
       <View className="px-6 pt-16">
         <Animated.View entering={FadeInDown.duration(500).springify()} className="flex-row justify-between items-center mb-8">
           <Text className="text-text text-[28px] font-bold tracking-tight">Intelligence</Text>

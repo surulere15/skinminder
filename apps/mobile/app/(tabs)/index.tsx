@@ -1,18 +1,21 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, RefreshControl } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../src/stores/auth";
 import { useScanStore } from "../../src/stores/scan";
 import { useConnectivity } from "../../src/hooks/useConnectivity";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Animated, { FadeInDown, FadeInUp, FadeIn } from "react-native-reanimated";
 import { COLORS, SHADOWS } from "../../src/constants/theme";
 import { hapticMedium } from "../../src/lib/haptics";
+import { ScrollView } from "react-native-gesture-handler";
+import { FullScreenSkeleton, CardSkeleton, ListSkeleton } from "../../src/components/ui/Skeleton";
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
-  const { scans, routine, dna, refreshAll, loadFromCache } = useScanStore();
+  const { scans, routine, dna, refreshAll, loadFromCache, isLoading } = useScanStore();
   const isConnected = useConnectivity();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (user?.id) {
@@ -21,11 +24,36 @@ export default function HomeScreen() {
     }
   }, [user?.id, isConnected]);
 
+  const onRefresh = useCallback(async () => {
+    if (!user?.id || !isConnected) return;
+    setRefreshing(true);
+    hapticMedium();
+    await refreshAll(user.id);
+    setRefreshing(false);
+  }, [user?.id, isConnected]);
+
   const latestScan = scans[0];
   const greeting = getGreeting();
 
+  if (isLoading && scans.length === 0) {
+    return <FullScreenSkeleton />;
+  }
+
   return (
-    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+    <ScrollView
+      className="flex-1 bg-bg"
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingBottom: 100 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          tintColor={COLORS.primary}
+          colors={[COLORS.primary]}
+          progressBackgroundColor={COLORS.surfaceCard}
+        />
+      }
+    >
       <View className="px-6 pt-16">
         <Animated.View entering={FadeInDown.duration(500).springify()} className="flex-row justify-between items-center mb-8">
           <View>
