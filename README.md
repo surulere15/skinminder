@@ -117,12 +117,9 @@ pnpm start
 
 ## 📸 Screenshots
 
-> _Screenshots coming soon_
-
-<!-- Add screenshots here once available:
-![Dashboard](public/landing/dashboard.png)
-![Skin Analysis](public/landing/analysis.png)
--->
+![Analysis Dashboard](public/landing/analysis-dashboard.png)
+![Scan Interface](public/landing/scan-interface.png)
+![Routine Visual](public/landing/routine-visual.png)
 
 ## 🤝 Contributing
 
