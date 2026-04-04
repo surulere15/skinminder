@@ -3,147 +3,202 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../src/stores/auth";
 import { useScanStore } from "../../src/stores/scan";
-import { useOnboardingStore } from "../../src/stores/onboarding";
 import { useConnectivity } from "../../src/hooks/useConnectivity";
 import { useEffect } from "react";
-import { getRelativeTime } from "../../src/lib/utils";
+import Animated, { FadeInDown, FadeInUp, FadeIn } from "react-native-reanimated";
+import { COLORS, SHADOWS } from "../../src/constants/theme";
+import { hapticMedium } from "../../src/lib/haptics";
 
 export default function HomeScreen() {
   const { user } = useAuthStore();
-  const { scans, routine, dna, isLoading, refreshAll, loadFromCache } = useScanStore();
-  const { isComplete, checkStatus } = useOnboardingStore();
+  const { scans, routine, dna, refreshAll, loadFromCache } = useScanStore();
   const isConnected = useConnectivity();
 
   useEffect(() => {
-    checkStatus();
-    if (!isComplete && user?.id) {
-      router.replace("/(onboarding)/welcome");
-      return;
-    }
     if (user?.id) {
-      if (isConnected) {
-        refreshAll(user.id);
-      } else {
-        loadFromCache();
-      }
+      if (isConnected) refreshAll(user.id);
+      else loadFromCache();
     }
-  }, [user?.id, isComplete, isConnected]);
-
-  if (!isComplete) return null;
+  }, [user?.id, isConnected]);
 
   const latestScan = scans[0];
+  const greeting = getGreeting();
 
   return (
-    <ScrollView className="flex-1 bg-surface">
-      <View className="px-6 pt-14 pb-6">
-        {!isConnected && (
-          <View className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-2 mb-4 flex-row items-center gap-2">
-            <Ionicons name="wifi-off" size={16} color="#fbbf24" />
-            <Text className="text-yellow-400 text-sm">Offline — showing cached data</Text>
-          </View>
-        )}
-
-        <View className="flex-row justify-between items-center mb-8">
+    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
+      <View className="px-6 pt-16">
+        <Animated.View entering={FadeInDown.duration(500).springify()} className="flex-row justify-between items-center mb-8">
           <View>
-            <Text className="text-gray-400 text-sm">Good morning</Text>
-            <Text className="text-white text-2xl font-bold">{user?.full_name || "SkinMinder"}</Text>
+            <Text className="text-text-tertiary text-[15px]">{greeting}</Text>
+            <Text className="text-text text-[28px] font-bold tracking-tight">{user?.full_name?.split(" ")[0] || "SkinMinder"}</Text>
           </View>
           <TouchableOpacity
-            className="w-10 h-10 rounded-full bg-surface-card items-center justify-center"
+            className="w-11 h-11 rounded-[14px] items-center justify-center"
+            style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}
             onPress={() => router.push("/profile")}
           >
-            <Ionicons name="person" size={20} color="#a18b6f" />
+            <Ionicons name="person" size={18} color={COLORS.primary} />
           </TouchableOpacity>
-        </View>
+        </Animated.View>
+
+        {!isConnected && (
+          <Animated.View entering={FadeIn.duration(300)} className="flex-row items-center gap-2 px-4 py-3 rounded-[14px] mb-6" style={{ backgroundColor: COLORS.warningSubtle, borderWidth: 1, borderColor: "rgba(251, 191, 36, 0.2)" }}>
+            <Ionicons name="wifi-off" size={14} color={COLORS.warning} />
+            <Text className="text-warning text-[13px] font-medium">Offline — showing cached data</Text>
+          </Animated.View>
+        )}
 
         {latestScan ? (
-          <TouchableOpacity
-            className="bg-surface-card rounded-2xl p-5 mb-6 border border-surface-border"
-            onPress={() => router.push("/dashboard")}
-          >
-            <View className="flex-row justify-between items-center mb-4">
-              <Text className="text-white font-semibold text-lg">Latest Scan</Text>
-              <Text className="text-gray-500 text-xs">{getRelativeTime(latestScan.created_at)}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <ScoreCircle label="Hydration" score={latestScan.hydration_score} color="#4fc3f7" />
-              <ScoreCircle label="Texture" score={latestScan.texture_score} color="#81c784" />
-              <ScoreCircle label="Pigment" score={latestScan.pigment_score} color="#ffb74d" />
-              <ScoreCircle label="Overall" score={latestScan.overall_score} color="#a18b6f" />
-            </View>
-          </TouchableOpacity>
+          <Animated.View entering={FadeInDown.delay(100).duration(600).springify()}>
+            <TouchableOpacity
+              className="rounded-[22px] p-6 mb-5"
+              style={{ backgroundColor: "rgba(201, 169, 110, 0.06)", borderColor: "rgba(201, 169, 110, 0.15)", borderWidth: 1, ...SHADOWS.card }}
+              onPress={() => {
+                hapticMedium();
+                router.push("/dashboard");
+              }}
+            >
+              <View className="flex-row justify-between items-center mb-5">
+                <Text className="text-text font-semibold text-[17px]">Latest Analysis</Text>
+                <View className="flex-row items-center gap-1.5">
+                  <Ionicons name="time" size={12} color={COLORS.textQuaternary} />
+                  <Text className="text-text-quaternary text-[12px]">{formatRelative(latestScan.created_at)}</Text>
+                </View>
+              </View>
+
+              <View className="flex-row justify-between">
+                <MiniRing label="Hydration" score={latestScan.hydration_score} color={COLORS.scores.hydration} />
+                <MiniRing label="Texture" score={latestScan.texture_score} color={COLORS.scores.texture} />
+                <MiniRing label="Pigment" score={latestScan.pigment_score} color={COLORS.scores.pigment} />
+                <MiniRing label="Overall" score={latestScan.overall_score} color={COLORS.primary} />
+              </View>
+            </TouchableOpacity>
+          </Animated.View>
         ) : (
-          <TouchableOpacity
-            className="bg-surface-card rounded-2xl p-6 mb-6 border border-surface-border items-center"
-            onPress={() => router.push("/scan")}
-          >
-            <Ionicons name="camera" size={48} color="#a18b6f" />
-            <Text className="text-white text-xl font-bold mt-3">Analyze Your Skin</Text>
-            <Text className="text-gray-400 text-center mt-1">
-              Take a photo to get your personalized skin intelligence report
-            </Text>
-          </TouchableOpacity>
+          <Animated.View entering={FadeInDown.delay(100).duration(600).springify()}>
+            <TouchableOpacity
+              className="rounded-[22px] p-8 items-center mb-5"
+              style={{ backgroundColor: "rgba(201, 169, 110, 0.08)", borderColor: "rgba(201, 169, 110, 0.2)", borderWidth: 1 }}
+              onPress={() => {
+                hapticMedium();
+                router.push("/scan");
+              }}
+            >
+              <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: "rgba(201, 169, 110, 0.15)" }}>
+                <Ionicons name="camera" size={32} color={COLORS.primary} />
+              </View>
+              <Text className="text-text text-[20px] font-bold mb-1.5">Analyze Your Skin</Text>
+              <Text className="text-text-tertiary text-[15px] text-center leading-5">Take a photo for your personalized AI skin intelligence report</Text>
+            </TouchableOpacity>
+          </Animated.View>
         )}
 
         {dna && (
-          <View className="bg-surface-card rounded-2xl p-5 mb-6 border border-surface-border">
-            <Text className="text-white font-semibold text-lg mb-2">Skin DNA</Text>
-            <View className="flex-row items-center gap-3">
-              <View className="w-12 h-12 rounded-full bg-primary-500/20 items-center justify-center">
-                <Ionicons name="fitness" size={24} color="#a18b6f" />
+          <Animated.View entering={FadeInDown.delay(200).duration(600).springify()}>
+            <View className="rounded-[22px] p-6 mb-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
+              <View className="flex-row items-center gap-4 mb-4">
+                <View className="w-12 h-12 rounded-[16px] items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>
+                  <Ionicons name="fitness" size={22} color={COLORS.primary} />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-text font-semibold text-[17px]">Skin DNA</Text>
+                  <Text className="text-primary text-[15px] font-medium">{dna.archetype}</Text>
+                </View>
+                <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: COLORS.primarySubtle }}>
+                  <Text className="text-primary text-[12px] font-semibold">{dna.vulnerabilities.length}</Text>
+                </View>
               </View>
-              <View>
-                <Text className="text-primary-500 font-semibold">{dna.archetype}</Text>
-                <Text className="text-gray-500 text-xs">{dna.vulnerabilities.length} vulnerabilities tracked</Text>
+              <View className="flex-row flex-wrap gap-2">
+                {dna.vulnerabilities.slice(0, 4).map((v: string, i: number) => (
+                  <View key={i} className="px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                    <Text className="text-text-tertiary text-[12px]">{v}</Text>
+                  </View>
+                ))}
+                {dna.vulnerabilities.length > 4 && (
+                  <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                    <Text className="text-text-quaternary text-[12px]">+{dna.vulnerabilities.length - 4}</Text>
+                  </View>
+                )}
               </View>
             </View>
-          </View>
+          </Animated.View>
         )}
 
         {routine && (
-          <View className="bg-surface-card rounded-2xl p-5 mb-6 border border-surface-border">
-            <View className="flex-row justify-between items-center mb-3">
-              <Text className="text-white font-semibold text-lg">Today's Routine</Text>
-              <TouchableOpacity onPress={() => router.push("/routine")}>
-                <Text className="text-primary-500 text-sm">View All</Text>
-              </TouchableOpacity>
-            </View>
-            <View className="gap-3">
-              <View className="flex-row items-center gap-3">
-                <Ionicons name="sunny" size={18} color="#ffb74d" />
-                <Text className="text-gray-300">{routine.morning.length} morning steps</Text>
+          <Animated.View entering={FadeInDown.delay(300).duration(600).springify()}>
+            <View className="rounded-[22px] p-6 mb-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
+              <View className="flex-row justify-between items-center mb-4">
+                <Text className="text-text font-semibold text-[17px]">Today's Routine</Text>
+                <TouchableOpacity onPress={() => router.push("/routine")}>
+                  <Text className="text-primary text-[15px] font-medium">View All</Text>
+                </TouchableOpacity>
               </View>
-              <View className="flex-row items-center gap-3">
-                <Ionicons name="moon" size={18} color="#7986cb" />
-                <Text className="text-gray-300">{routine.evening.length} evening steps</Text>
+              <View className="flex-row gap-4">
+                <View className="flex-1 p-4 rounded-[16px]" style={{ backgroundColor: "rgba(251, 191, 36, 0.06)" }}>
+                  <View className="flex-row items-center gap-2 mb-2">
+                    <Ionicons name="sunny" size={16} color={COLORS.warning} />
+                    <Text className="text-text-secondary text-[13px] font-medium">Morning</Text>
+                  </View>
+                  <Text className="text-text text-[24px] font-bold">{routine.morning.length}</Text>
+                  <Text className="text-text-quaternary text-[12px] mt-0.5">steps</Text>
+                </View>
+                <View className="flex-1 p-4 rounded-[16px]" style={{ backgroundColor: "rgba(96, 165, 250, 0.06)" }}>
+                  <View className="flex-row items-center gap-2 mb-2">
+                    <Ionicons name="moon" size={16} color={COLORS.info} />
+                    <Text className="text-text-secondary text-[13px] font-medium">Evening</Text>
+                  </View>
+                  <Text className="text-text text-[24px] font-bold">{routine.evening.length}</Text>
+                  <Text className="text-text-quaternary text-[12px] mt-0.5">steps</Text>
+                </View>
               </View>
             </View>
-          </View>
+          </Animated.View>
         )}
 
-        <TouchableOpacity
-          className="bg-surface-card rounded-2xl p-5 border border-surface-border"
-          onPress={() => router.push("/scan")}
-        >
-          <View className="flex-row items-center gap-3">
-            <View className="w-10 h-10 rounded-full bg-primary-500 items-center justify-center">
-              <Ionicons name="add" size={20} color="#0A0A0A" />
+        <Animated.View entering={FadeInDown.delay(400).duration(600).springify()}>
+          <TouchableOpacity
+            className="rounded-[22px] p-5 flex-row items-center gap-4"
+            style={{ backgroundColor: COLORS.primary, ...SHADOWS.glow }}
+            onPress={() => {
+              hapticMedium();
+              router.push("/scan");
+            }}
+          >
+            <View className="w-11 h-11 rounded-[14px] items-center justify-center" style={{ backgroundColor: "rgba(0,0,0,0.15)" }}>
+              <Ionicons name="add" size={22} color="#000" />
             </View>
-            <Text className="text-white font-semibold">New Skin Analysis</Text>
-          </View>
-        </TouchableOpacity>
+            <Text className="text-black font-semibold text-[17px]">New Skin Analysis</Text>
+            <Ionicons name="chevron-forward" size={18} color="rgba(0,0,0,0.4)" style={{ marginLeft: "auto" }} />
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </ScrollView>
   );
 }
 
-function ScoreCircle({ label, score, color }: { label: string; score: number; color: string }) {
+function MiniRing({ label, score, color }: { label: string; score: number; color: string }) {
   return (
     <View className="items-center">
-      <View className="w-14 h-14 rounded-full items-center justify-center" style={{ backgroundColor: `${color}20` }}>
-        <Text className="text-xl font-bold" style={{ color }}>{score}</Text>
+      <View className="w-[56px] h-[56px] rounded-full items-center justify-center" style={{ backgroundColor: `${color}12` }}>
+        <Text className="text-[20px] font-bold" style={{ color }}>{score}</Text>
       </View>
-      <Text className="text-gray-500 text-xs mt-1">{label}</Text>
+      <Text className="text-text-quaternary text-[11px] mt-2">{label}</Text>
     </View>
   );
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+function formatRelative(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
 }

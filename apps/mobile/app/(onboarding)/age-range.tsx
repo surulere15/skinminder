@@ -2,62 +2,74 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useOnboardingStore } from "../../../src/stores/onboarding";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { COLORS } from "../../../src/constants/theme";
+import { hapticLight } from "../../../src/lib/haptics";
 
-const AGE_RANGES = [
-  { id: "18-24", label: "18-24" },
-  { id: "25-34", label: "25-34" },
-  { id: "35-44", label: "35-44" },
-  { id: "45-54", label: "45-54" },
-  { id: "55+", label: "55+" },
-];
+const AGE_RANGES = ["18-24", "25-34", "35-44", "45-54", "55+"];
 
 export default function AgeRangeStep() {
   const { ageRange, setAgeRange, currentStep } = useOnboardingStore();
 
-  const handleNext = () => {
-    if (ageRange) {
-      router.push("/(onboarding)/climate");
-    }
-  };
-
   return (
-    <ScrollView className="flex-1 bg-surface">
-      <View className="px-6 pt-14 pb-6 flex-1">
-        <View className="flex-row gap-2 mb-6">
+    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false}>
+      <View className="flex-1 px-7 pt-16 pb-10 justify-center">
+        <View className="flex-row gap-1.5 mb-12">
           {[0, 1, 2, 3, 4].map((i) => (
-            <View key={i} className={`h-1 flex-1 rounded-full ${i <= currentStep ? "bg-primary-500" : "bg-surface-border"}`} />
+            <View key={i} className={`h-1 flex-1 rounded-full ${i <= currentStep ? "bg-primary" : "bg-border"}`} />
           ))}
         </View>
-        <Text className="text-white text-2xl font-bold mb-2">Your age range?</Text>
-        <Text className="text-gray-400 mb-8">Skin needs change over time. This helps us calibrate your analysis.</Text>
+
+        <Animated.Text entering={FadeInUp.duration(500).springify()} className="text-text text-3xl font-bold mb-2" style={{ letterSpacing: -0.5 }}>
+          Your age range
+        </Animated.Text>
+        <Animated.Text entering={FadeInUp.delay(100).duration(500).springify()} className="text-text-secondary text-[17px] leading-6 mb-12">
+          Skin needs evolve. This helps us calibrate your analysis and recommendations.
+        </Animated.Text>
 
         <View className="gap-3">
-          {AGE_RANGES.map((range) => (
-            <TouchableOpacity
-              key={range.id}
-              className={`p-5 rounded-xl border items-center ${
-                ageRange === range.id
-                  ? "bg-primary-500/10 border-primary-500"
-                  : "bg-surface-card border-surface-border"
-              }`}
-              onPress={() => setAgeRange(range.id)}
-            >
-              <Text className={`text-xl font-semibold ${ageRange === range.id ? "text-primary-500" : "text-white"}`}>
-                {range.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {AGE_RANGES.map((range, i) => {
+            const isSelected = ageRange === range;
+            return (
+              <Animated.View key={range} entering={FadeInDown.delay(200 + i * 80).duration(500).springify()}>
+                <TouchableOpacity
+                  className="p-6 rounded-[18px] items-center"
+                  style={{
+                    backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
+                    borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
+                    borderWidth: 1,
+                  }}
+                  onPress={() => {
+                    hapticLight();
+                    setAgeRange(range);
+                  }}
+                >
+                  <Text className="text-[28px] font-bold tracking-tight" style={{ color: isSelected ? COLORS.primary : COLORS.text }}>
+                    {range}
+                  </Text>
+                </TouchableOpacity>
+              </Animated.View>
+            );
+          })}
         </View>
 
-        <TouchableOpacity
-          className={`mt-8 rounded-xl py-4 items-center ${ageRange ? "bg-primary-500" : "bg-surface-border"}`}
-          onPress={handleNext}
-          disabled={!ageRange}
-        >
-          <Text className={`font-semibold text-lg ${ageRange ? "text-surface" : "text-gray-600"}`}>
-            Continue
-          </Text>
-        </TouchableOpacity>
+        <View className="mt-12">
+          <TouchableOpacity
+            className="rounded-[16px] items-center"
+            style={{ height: 56, backgroundColor: ageRange ? COLORS.primary : "rgba(255,255,255,0.06)" }}
+            onPress={() => {
+              if (ageRange) {
+                hapticLight();
+                router.push("/(onboarding)/climate");
+              }
+            }}
+            disabled={!ageRange}
+          >
+            <Text className="font-semibold text-[17px]" style={{ color: ageRange ? "#000" : COLORS.textQuaternary }}>
+              Continue
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

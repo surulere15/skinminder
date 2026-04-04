@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { useAuthStore } from "../../src/stores/auth";
 import { supabase } from "../../src/lib/supabase";
+import { COLORS } from "../../src/constants/theme";
 
 export default function TabsLayout() {
   const { refreshUser } = useAuthStore();
@@ -11,11 +12,9 @@ export default function TabsLayout() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) refreshUser();
     });
-
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) refreshUser();
     });
-
     return () => subscription.unsubscribe();
   }, []);
 
@@ -24,18 +23,22 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "#0A0A0A",
-          borderTopColor: "#2a2a2a",
-          borderTopWidth: 1,
-          paddingBottom: 8,
-          paddingTop: 8,
+          backgroundColor: "rgba(10, 10, 10, 0.95)",
+          borderTopColor: COLORS.border,
+          borderTopWidth: 0.5,
+          paddingBottom: 28,
+          paddingTop: 12,
           height: 88,
         },
-        tabBarActiveTintColor: "#a18b6f",
-        tabBarInactiveTintColor: "#666",
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.textQuaternary,
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "500",
+          fontSize: 10,
+          fontWeight: "500" as const,
+          marginTop: 4,
+        },
+        tabBarItemStyle: {
+          gap: 2,
         },
       }}
     >
@@ -43,18 +46,14 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="dashboard"
         options={{
-          title: "Dashboard",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="analytics" size={size} color={color} />
-          ),
+          title: "Intelligence",
+          tabBarIcon: ({ color, size }) => <Ionicons name="analytics" size={size} color={color} />,
         }}
       />
       <Tabs.Screen
@@ -70,18 +69,14 @@ export default function TabsLayout() {
         name="routine"
         options={{
           title: "Routine",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="time" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="time" size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
         }}
       />
     </Tabs>

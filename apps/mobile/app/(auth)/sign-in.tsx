@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity, TextInput, Image, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { useAuthStore } from "../../src/stores/auth";
 import { Ionicons } from "@expo/vector-icons";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { COLORS } from "../../src/constants/theme";
 
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
@@ -19,65 +21,57 @@ export default function SignInScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      className="flex-1 bg-surface"
-    >
-      <ScrollView contentContainerClassName="flex-grow justify-center px-8">
-        <View className="items-center mb-12">
-          <View className="w-20 h-20 rounded-full bg-primary-500 items-center justify-center mb-4">
-            <Ionicons name="sparkles" size={36} color="#0A0A0A" />
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 bg-bg">
+      <ScrollView contentContainerClassName="flex-grow justify-center px-7" showsVerticalScrollIndicator={false}>
+        <Animated.View entering={FadeInUp.duration(600).springify()} className="items-center mb-12">
+          <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-5" style={{ backgroundColor: COLORS.primarySubtle, borderWidth: 1, borderColor: "rgba(201, 169, 110, 0.2)" }}>
+            <Ionicons name="sparkles" size={28} color={COLORS.primary} />
           </View>
-          <Text className="text-3xl font-bold text-white">SkinMinder</Text>
-          <Text className="text-surface-border mt-2 text-center">
-            Your AI-powered skincare intelligence
-          </Text>
-        </View>
+          <Text className="text-text text-3xl font-bold tracking-tight">SkinMinder</Text>
+          <Text className="text-text-tertiary mt-2 text-[17px]">Your AI skincare intelligence</Text>
+        </Animated.View>
 
         <View className="gap-4">
-          <View>
-            <Text className="text-gray-400 mb-2 text-sm">Email</Text>
+          <Animated.View entering={FadeInDown.delay(200).duration(500).springify()}>
+            <Text className="text-text-tertiary mb-2 text-[15px] font-medium">Email</Text>
             <TextInput
-              className="bg-surface-card border border-surface-border rounded-xl px-4 py-4 text-white"
+              className="rounded-[14px] px-4 py-4 text-[17px]"
+              style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, color: COLORS.text }}
               placeholder="you@example.com"
-              placeholderTextColor="#666"
+              placeholderTextColor={COLORS.textQuaternary}
               value={email}
               onChangeText={setEmail}
               autoCapitalize="none"
               keyboardType="email-address"
             />
-          </View>
+          </Animated.View>
 
-          <View>
-            <Text className="text-gray-400 mb-2 text-sm">Password</Text>
+          <Animated.View entering={FadeInDown.delay(300).duration(500).springify()}>
+            <Text className="text-text-tertiary mb-2 text-[15px] font-medium">Password</Text>
             <TextInput
-              className="bg-surface-card border border-surface-border rounded-xl px-4 py-4 text-white"
+              className="rounded-[14px] px-4 py-4 text-[17px]"
+              style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, color: COLORS.text }}
               placeholder="••••••••"
-              placeholderTextColor="#666"
+              placeholderTextColor={COLORS.textQuaternary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
             />
-          </View>
+          </Animated.View>
 
-          <TouchableOpacity
-            className="bg-primary-500 rounded-xl py-4 items-center mt-4"
-            onPress={handleSignIn}
-            disabled={isLoading}
-          >
-            <Text className="text-surface text-lg font-semibold">
-              {isLoading ? "Signing in..." : "Sign In"}
-            </Text>
-          </TouchableOpacity>
-
-          <Link href="/(auth)/sign-up" asChild>
-            <TouchableOpacity className="items-center mt-4">
-              <Text className="text-gray-400">
-                Don't have an account?{" "}
-                <Text className="text-primary-500 font-semibold">Sign Up</Text>
-              </Text>
+          <Animated.View entering={FadeInDown.delay(400).duration(500).springify()}>
+            <TouchableOpacity className="rounded-[16px] items-center mt-2" style={{ height: 56, backgroundColor: COLORS.primary }} onPress={handleSignIn} disabled={isLoading}>
+              <Text className="text-black text-[17px] font-semibold">{isLoading ? "Signing in..." : "Sign In"}</Text>
             </TouchableOpacity>
-          </Link>
+          </Animated.View>
+
+          <Animated.View entering={FadeInDown.delay(500).duration(500).springify()}>
+            <Link href="/(auth)/sign-up" asChild>
+              <TouchableOpacity className="items-center mt-4">
+                <Text className="text-text-tertiary text-[15px]">Don't have an account? <Text className="text-primary font-semibold">Sign Up</Text></Text>
+              </TouchableOpacity>
+            </Link>
+          </Animated.View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

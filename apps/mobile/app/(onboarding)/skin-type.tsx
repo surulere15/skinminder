@@ -2,74 +2,88 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useOnboardingStore } from "../../../src/stores/onboarding";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { COLORS } from "../../../src/constants/theme";
+import { hapticLight } from "../../../src/lib/haptics";
 
 const SKIN_TYPES = [
   { id: "normal", label: "Normal", icon: "checkmark-circle", desc: "Balanced, minimal concerns" },
-  { id: "dry", label: "Dry", icon: "water", desc: "Tight, flaky, dull" },
+  { id: "dry", label: "Dry", icon: "water", desc: "Tight, flaky, or dull" },
   { id: "oily", label: "Oily", icon: "drop", desc: "Shiny, enlarged pores" },
   { id: "combination", label: "Combination", icon: "git-merge", desc: "Oily T-zone, dry cheeks" },
   { id: "sensitive", label: "Sensitive", icon: "alert-circle", desc: "Reactive, redness-prone" },
 ];
 
 export default function SkinTypeStep() {
-  const { skinType, setSkinType, currentStep, setStep } = useOnboardingStore();
-
-  const handleNext = () => {
-    if (skinType) {
-      setStep(currentStep + 1);
-      router.push("/(onboarding)/concerns");
-    }
-  };
+  const { skinType, setSkinType, currentStep } = useOnboardingStore();
 
   return (
-    <ScrollView className="flex-1 bg-surface">
-      <View className="px-6 pt-14 pb-6 flex-1">
-        <View className="mb-8">
-          <View className="flex-row gap-2 mb-6">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <View key={i} className={`h-1 flex-1 rounded-full ${i <= currentStep ? "bg-primary-500" : "bg-surface-border"}`} />
-            ))}
-          </View>
-          <Text className="text-white text-2xl font-bold mb-2">What's your skin type?</Text>
-          <Text className="text-gray-400">This helps us personalize your analysis and recommendations.</Text>
-        </View>
-
-        <View className="gap-3">
-          {SKIN_TYPES.map((type) => (
-            <TouchableOpacity
-              key={type.id}
-              className={`p-4 rounded-xl border flex-row items-center gap-4 ${
-                skinType === type.id
-                  ? "bg-primary-500/10 border-primary-500"
-                  : "bg-surface-card border-surface-border"
-              }`}
-              onPress={() => setSkinType(type.id)}
-            >
-              <View className={`w-12 h-12 rounded-full items-center justify-center ${
-                skinType === type.id ? "bg-primary-500" : "bg-surface-border"
-              }`}>
-                <Ionicons name={type.icon as any} size={22} color={skinType === type.id ? "#0A0A0A" : "#666"} />
-              </View>
-              <View className="flex-1">
-                <Text className="text-white font-semibold">{type.label}</Text>
-                <Text className="text-gray-500 text-sm">{type.desc}</Text>
-              </View>
-              {skinType === type.id && (
-                <Ionicons name="checkmark-circle" size={22} color="#a18b6f" />
-              )}
-            </TouchableOpacity>
+    <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false}>
+      <View className="flex-1 px-7 pt-16 pb-10">
+        <View className="flex-row gap-1.5 mb-12">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <View key={i} className={`h-1 flex-1 rounded-full ${i <= currentStep ? "bg-primary" : "bg-border"}`} />
           ))}
         </View>
 
-        <TouchableOpacity
-          className={`mt-8 rounded-xl py-4 items-center ${skinType ? "bg-primary-500" : "bg-surface-border"}`}
-          onPress={handleNext}
-          disabled={!skinType}
-        >
-          <Text className={`font-semibold text-lg ${skinType ? "text-surface" : "text-gray-600"}`}>
-            Continue
-          </Text>
-        </TouchableOpacity>
+        <Animated.Text entering={FadeInUp.duration(500).springify()} className="text-text text-3xl font-bold mb-2" style={{ letterSpacing: -0.5 }}>
+          Your skin type
+        </Animated.Text>
+        <Animated.Text entering={FadeInUp.delay(100).duration(500).springify()} className="text-text-secondary text-[17px] leading-6 mb-10">
+          This calibrates our AI analysis engine for your unique skin.
+        </Animated.Text>
+
+        <View className="gap-3">
+          {SKIN_TYPES.map((type, i) => {
+            const isSelected = skinType === type.id;
+            return (
+              <Animated.View key={type.id} entering={FadeInDown.delay(200 + i * 80).duration(500).springify()}>
+                <TouchableOpacity
+                  className="p-5 rounded-[18px] flex-row items-center gap-4"
+                  style={{
+                    backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
+                    borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
+                    borderWidth: 1,
+                  }}
+                  onPress={() => {
+                    hapticLight();
+                    setSkinType(type.id);
+                  }}
+                >
+                  <View className="w-12 h-12 rounded-[14px] items-center justify-center" style={{ backgroundColor: isSelected ? "rgba(201, 169, 110, 0.2)" : "rgba(255,255,255,0.04)" }}>
+                    <Ionicons name={type.icon as any} size={22} color={isSelected ? COLORS.primary : COLORS.textTertiary} />
+                  </View>
+                  <View className="flex-1">
+                    <Text className="text-text font-semibold text-[17px]">{type.label}</Text>
+                    <Text className="text-text-tertiary text-[15px] mt-0.5">{type.desc}</Text>
+                  </View>
+                  {isSelected && <Ionicons name="checkmark-circle" size={22} color={COLORS.primary} />}
+                </TouchableOpacity>
+              </Animated.View>
+            );
+          })}
+        </View>
+
+        <View className="mt-10">
+          <TouchableOpacity
+            className="rounded-[16px] items-center"
+            style={{
+              height: 56,
+              backgroundColor: skinType ? COLORS.primary : "rgba(255,255,255,0.06)",
+            }}
+            onPress={() => {
+              if (skinType) {
+                hapticLight();
+                router.push("/(onboarding)/concerns");
+              }
+            }}
+            disabled={!skinType}
+          >
+            <Text className="font-semibold text-[17px]" style={{ color: skinType ? "#000" : COLORS.textQuaternary }}>
+              Continue
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
