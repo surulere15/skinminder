@@ -36,7 +36,7 @@ export default function AgeRangeStep() {
                   className="p-6 rounded-[22px] items-center"
                   style={{
                     backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
-                    borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
+                    borderColor: isSelected ? COLORS.primaryStrong : COLORS.border,
                     borderWidth: 1,
                   }}
                   onPress={() => {
@@ -56,7 +56,7 @@ export default function AgeRangeStep() {
         <View className="mt-12">
           <TouchableOpacity
             className="rounded-[16px] items-center"
-            style={{ height: 56, backgroundColor: ageRange ? COLORS.primary : "rgba(255,255,255,0.06)" }}
+            style={{ height: 56, backgroundColor: ageRange ? COLORS.primary : COLORS.surfaceDisabled }}
             onPress={() => {
               if (ageRange) {
                 hapticLight();
@@ -65,7 +65,7 @@ export default function AgeRangeStep() {
             }}
             disabled={!ageRange}
           >
-            <Text className="font-semibold text-[17px]" style={{ color: ageRange ? "#000" : COLORS.textQuaternary }}>
+            <Text className="font-semibold text-[17px]" style={{ color: ageRange ? COLORS.textInverse : COLORS.textQuaternary }}>
               Continue
             </Text>
           </TouchableOpacity>

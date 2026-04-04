@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Svg, { Defs, RadialGradient, Stop, Circle, Rect, LinearGradient } from "react-native-svg";
 import Animated, {
   useSharedValue,
@@ -129,7 +129,7 @@ export function Shimmer({ width, height, borderRadius = 0 }: ShimmerProps) {
   }));
 
   return (
-    <View style={{ width, height, borderRadius, overflow: "hidden", backgroundColor: "rgba(255,255,255,0.04)" }}>
+    <View style={{ width, height, borderRadius, overflow: "hidden", backgroundColor: COLORS.surfaceCard }}>
       <Animated.View
         style={[
           {

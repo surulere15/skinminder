@@ -62,8 +62,8 @@ export default function RoutineScreen() {
                 setActiveTab(tab);
               }}
             >
-              <Ionicons name={tab === "morning" ? "sunny" : "moon"} size={16} color={activeTab === tab ? "#000" : COLORS.textTertiary} />
-              <Text className="font-semibold text-[15px]" style={{ color: activeTab === tab ? "#000" : COLORS.textTertiary, textTransform: "capitalize" }}>{tab}</Text>
+              <Ionicons name={tab === "morning" ? "sunny" : "moon"} size={16} color={activeTab === tab ? COLORS.textInverse : COLORS.textTertiary} />
+              <Text className="font-semibold text-[15px]" style={{ color: activeTab === tab ? COLORS.textInverse : COLORS.textTertiary, textTransform: "capitalize" }}>{tab}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -83,7 +83,7 @@ export default function RoutineScreen() {
               <View className="flex-1">
                 <View className="flex-row justify-between items-center mb-1">
                   <Text className="text-text font-semibold text-[17px]">{step.product_name}</Text>
-                  <View className="px-2.5 py-1 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
+                  <View className="px-2.5 py-1 rounded-full" style={{ backgroundColor: COLORS.surfaceCard }}>
                     <Text className="text-text-quaternary text-[12px] font-medium">Step {step.order}</Text>
                   </View>
                 </View>

@@ -95,7 +95,7 @@ export default function SellerScreen() {
                 className="flex-row items-center py-3"
                 style={{ borderBottomWidth: i < topProducts.length - 1 ? 1 : 0, borderBottomColor: COLORS.border }}
               >
-                <View className="w-8 h-8 rounded-full items-center justify-center mr-4" style={{ backgroundColor: i === 0 ? "rgba(201, 169, 110, 0.2)" : "rgba(255,255,255,0.04)" }}>
+                <View className="w-8 h-8 rounded-full items-center justify-center mr-4" style={{ backgroundColor: i === 0 ? COLORS.primaryMedium : COLORS.surfaceCard }}>
                   <Text className="text-[13px] font-bold" style={{ color: i === 0 ? COLORS.primary : COLORS.textTertiary }}>{product.rank}</Text>
                 </View>
                 <View className="flex-1">
@@ -111,7 +111,7 @@ export default function SellerScreen() {
           </View>
         </Animated.View>
 
-        <Animated.View entering={FadeInUp.delay(1000).duration(500).springify()} className="rounded-[22px] p-6" style={{ backgroundColor: "rgba(201, 169, 110, 0.06)", borderColor: "rgba(201, 169, 110, 0.15)", borderWidth: 1 }}>
+        <Animated.View entering={FadeInUp.delay(1000).duration(500).springify()} className="rounded-[22px] p-6" style={{ backgroundColor: COLORS.primaryCard, borderColor: COLORS.primaryBorder, borderWidth: 1 }}>
           <View className="flex-row items-center gap-4 mb-4">
             <View className="w-12 h-12 rounded-[16px] items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>
               <Ionicons name="bulb" size={22} color={COLORS.primary} />

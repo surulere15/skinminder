@@ -42,7 +42,7 @@ export default function SkinTypeStep() {
                   className="p-5 rounded-[22px] flex-row items-center gap-4"
                   style={{
                     backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
-                    borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
+                    borderColor: isSelected ? COLORS.primaryStrong : COLORS.border,
                     borderWidth: 1,
                   }}
                   onPress={() => {
@@ -50,7 +50,7 @@ export default function SkinTypeStep() {
                     setSkinType(type.id);
                   }}
                 >
-                  <View className="w-12 h-12 rounded-[14px] items-center justify-center" style={{ backgroundColor: isSelected ? "rgba(201, 169, 110, 0.2)" : "rgba(255,255,255,0.04)" }}>
+                  <View className="w-12 h-12 rounded-[14px] items-center justify-center" style={{ backgroundColor: isSelected ? COLORS.primaryMedium : COLORS.surfaceCard }}>
                     <Ionicons name={type.icon as any} size={22} color={isSelected ? COLORS.primary : COLORS.textTertiary} />
                   </View>
                   <View className="flex-1">
@@ -69,7 +69,7 @@ export default function SkinTypeStep() {
             className="rounded-[16px] items-center"
             style={{
               height: 56,
-              backgroundColor: skinType ? COLORS.primary : "rgba(255,255,255,0.06)",
+              backgroundColor: skinType ? COLORS.primary : COLORS.surfaceDisabled,
             }}
             onPress={() => {
               if (skinType) {
@@ -79,7 +79,7 @@ export default function SkinTypeStep() {
             }}
             disabled={!skinType}
           >
-            <Text className="font-semibold text-[17px]" style={{ color: skinType ? "#000" : COLORS.textQuaternary }}>
+            <Text className="font-semibold text-[17px]" style={{ color: skinType ? COLORS.textInverse : COLORS.textQuaternary }}>
               Continue
             </Text>
           </TouchableOpacity>

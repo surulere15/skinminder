@@ -47,7 +47,7 @@ export default function ConcernsStep() {
                   className="px-5 py-3.5 rounded-[14px] flex-row items-center gap-2"
                   style={{
                     backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
-                    borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
+                    borderColor: isSelected ? COLORS.primaryStrong : COLORS.border,
                     borderWidth: 1,
                   }}
                   onPress={() => {
@@ -68,7 +68,7 @@ export default function ConcernsStep() {
         <View className="mt-10">
           <TouchableOpacity
             className="rounded-[16px] items-center"
-            style={{ height: 56, backgroundColor: concerns.length > 0 ? COLORS.primary : "rgba(255,255,255,0.06)" }}
+            style={{ height: 56, backgroundColor: concerns.length > 0 ? COLORS.primary : COLORS.surfaceDisabled }}
             onPress={() => {
               if (concerns.length > 0) {
                 hapticLight();
@@ -77,7 +77,7 @@ export default function ConcernsStep() {
             }}
             disabled={concerns.length === 0}
           >
-            <Text className="font-semibold text-[17px]" style={{ color: concerns.length > 0 ? "#000" : COLORS.textQuaternary }}>
+            <Text className="font-semibold text-[17px]" style={{ color: concerns.length > 0 ? COLORS.textInverse : COLORS.textQuaternary }}>
               Continue
             </Text>
           </TouchableOpacity>

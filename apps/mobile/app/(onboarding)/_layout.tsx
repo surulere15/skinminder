@@ -2,7 +2,6 @@ import { Redirect } from "expo-router";
 import { useAuthStore } from "../../src/stores/auth";
 import { useOnboardingStore } from "../../src/stores/onboarding";
 import { useEffect } from "react";
-import { supabase } from "../../src/lib/supabase";
 
 export default function OnboardingLayout() {
   const { isAuthenticated } = useAuthStore();

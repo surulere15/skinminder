@@ -31,7 +31,7 @@ export default function HomeScreen() {
     hapticMedium();
     await refreshAll(user.id);
     setRefreshing(false);
-  }, [user?.id, isConnected]);
+  }, [user?.id, isOnline]);
 
   const latestScan = scans[0];
   const greeting = getGreeting();
@@ -83,7 +83,7 @@ export default function HomeScreen() {
             <Animated.View entering={FadeInDown.delay(100).duration(600).springify()}>
               <TouchableOpacity
                 className="rounded-[22px] p-6 mb-5"
-                style={{ backgroundColor: "rgba(201, 169, 110, 0.06)", borderColor: "rgba(201, 169, 110, 0.15)", borderWidth: 1, ...SHADOWS.card }}
+                style={{ backgroundColor: COLORS.primaryCard, borderColor: COLORS.primaryBorder, borderWidth: 1, ...SHADOWS.card }}
                 onPress={() => {
                   hapticMedium();
                   router.push("/dashboard");
@@ -109,13 +109,13 @@ export default function HomeScreen() {
             <Animated.View entering={FadeInDown.delay(100).duration(600).springify()}>
               <TouchableOpacity
                 className="rounded-[22px] p-8 items-center mb-5"
-                style={{ backgroundColor: "rgba(201, 169, 110, 0.08)", borderColor: "rgba(201, 169, 110, 0.2)", borderWidth: 1 }}
+                style={{ backgroundColor: COLORS.primarySubtle, borderColor: COLORS.primaryStrong, borderWidth: 1 }}
                 onPress={() => {
                   hapticMedium();
                   router.push("/scan");
                 }}
               >
-                <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: "rgba(201, 169, 110, 0.15)" }}>
+                <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: COLORS.primaryBorder }}>
                   <Ionicons name="camera" size={32} color={COLORS.primary} />
                 </View>
                 <Text className="text-text text-[20px] font-bold mb-1.5">Analyze Your Skin</Text>
@@ -199,7 +199,7 @@ export default function HomeScreen() {
                 <Ionicons name="add" size={22} color="#000" />
               </View>
               <Text className="text-black font-semibold text-[17px]">New Skin Analysis</Text>
-              <Ionicons name="chevron-forward" size={18} color="rgba(0,0,0,0.4)" style={{ marginLeft: "auto" }} />
+              <Ionicons name="chevron-forward" size={18} color={COLORS.textInverse} style={{ opacity: 0.4, marginLeft: "auto" }} />
             </TouchableOpacity>
           </Animated.View>
         </View>

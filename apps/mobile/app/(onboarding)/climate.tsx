@@ -6,7 +6,7 @@ import { useAuthStore } from "../../../src/stores/auth";
 import { supabase } from "../../../src/lib/supabase";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS } from "../../../src/constants/theme";
-import { hapticLight, hapticSuccess } from "../../../src/lib/haptics";
+import { hapticLight, hapticSuccess, hapticError } from "../../../src/lib/haptics";
 
 const CLIMATES = [
   { id: "tropical", label: "Tropical", icon: "sunny", desc: "Hot & humid year-round" },
@@ -79,7 +79,7 @@ export default function ClimateStep() {
                   className="p-5 rounded-[22px] flex-row items-center gap-4"
                   style={{
                     backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
-                    borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
+                    borderColor: isSelected ? COLORS.primaryStrong : COLORS.border,
                     borderWidth: 1,
                   }}
                   onPress={() => {
@@ -87,7 +87,7 @@ export default function ClimateStep() {
                     setClimate(c.id);
                   }}
                 >
-                  <View className="w-12 h-12 rounded-[14px] items-center justify-center" style={{ backgroundColor: isSelected ? "rgba(201, 169, 110, 0.2)" : "rgba(255,255,255,0.04)" }}>
+                  <View className="w-12 h-12 rounded-[14px] items-center justify-center" style={{ backgroundColor: isSelected ? COLORS.primaryMedium : COLORS.surfaceCard }}>
                     <Ionicons name={c.icon as any} size={22} color={isSelected ? COLORS.primary : COLORS.textTertiary} />
                   </View>
                   <View className="flex-1">
@@ -104,11 +104,11 @@ export default function ClimateStep() {
         <View className="mt-10">
           <TouchableOpacity
             className="rounded-[16px] items-center"
-            style={{ height: 56, backgroundColor: climate ? COLORS.primary : "rgba(255,255,255,0.06)" }}
+            style={{ height: 56, backgroundColor: climate ? COLORS.primary : COLORS.surfaceDisabled }}
             onPress={handleComplete}
             disabled={!climate}
           >
-            <Text className="font-semibold text-[17px]" style={{ color: climate ? "#000" : COLORS.textQuaternary }}>
+            <Text className="font-semibold text-[17px]" style={{ color: climate ? COLORS.textInverse : COLORS.textQuaternary }}>
               Start Analyzing
             </Text>
           </TouchableOpacity>
