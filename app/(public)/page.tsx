@@ -112,30 +112,26 @@ export default function LandingPage() {
            <div className="text-center space-y-8">
               <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-skin-lavender border border-skin-primary/10 text-skin-primary text-[10px] font-black uppercase tracking-[0.3em]">
                 Science Output
-              </div>
-               <h2 className="text-5xl md:text-8xl font-black tracking-tighter text-skin-slate uppercase italic leading-[0.8]">The Clinical<br /><span className="text-skin-primary/20">Archive.</span></h2>
-              <p className="text-skin-slate/40 text-lg md:text-xl font-bold italic max-w-2xl mx-auto tracking-tight">Technical instrumentation revealing the biological truth beneath the surface.</p>
-           </div>
-           
-           <div className="grid lg:grid-cols-1 gap-16">
-              <ArchetypeCard 
-                name="PIH-Prone Reactivator"
-                description="Hyper-responsive melanocyte activity detected in sub-dermal layers. Your skin structure requires inflammatory stabilization to prevent long-term pigmentation clustering."
-                populationPercent={18.4}
-                confidence={98}
-                skinAge={26}
-                skinTwin={4.2}
-                className="shadow-soft border-skin-lavender bg-white"
-              />
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <MetricCard label="Hydration" value={62} trend="up" showConfidence={false} />
-                <MetricCard label="Pigmentation" value={48} trend="stable" showConfidence={false} />
-                <MetricCard label="Texture" value={72} trend="up" showConfidence={false} />
-                <MetricCard label="Overall Score" value={78} trend="up" showConfidence={false} />
-              </div>
-           </div>
-        </section>
+               </div>
+                <h2 className="text-4xl md:text-6xl font-bold">Your skin, tracked over time.</h2>
+               <p className="text-muted-foreground text-lg max-w-xl mx-auto">See what's working. Scan weekly to measure hydration, texture, and pigmentation changes.</p>
+            </div>
+            
+            <div className="grid lg:grid-cols-1 gap-12">
+               <div className="bg-card rounded-2xl p-8 border border-border">
+                 <div className="text-sm text-muted-foreground mb-4">Example result</div>
+                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                   <MetricCard label="Hydration" value={62} trend="up" showConfidence={true} />
+                   <MetricCard label="Pigmentation" value={48} trend="stable" showConfidence={true} />
+                   <MetricCard label="Texture" value={72} trend="up" showConfidence={true} />
+                   <MetricCard label="Overall" value={78} trend="up" showConfidence={true} />
+                 </div>
+                 <p className="mt-4 text-sm text-muted-foreground">
+                   Scan weekly to see your trends. Each scan shows what's changed.
+                 </p>
+               </div>
+            </div>
+         </section>
 
         {/* LAYER 4: SYSTEM DESIGN (3-Step Diagram) */}
         <section className="w-full space-y-20 py-24">
