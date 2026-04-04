@@ -1,8 +1,18 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { recommendationsSchema } from '@/schemas/recommendations';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
+
+const AI_TIMEOUT_MS = 30000;
+
+function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`AI request timed out after ${ms}ms`)), ms);
+    promise.then(resolve).catch(reject).finally(() => clearTimeout(timer));
+  });
+}
 
 export interface ProductRecommendation {
   name: string;
@@ -65,15 +75,19 @@ Return JSON:
 Use encouraging, hopeful language. Suggest real, well-known products. Return ONLY valid JSON.`;
 
   try {
-    const response = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20240620',
-      max_tokens: 2000,
-      messages: [{ role: 'user', content: prompt }],
-      system: 'You are a skincare expert and product curator. Return valid JSON only.',
-    });
+    const response = await timeout(
+      anthropic.messages.create({
+        model: 'claude-3-5-sonnet-20240620',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }],
+        system: 'You are a skincare expert and product curator. Return valid JSON only.',
+      }),
+      AI_TIMEOUT_MS
+    );
 
     const content = response.content[0].type === 'text' ? response.content[0].text : '{}';
-    return JSON.parse(content);
+    const parsed = JSON.parse(content);
+    return recommendationsSchema.parse(parsed);
   } catch (error: any) {
     console.error('Recommendations AI Service Error:', error);
     return {

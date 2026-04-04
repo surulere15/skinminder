@@ -1,5 +1,8 @@
 // =============================================================================
-// Vision Analysis Prompt
+// Vision Analysis Prompt v1.0
+// Version: 1.0.0
+// Last Updated: 2026-04-04
+// Model: claude-3-5-sonnet-20240620
 // Analyzes skin images and returns cosmetic wellness metric scores.
 // =============================================================================
 

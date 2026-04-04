@@ -8,8 +8,16 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+const AI_TIMEOUT_MS = 30000;
+
+function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`AI request timed out after ${ms}ms`)), ms);
+    promise.then(resolve).catch(reject).finally(() => clearTimeout(timer));
+  });
+}
+
 export async function analyzeSkinImage(imageUrl: string, bodyArea: string) {
-  // Priority: Ollama (MedGemma) > Anthropic > Mock
   if (shouldUseOllama()) {
     console.log("Using Ollama (MedGemma) for vision analysis");
     try {
@@ -53,30 +61,26 @@ export async function analyzeSkinImage(imageUrl: string, bodyArea: string) {
   const base64Image = buffer.toString('base64');
   const mediaType = blob.type as "image/jpeg" | "image/png" | "image/gif" | "image/webp";
 
-  const message = await anthropic.messages.create({
-    model: "claude-3-5-sonnet-20240620",
-    max_tokens: 1024,
-    system: VISION_ANALYSIS_SYSTEM_PROMPT,
-    messages: [
-      {
-        role: "user",
-        content: [
-          {
-            type: "text",
-            text: buildVisionAnalysisUserPrompt(bodyArea),
-          },
-          {
-            type: "image",
-            source: {
-              type: "base64",
-              media_type: mediaType,
-              data: base64Image,
+  const message = await timeout(
+    anthropic.messages.create({
+      model: "claude-3-5-sonnet-20240620",
+      max_tokens: 1024,
+      system: VISION_ANALYSIS_SYSTEM_PROMPT,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "text", text: buildVisionAnalysisUserPrompt(bodyArea) },
+            {
+              type: "image",
+              source: { type: "base64", media_type: mediaType, data: base64Image },
             },
-          },
-        ],
-      },
-    ],
-  });
+          ],
+        },
+      ],
+    }),
+    AI_TIMEOUT_MS
+  );
 
   const content = message.content[0];
   if (content.type !== 'text') {

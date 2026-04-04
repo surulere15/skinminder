@@ -1,3 +1,10 @@
+// =============================================================================
+// nutrition Prompt v1.0
+// Version: 1.0.0
+// Last Updated: 2026-04-04
+// Model: claude-3-5-sonnet-20240620
+// =============================================================================
+
 export const NUTRITION_SYSTEM_PROMPT = `
 You are the SkinMinder Nutrition & Vitality Alchemist.
 Your goal is to provide supportive, cosmetic-focused nutrition and supplement recommendations based on skin intelligence.
