@@ -43,7 +43,7 @@ export default function SellerScreen() {
 
         <View className="flex-row gap-3 mb-5">
           {stats.slice(0, 2).map((stat, i) => (
-            <Animated.View key={stat.label} entering={FadeInDown.delay(100 + i * 100).duration(500).springify()} className="flex-1 rounded-[18px] p-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
+            <Animated.View key={stat.label} entering={FadeInDown.delay(100 + i * 100).duration(500).springify()} className="flex-1 rounded-[22px] p-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
               <View className="flex-row items-center gap-2 mb-3">
                 <View className="w-8 h-8 rounded-[10px] items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>
                   <Ionicons name={stat.icon as any} size={16} color={COLORS.primary} />
@@ -62,7 +62,7 @@ export default function SellerScreen() {
 
         <View className="flex-row gap-3 mb-6">
           {stats.slice(2, 4).map((stat, i) => (
-            <Animated.View key={stat.label} entering={FadeInDown.delay(300 + i * 100).duration(500).springify()} className="flex-1 rounded-[18px] p-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
+            <Animated.View key={stat.label} entering={FadeInDown.delay(300 + i * 100).duration(500).springify()} className="flex-1 rounded-[22px] p-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
               <View className="flex-row items-center gap-2 mb-3">
                 <View className="w-8 h-8 rounded-[10px] items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>
                   <Ionicons name={stat.icon as any} size={16} color={COLORS.primary} />
@@ -121,7 +121,7 @@ export default function SellerScreen() {
               <Text className="text-text-tertiary text-[15px] mt-0.5">Your products match 3x better with users who have dry skin concerns.</Text>
             </View>
           </View>
-          <TouchableOpacity className="py-3 rounded-[12px] items-center" style={{ backgroundColor: COLORS.primary }}>
+          <TouchableOpacity className="py-3 rounded-[16px] items-center" style={{ backgroundColor: COLORS.primary }}>
             <Text className="text-black font-semibold text-[15px]">View Full Report</Text>
           </TouchableOpacity>
         </Animated.View>

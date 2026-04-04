@@ -89,7 +89,7 @@ export default function DashboardScreen() {
               <Animated.View entering={FadeInDown.delay(300).duration(600).springify()} className="rounded-[22px] p-6 mb-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
                 <Text className="text-text font-semibold text-[17px] mb-4">Skin DNA Profile</Text>
                 <View className="flex-row items-center gap-4 mb-4">
-                  <View className="w-14 h-14 rounded-[18px] items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>
+                  <View className="w-14 h-14 rounded-[22px] items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>
                     <Ionicons name="fitness" size={26} color={COLORS.primary} />
                   </View>
                   <View className="flex-1">
@@ -116,7 +116,7 @@ export default function DashboardScreen() {
               </Animated.View>
             ) : (
               scans.slice(0, 10).map((scan, i) => (
-                <Animated.View key={scan.id} entering={FadeInDown.delay(100 * Math.min(i, 5)).duration(400)} className="rounded-[18px] p-5 mb-2.5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
+                <Animated.View key={scan.id} entering={FadeInDown.delay(100 * Math.min(i, 5)).duration(400)} className="rounded-[22px] p-5 mb-2.5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
                   <View className="flex-row justify-between items-center mb-3">
                     <Text className="text-text-quaternary text-[13px]">{formatRelative(scan.created_at)}</Text>
                     <View className="w-10 h-10 rounded-full items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle }}>

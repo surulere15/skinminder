@@ -55,7 +55,7 @@ export default function RoutineScreen() {
           {(["morning", "evening"] as const).map((tab) => (
             <TouchableOpacity
               key={tab}
-              className="flex-1 py-3.5 rounded-[11px] items-center flex-row justify-center gap-2"
+              className="flex-1 py-3.5 rounded-[14px] items-center flex-row justify-center gap-2"
               style={{ backgroundColor: activeTab === tab ? COLORS.primary : "transparent" }}
               onPress={() => {
                 hapticLight();
@@ -74,7 +74,7 @@ export default function RoutineScreen() {
               key={index}
               entering={FadeInDown.delay(index * 80).duration(400).springify()}
               layout={Layout.springify()}
-              className="rounded-[18px] p-5 flex-row items-start gap-4"
+              className="rounded-[22px] p-5 flex-row items-start gap-4"
               style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}
             >
               <View className="w-10 h-10 rounded-[14px] items-center justify-center mt-0.5" style={{ backgroundColor: COLORS.primarySubtle }}>

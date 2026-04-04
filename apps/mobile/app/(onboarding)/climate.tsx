@@ -63,7 +63,7 @@ export default function ClimateStep() {
             return (
               <Animated.View key={c.id} entering={FadeInDown.delay(200 + i * 80).duration(500).springify()}>
                 <TouchableOpacity
-                  className="p-5 rounded-[18px] flex-row items-center gap-4"
+                  className="p-5 rounded-[22px] flex-row items-center gap-4"
                   style={{
                     backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
                     borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,

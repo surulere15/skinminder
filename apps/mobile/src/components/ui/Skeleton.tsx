@@ -69,7 +69,7 @@ export function ListSkeleton({ count = 5 }: { count?: number }) {
         <Animated.View
           key={i}
           entering={FadeInDown.delay(i * 80).duration(400)}
-          className="rounded-[18px] p-5 flex-row items-center gap-4"
+          className="rounded-[22px] p-5 flex-row items-center gap-4"
           style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}
         >
           <Skeleton width={44} height={44} borderRadius={RADIUS.md} />
@@ -87,7 +87,7 @@ export function StatGridSkeleton() {
   return (
     <View className="flex-row gap-3 mb-5">
       {[1, 2].map((i) => (
-        <View key={i} className="flex-1 rounded-[18px] p-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
+        <View key={i} className="flex-1 rounded-[22px] p-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
           <Skeleton width={80} height={12} className="mb-3" />
           <Skeleton width={60} height={28} className="mb-2" />
           <Skeleton width={40} height={10} />

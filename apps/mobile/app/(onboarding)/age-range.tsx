@@ -33,7 +33,7 @@ export default function AgeRangeStep() {
             return (
               <Animated.View key={range} entering={FadeInDown.delay(200 + i * 80).duration(500).springify()}>
                 <TouchableOpacity
-                  className="p-6 rounded-[18px] items-center"
+                  className="p-6 rounded-[22px] items-center"
                   style={{
                     backgroundColor: isSelected ? COLORS.primarySubtle : COLORS.surfaceCard,
                     borderColor: isSelected ? "rgba(201, 169, 110, 0.4)" : COLORS.border,
