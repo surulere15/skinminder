@@ -61,6 +61,11 @@ export async function uploadImage(uri: string, retries = 3): Promise<string> {
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error("Session expired. Please sign in again.");
+      }
+
       const formData = new FormData();
       const filename = `scan_${Date.now()}.jpg`;
 
@@ -74,6 +79,9 @@ export async function uploadImage(uri: string, retries = 3): Promise<string> {
 
       const response = await fetch(`${API_URL}/api/upload`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
         body: formData,
         signal: createTimeoutSignal(UPLOAD_TIMEOUT),
       });
