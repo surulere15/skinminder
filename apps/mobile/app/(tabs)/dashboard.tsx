@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuthStore } from "../../src/stores/auth";
 import { useScanStore } from "../../src/stores/scan";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { COLORS, SHADOWS } from "../../src/constants/theme";
+import { COLORS } from "../../src/constants/theme";
 import { FullScreenSkeleton } from "../../src/components/ui/Skeleton";
 import { hapticMedium } from "../../src/lib/haptics";
 

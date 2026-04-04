@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { useAuthStore } from "../../src/stores/auth";
+import { useOnboardingStore } from "../../src/stores/onboarding";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { COLORS } from "../../src/constants/theme";
@@ -14,7 +15,12 @@ export default function SignInScreen() {
   const handleSignIn = async () => {
     try {
       await signIn(email, password);
-      router.replace("/(tabs)");
+      const { isComplete } = useOnboardingStore.getState();
+      if (!isComplete) {
+        router.replace("/(onboarding)/welcome");
+      } else {
+        router.replace("/(tabs)");
+      }
     } catch (error: any) {
       console.error(error);
     }

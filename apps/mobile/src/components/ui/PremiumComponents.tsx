@@ -203,48 +203,6 @@ export function ProgressBar({ progress, color = COLORS.primary, height = 4, anim
   );
 }
 
-interface SkeletonProps {
-  width?: number | string;
-  height?: number;
-  borderRadius?: number;
-  style?: ViewStyle;
-}
-
-export function Skeleton({ width = "100%", height = 16, borderRadius = 8, style }: SkeletonProps) {
-  const opacity = useSharedValue(0.3);
-
-  useEffect(() => {
-    const animate = () => {
-      opacity.value = withTiming(opacity.value > 0.5 ? 0.3 : 0.7, {
-        duration: 800,
-        easing: Easing.inOut(Easing.ease),
-      });
-    };
-    animate();
-    const interval = setInterval(animate, 800);
-    return () => clearInterval(interval);
-  }, []);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
-
-  return (
-    <Animated.View
-      style={[
-        {
-          width,
-          height,
-          borderRadius,
-          backgroundColor: "rgba(255,255,255,0.06)",
-        },
-        animatedStyle,
-        style,
-      ]}
-    />
-  );
-}
-
 interface StatCardProps {
   label: string;
   value: string | number;

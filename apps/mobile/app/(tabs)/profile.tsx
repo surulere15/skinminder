@@ -54,7 +54,6 @@ export default function ProfileScreen() {
               style={{ borderBottomWidth: index < menuItems.length - 1 ? 1 : 0, borderBottomColor: COLORS.border }}
               onPress={() => {
                 hapticLight();
-                item.action?.();
               }}
             >
               <View className="w-9 h-9 rounded-[12px] items-center justify-center mr-4" style={{ backgroundColor: "rgba(255,255,255,0.04)" }}>
@@ -72,7 +71,7 @@ export default function ProfileScreen() {
         <Animated.View entering={FadeInDown.delay(200).duration(500).springify()}>
           <TouchableOpacity
             className="py-4 rounded-[16px] items-center"
-            style={{ backgroundColor: COLORS.errorSubtle, borderColor: "rgba(248, 113, 113, 0.2)", borderWidth: 1 }}
+            style={{ backgroundColor: COLORS.errorSubtle, borderColor: "rgba(248, 113, 113, 0.1)", borderWidth: 1 }}
             onPress={() => {
               Alert.alert("Sign Out", "Are you sure?", [
                 { text: "Cancel", style: "cancel" },

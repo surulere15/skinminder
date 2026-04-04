@@ -23,7 +23,7 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: "rgba(10, 10, 10, 0.95)",
+          backgroundColor: COLORS.backgroundSecondary,
           borderTopColor: COLORS.border,
           borderTopWidth: 0.5,
           paddingBottom: 28,
@@ -36,9 +36,6 @@ export default function TabsLayout() {
           fontSize: 10,
           fontWeight: "500" as const,
           marginTop: 4,
-        },
-        tabBarItemStyle: {
-          gap: 2,
         },
       }}
     >
@@ -60,9 +57,7 @@ export default function TabsLayout() {
         name="scan"
         options={{
           title: "Scan",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="camera" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="camera" size={size} color={color} />,
         }}
       />
       <Tabs.Screen

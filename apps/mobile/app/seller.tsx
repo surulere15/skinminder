@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { COLORS, SHADOWS } from "../src/constants/theme";
+import { COLORS } from "../src/constants/theme";
 import { hapticLight } from "../src/lib/haptics";
 
 export default function SellerScreen() {

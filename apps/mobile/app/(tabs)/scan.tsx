@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator, Dimensions } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,7 +8,7 @@ import Animated, { FadeIn, FadeOut, ZoomIn, SlideInDown, SlideInUp } from "react
 import { uploadImage, analyzeSkin } from "../src/lib/api";
 import { useScanStore } from "../src/stores/scan";
 import { useAuthStore } from "../src/stores/auth";
-import { COLORS, SHADOWS } from "../src/constants/theme";
+import { COLORS } from "../src/constants/theme";
 import { hapticMedium, hapticSuccess, hapticLight } from "../src/lib/haptics";
 import { AmbientBackground } from "../src/components/ui/DecorativeElements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -24,7 +24,7 @@ export default function ScanScreen() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [cameraReady, setCameraReady] = useState(false);
-  const cameraRef = useState<any>(null);
+  const cameraRef = useRef<any>(null);
   const { addScan, refreshAll } = useScanStore();
   const { user } = useAuthStore();
 

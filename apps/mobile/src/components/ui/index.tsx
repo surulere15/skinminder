@@ -1,4 +1,5 @@
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator, ViewStyle, TextStyle } from "react-native";
+import { COLORS, RADIUS, SHADOWS } from "../../constants/theme";
 
 interface ButtonProps {
   label: string;
@@ -6,32 +7,31 @@ interface ButtonProps {
   variant?: "primary" | "secondary" | "ghost";
   loading?: boolean;
   disabled?: boolean;
-  icon?: string;
 }
 
-export function Button({ label, onPress, variant = "primary", loading, disabled, icon }: ButtonProps) {
-  const variants = {
-    primary: "bg-primary-500",
-    secondary: "bg-surface-card border border-surface-border",
-    ghost: "bg-transparent",
+export function Button({ label, onPress, variant = "primary", loading, disabled }: ButtonProps) {
+  const variants: Record<string, ViewStyle> = {
+    primary: { backgroundColor: COLORS.primary },
+    secondary: { backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 },
+    ghost: { backgroundColor: "transparent" },
   };
 
-  const textVariants = {
-    primary: "text-surface",
-    secondary: "text-gray-300",
-    ghost: "text-primary-500",
+  const textColors: Record<string, string> = {
+    primary: COLORS.textInverse,
+    secondary: COLORS.textSecondary,
+    ghost: COLORS.primary,
   };
 
   return (
     <TouchableOpacity
-      className={`${variants[variant]} rounded-xl py-4 items-center ${disabled ? "opacity-50" : ""}`}
+      style={{ ...variants[variant], borderRadius: RADIUS.lg, height: 56, alignItems: "center", justifyContent: "center", opacity: disabled ? 0.5 : 1 }}
       onPress={onPress}
       disabled={disabled || loading}
     >
       {loading ? (
-        <ActivityIndicator color={variant === "primary" ? "#0A0A0A" : "#a18b6f"} />
+        <ActivityIndicator color={textColors[variant]} />
       ) : (
-        <Text className={`${textVariants[variant]} font-semibold text-lg`}>{label}</Text>
+        <Text style={{ color: textColors[variant], fontWeight: "600", fontSize: 17 }}>{label}</Text>
       )}
     </TouchableOpacity>
   );
@@ -46,7 +46,13 @@ export function Card({ children, onPress }: CardProps) {
   const Wrapper = onPress ? TouchableOpacity : View;
   return (
     <Wrapper
-      className="bg-surface-card rounded-2xl p-5 border border-surface-border"
+      style={{
+        backgroundColor: COLORS.surfaceCard,
+        borderRadius: RADIUS.xl,
+        padding: 20,
+        borderColor: COLORS.border,
+        borderWidth: 1,
+      }}
       onPress={onPress}
     >
       {children}
@@ -62,23 +68,27 @@ interface ScoreDisplayProps {
 }
 
 export function ScoreDisplay({ label, score, color, size = "md" }: ScoreDisplayProps) {
-  const sizes = {
-    sm: { container: "w-10 h-10", text: "text-sm" },
-    md: { container: "w-14 h-14", text: "text-xl" },
-    lg: { container: "w-24 h-24", text: "text-3xl" },
+  const sizes: Record<string, { container: number; text: number }> = {
+    sm: { container: 40, text: 14 },
+    md: { container: 56, text: 20 },
+    lg: { container: 96, text: 36 },
   };
 
   return (
-    <View className="items-center">
+    <View style={{ alignItems: "center" }}>
       <View
-        className={`${sizes[size].container} rounded-full items-center justify-center`}
-        style={{ backgroundColor: `${color}20` }}
+        style={{
+          width: sizes[size].container,
+          height: sizes[size].container,
+          borderRadius: sizes[size].container / 2,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: `${color}12`,
+        }}
       >
-        <Text className={`${sizes[size].text} font-bold`} style={{ color }}>
-          {score}
-        </Text>
+        <Text style={{ fontSize: sizes[size].text, fontWeight: "700", color }}>{score}</Text>
       </View>
-      <Text className="text-gray-500 text-xs mt-1">{label}</Text>
+      <Text style={{ fontSize: 11, color: COLORS.textQuaternary, marginTop: 8 }}>{label}</Text>
     </View>
   );
 }
