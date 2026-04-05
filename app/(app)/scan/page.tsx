@@ -107,10 +107,13 @@ export default function ScanPage() {
                 <ArrowLeft />
              </Button>
            )}
-           <h1 className="text-3xl font-outfit font-black tracking-tight text-content-primary">Skin Analysis</h1>
+           <div>
+              <h1 className="text-3xl font-outfit font-black tracking-tight text-content-primary">Skin Analysis</h1>
+              <p className="text-xs text-content-muted font-medium mt-0.5">Understand your skin in 10 seconds</p>
+           </div>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-skin-surface text-content-secondary text-xs font-black uppercase tracking-widest border border-white/5 shadow-xl">
-          <ShieldCheck size={14} className="text-skin-violet" /> Privacy Protected
+          <ShieldCheck size={14} className="text-skin-violet" /> Private & Encrypted
         </div>
       </header>
 
@@ -123,9 +126,27 @@ export default function ScanPage() {
             exit={{ opacity: 0, scale: 0.9 }}
             className="space-y-12 relative z-10"
           >
-            <ScanCapture onCapture={handleCapture} />
+             <ScanCapture onCapture={handleCapture} />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             {/* Trust signals below capture */}
+             <div className="flex items-center justify-center gap-4 text-xs text-content-muted font-medium">
+                <span className="flex items-center gap-1.5">
+                   <Zap size={14} className="text-skin-violet" />
+                   10-second scan
+                </span>
+                <span className="h-1 w-1 rounded-full bg-white/20" />
+                <span className="flex items-center gap-1.5">
+                   <ShieldCheck size={14} className="text-skin-gold" />
+                   Private & encrypted
+                </span>
+                <span className="h-1 w-1 rounded-full bg-white/20" />
+                <span className="flex items-center gap-1.5">
+                   <Sparkles size={14} className="text-skin-glow" />
+                   7 AI metrics
+                </span>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <PremiumCard glass={false} className="p-6 rounded-[2.5rem] flex items-start gap-4 border-none bg-skin-surface border border-white/5 shadow-xl hover:bg-white/5 transition-all">
                    <div className="w-10 h-10 rounded-xl bg-skin-violet/10 flex items-center justify-center text-skin-violet flex-shrink-0 border border-skin-violet/20">
                       <Zap size={20} />
@@ -208,21 +229,24 @@ export default function ScanPage() {
                      </div>
                   </section>
 
-                  <div className="pt-8">
-                     <Button 
-                       size="lg" 
-                       variant="premium" 
-                       className="w-full h-18 text-lg font-black rounded-3xl shadow-2xl shadow-skin-violet/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                       disabled={!bodyArea || isUploading}
-                       onClick={handleStartAnalysis}
-                     >
-                       {isUploading ? (
-                         <><Loader2 className="mr-3 animate-spin w-6 h-6" /> Running AI Core...</>
-                       ) : (
-                         <>Start AI Analysis <ChevronRight className="ml-2 w-6 h-6" /></>
-                       )}
-                     </Button>
-                  </div>
+                   <div className="pt-8 space-y-4">
+                      <Button 
+                        size="lg" 
+                        variant="premium" 
+                        className="w-full h-18 text-lg font-black rounded-3xl shadow-2xl shadow-skin-violet/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        disabled={!bodyArea || isUploading}
+                        onClick={handleStartAnalysis}
+                      >
+                        {isUploading ? (
+                          <><Loader2 className="mr-3 animate-spin w-6 h-6" /> Running AI Core...</>
+                        ) : (
+                          <>Start Skin Analysis <ChevronRight className="ml-2 w-6 h-6" /></>
+                        )}
+                      </Button>
+                      <p className="text-center text-xs text-content-muted font-medium">
+                        Takes 10 seconds • Private • No extra signup required
+                      </p>
+                   </div>
                </div>
             </div>
           </motion.div>
@@ -258,8 +282,8 @@ export default function ScanPage() {
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-center gap-3">
-                  <Loader2 className="animate-spin w-6 h-6 text-primary" />
-                  <h2 className="text-3xl font-semibold tracking-tight text-content-primary">Medical Analysis</h2>
+                   <Sparkles className="animate-pulse w-5 h-5 text-skin-violet" />
+                   <h2 className="text-2xl font-semibold tracking-tight text-content-primary">Analyzing your skin</h2>
                 </div>
                 <div className="h-6 overflow-hidden">
                    <motion.p 
@@ -267,14 +291,14 @@ export default function ScanPage() {
                      initial={{ y: 20, opacity: 0 }}
                      animate={{ y: 0, opacity: 1 }}
                      exit={{ y: -20, opacity: 0 }}
-                     className="text-primary font-bold uppercase tracking-widest text-[10px]"
+                     className="text-skin-violet font-bold uppercase tracking-widest text-[10px]"
                    >
                      {analysisSteps[analysisStep]}
                    </motion.p>
                 </div>
               </div>
               <p className="text-content-secondary font-medium opacity-80 text-sm leading-relaxed">
-                Extracting high-resolution dermal markers and cross-referencing with clinical benchmarks.
+                Our AI is reading visible skin patterns and building your personalized profile.
               </p>
             </motion.div>
           </motion.div>
@@ -284,10 +308,10 @@ export default function ScanPage() {
       {/* Trust Message */}
       <footer className="text-center pt-16 relative z-10">
          <div className="max-w-md mx-auto p-6 rounded-3xl bg-skin-surface border border-white/5 opacity-80 backdrop-blur-sm shadow-2xl">
-            <p className="text-[10px] text-content-muted font-black uppercase tracking-widest mb-3">Privacy & Trust</p>
+            <p className="text-[10px] text-content-muted font-black uppercase tracking-widest mb-3">Built for trust</p>
             <p className="text-xs text-content-secondary font-bold leading-relaxed">
-              Your photos are processed using secure encrypted pipelines and are only visible to you. 
-              This is a cosmetic analysis tool, not a medical diagnosis.
+              Your photos are encrypted and only visible to you. 
+              SkinMinder provides cosmetic analysis — not medical diagnosis.
             </p>
          </div>
       </footer>
