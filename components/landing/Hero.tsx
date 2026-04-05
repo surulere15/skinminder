@@ -80,7 +80,7 @@ export default function Hero() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute -right-4 top-12 z-10 md:-right-6"
+            className="absolute -right-6 top-16 z-10 md:-right-8"
             style={{ animation: "float 6s ease-in-out infinite 2s" }}
           >
             <GlassCard className="rounded-[20px] border border-[#c9a96e]/20 bg-[#c9a96e]/10 px-4 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.3)]">
@@ -89,9 +89,9 @@ export default function Hero() {
             </GlassCard>
           </motion.div>
 
-          <GlassCard className="relative overflow-hidden rounded-[36px] p-3 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-            <div className="rounded-[30px] border border-white/10 bg-black/70 p-4">
-              <div className="mx-auto w-full max-w-[320px] rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.03))] p-3">
+          <GlassCard className="relative overflow-hidden rounded-[36px] p-2 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+            <div className="rounded-[30px] border border-white/10 bg-black/70 p-3">
+              <div className="mx-auto w-full max-w-[320px] rounded-[34px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.10),rgba(255,255,255,0.03))] p-2">
                 <div className="rounded-[28px] border border-white/10 bg-black/70 px-4 pb-5 pt-4">
                   <div className="mb-4 flex items-center justify-between">
                     <div>
@@ -105,14 +105,23 @@ export default function Hero() {
                     </div>
                   </div>
 
-                  {/* Scan area with subtle rings */}
-                  <div className="mb-4 overflow-hidden rounded-[24px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(201,169,110,0.24),rgba(255,255,255,0.03))] p-5">
+                  {/* Scan area with face frame */}
+                  <div className="mb-4 overflow-hidden rounded-[24px] border border-white/10 bg-[radial-gradient(ellipse_at_center,rgba(201,169,110,0.18),rgba(0,0,0,0.6))] p-5">
                     <div className="relative mx-auto h-52 w-40">
-                      <div className="absolute inset-0 rounded-[22px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03))]" />
-                      <div className="absolute inset-4 rounded-[16px] border border-white/5" />
-                      <div className="absolute inset-8 rounded-[12px] border border-white/5" />
-                      <div className="absolute right-3 top-6 h-2 w-2 rounded-full bg-[#c9a96e]/60" />
-                      <div className="absolute bottom-8 left-4 h-1.5 w-1.5 rounded-full bg-[#c9a96e]/40" />
+                      {/* Face oval */}
+                      <div className="absolute inset-2 rounded-full border border-white/15 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]" />
+                      {/* Analysis ring */}
+                      <div className="absolute inset-6 rounded-full border border-[#c9a96e]/30" />
+                      {/* Scan dots */}
+                      <div className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#c9a96e]" />
+                      <div className="absolute right-6 top-10 h-1 w-1 rounded-full bg-[#c9a96e]/60" />
+                      <div className="absolute bottom-12 left-6 h-1 w-1 rounded-full bg-[#c9a96e]/40" />
+                      <div className="absolute right-8 bottom-16 h-1 w-1 rounded-full bg-[#c9a96e]/50" />
+                      {/* Corner brackets */}
+                      <div className="absolute left-0 top-0 h-5 w-5 border-l border-t border-[#c9a96e]/40" />
+                      <div className="absolute right-0 top-0 h-5 w-5 border-r border-t border-[#c9a96e]/40" />
+                      <div className="absolute bottom-0 left-0 h-5 w-5 border-b border-l border-[#c9a96e]/40" />
+                      <div className="absolute bottom-0 right-0 h-5 w-5 border-b border-r border-[#c9a96e]/40" />
                     </div>
                   </div>
 
@@ -121,7 +130,7 @@ export default function Hero() {
                       <p className="text-[11px] uppercase tracking-[0.22em] text-[#c9a96e]">
                         Observations
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-white/78">
+                      <p className="mt-2 text-sm leading-6 text-white/85">
                         Mild breakouts, dark spots, balanced oil pattern.
                       </p>
                     </GlassCard>
@@ -130,7 +139,7 @@ export default function Hero() {
                       <p className="text-[11px] uppercase tracking-[0.22em] text-[#c9a96e]">
                         Interpretation
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-white/78">
+                      <p className="mt-2 text-sm leading-6 text-white/85">
                         Consistent with mild acne and post-inflammatory marks.
                       </p>
                     </GlassCard>
@@ -139,7 +148,7 @@ export default function Hero() {
                       <p className="text-[11px] uppercase tracking-[0.22em] text-[#c9a96e]">
                         Routine Guidance
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-white/78">
+                      <p className="mt-2 text-sm leading-6 text-white/85">
                         Gentle cleanser, niacinamide, moisturizer, sunscreen.
                       </p>
                     </GlassCard>
