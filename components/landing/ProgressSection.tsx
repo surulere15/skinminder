@@ -2,7 +2,7 @@ import GlassCard from "./GlassCard";
 
 export default function ProgressSection() {
   return (
-    <section className="px-6 py-24 lg:px-8">
+    <section className="px-6 py-20 md:py-24 lg:px-8 lg:py-28">
       <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1fr_1fr] lg:items-center">
         <GlassCard className="p-8">
           <div className="grid grid-cols-2 gap-4">
@@ -18,13 +18,13 @@ export default function ProgressSection() {
         </GlassCard>
 
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c9a96e]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c9a96e]">
             Progress over time
           </p>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+          <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] leading-[1.02] md:text-5xl">
             The value gets stronger the more you use it.
           </h2>
-          <p className="mt-5 text-sm leading-8 text-white/66 md:text-base">
+          <p className="mt-5 text-sm leading-7 text-white/66 md:text-base md:leading-8">
             Skinminder is built for more than one scan. Over time, it helps you
             see what is changing, what is stable, and whether your routine is
             moving in the right direction.

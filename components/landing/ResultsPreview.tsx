@@ -2,16 +2,16 @@ import GlassCard from "./GlassCard";
 
 export default function ResultsPreview() {
   return (
-    <section id="results" className="px-6 py-24 lg:px-8">
+    <section id="results" className="px-6 py-20 md:py-24 lg:px-8 lg:py-28">
       <div className="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#c9a96e]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#c9a96e]">
             What you get
           </p>
-          <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+          <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] leading-[1.02] md:text-5xl">
             Clear guidance, designed to be understood.
           </h2>
-          <p className="mt-5 max-w-xl text-sm leading-8 text-white/66 md:text-base">
+          <p className="mt-5 max-w-xl text-sm leading-7 text-white/66 md:text-base md:leading-8">
             Skinminder gives you structured feedback that feels calm, readable, and useful — not overwhelming.
           </p>
 
@@ -23,7 +23,7 @@ export default function ResultsPreview() {
           </ul>
         </div>
 
-        <GlassCard className="p-6">
+        <GlassCard className="p-6 md:p-7">
           <div className="grid gap-4 md:grid-cols-2">
             {[
               ["Observations", "Mild breakouts are visible along the cheeks, with dark spots from previous irritation."],
@@ -33,7 +33,7 @@ export default function ResultsPreview() {
             ].map(([title, desc]) => (
               <div
                 key={title}
-                className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5"
+                className="rounded-[24px] border border-white/10 bg-white/[0.04] p-5 transition-all duration-300 ease-out hover:border-white/18 hover:bg-white/[0.05]"
               >
                 <p className="text-[11px] uppercase tracking-[0.24em] text-[#c9a96e]">
                   {title}

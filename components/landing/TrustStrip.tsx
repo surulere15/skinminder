@@ -8,7 +8,7 @@ export default function TrustStrip() {
 
   return (
     <section className="border-y border-white/8 bg-white/[0.02]">
-      <div className="mx-auto grid max-w-7xl gap-6 px-6 py-8 text-center text-sm text-white/55 md:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-4 px-6 py-6 text-center text-[11px] font-medium uppercase tracking-[0.2em] text-white/45 md:grid-cols-4 md:py-8 lg:px-8">
         {items.map((item) => (
           <div key={item}>{item}</div>
         ))}

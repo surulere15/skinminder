@@ -10,16 +10,16 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-wrap gap-5 text-sm text-white/52">
-          <a href="/privacy" className="transition hover:text-white">
+          <a href="/privacy" className="transition-all duration-300 ease-out hover:text-white hover:-translate-y-[1px]">
             Privacy
           </a>
-          <a href="/terms" className="transition hover:text-white">
+          <a href="/terms" className="transition-all duration-300 ease-out hover:text-white hover:-translate-y-[1px]">
             Terms
           </a>
-          <a href="/contact" className="transition hover:text-white">
+          <a href="/contact" className="transition-all duration-300 ease-out hover:text-white hover:-translate-y-[1px]">
             Contact
           </a>
-          <a href="/support" className="transition hover:text-white">
+          <a href="/support" className="transition-all duration-300 ease-out hover:text-white hover:-translate-y-[1px]">
             Support
           </a>
         </div>
