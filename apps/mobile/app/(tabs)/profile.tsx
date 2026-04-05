@@ -21,6 +21,9 @@ export default function ProfileScreen() {
       case "Privacy & Security":
         Linking.openURL("https://skinminder.ai/privacy");
         break;
+      case "Terms of Use":
+        Linking.openURL("https://skinminder.ai/terms");
+        break;
       case "Data & Storage":
         Alert.alert("Data & Storage", "Coming soon.");
         break;
@@ -37,6 +40,7 @@ export default function ProfileScreen() {
     { icon: "person-outline" as const, label: "Edit Profile", sub: "Name, photo, preferences" },
     { icon: "notifications-outline" as const, label: "Notifications", sub: "Push, email, reminders" },
     { icon: "shield-checkmark-outline" as const, label: "Privacy & Security", sub: "Biometric, data, permissions" },
+    { icon: "document-text-outline" as const, label: "Terms of Use", sub: "User agreement, disclaimers" },
     { icon: "cloud-upload-outline" as const, label: "Data & Storage", sub: "Cache, exports, backups" },
     { icon: "help-circle-outline" as const, label: "Help & Support", sub: "FAQ, contact, feedback" },
     { icon: "information-circle-outline" as const, label: "About", sub: "Version, licenses, terms" },
