@@ -130,6 +130,94 @@ function getProfileCards(scan: any) {
   ];
 }
 
+// Routine step generators — category-based, not brand-based
+function getMorningSteps(scan: any) {
+  const hydration = Math.round((scan.hydration_score || 0.68) * 100);
+  const pigmentation = Math.round((scan.pigmentation_score || 0.72) * 100);
+
+  const steps = [
+    {
+      step: 1,
+      category: "Gentle Cleanser",
+      rationale: "A mild, pH-balanced cleanser removes overnight buildup without stripping your skin's natural moisture barrier.",
+    },
+    {
+      step: 2,
+      category: "Hydrating Serum",
+      rationale: hydration < 60
+        ? "Your hydration levels suggest your skin would benefit from a hyaluronic acid or glycerin-based serum to support moisture retention throughout the day."
+        : "A lightweight hydrating serum helps maintain your skin's moisture balance and prepares it for the steps that follow.",
+    },
+  ];
+
+  if (pigmentation < 70) {
+    steps.push({
+      step: 3,
+      category: "Brightening Support",
+      rationale: "A vitamin C or niacinamide-based serum helps support tone evenness and reduce the visibility of post-inflammatory pigmentation over time.",
+    });
+  }
+
+  steps.push(
+    {
+      step: steps.length + 1,
+      category: "Moisturizer",
+      rationale: "A lightweight, barrier-supporting moisturizer locks in hydration and protects your skin throughout the day.",
+    },
+    {
+      step: steps.length + 2,
+      category: "SPF 50+",
+      rationale: "Daily sun protection is the single most important step for preventing further pigmentation and maintaining the improvements from your routine.",
+    }
+  );
+
+  return steps;
+}
+
+function getEveningSteps(scan: any) {
+  const hydration = Math.round((scan.hydration_score || 0.68) * 100);
+  const irritation = Math.round((scan.irritation_probability || 0.15) * 100);
+  const pigmentation = Math.round((scan.pigmentation_score || 0.72) * 100);
+
+  const steps = [
+    {
+      step: 1,
+      category: "Gentle Cleanser",
+      rationale: "A thorough but gentle cleanse removes sunscreen, pollution, and daily buildup without compromising your skin barrier.",
+    },
+  ];
+
+  if (irritation > 25 || hydration < 55) {
+    steps.push({
+      step: 2,
+      category: "Barrier-Support Serum",
+      rationale: "Your barrier condition suggests your skin would benefit from ceramides, panthenol, or centella-based support to strengthen overnight recovery.",
+    });
+  } else {
+    steps.push({
+      step: 2,
+      category: "Treatment Serum",
+      rationale: "A targeted serum addresses your specific concerns while your skin is in its natural repair cycle overnight.",
+    });
+  }
+
+  if (pigmentation < 70) {
+    steps.push({
+      step: steps.length + 1,
+      category: "Pigmentation Treatment",
+      rationale: "A gentle brightening treatment with alpha arbutin, tranexamic acid, or licorice root helps support tone evenness while you sleep.",
+    });
+  }
+
+  steps.push({
+    step: steps.length + 1,
+    category: "Moisturizer",
+    rationale: "A slightly richer evening moisturizer supports your skin's natural overnight repair process and prevents transepidermal water loss.",
+  });
+
+  return steps;
+}
+
 // Metric card data generator
 function getMetricCards(scan: any) {
   const hydration = Math.round((scan.hydration_score || 0.68) * 100);
@@ -659,23 +747,81 @@ export default function ScanResultsPage() {
         {/* H. PREDICTIVE MODELING */}
         <PredictiveModeling />
 
-        {/* I. ACTION PLAN — MORNING / EVENING ROUTINE */}
-        <section className="space-y-6">
+        {/* I. PERSONALIZED ROUTINE — Morning / Evening */}
+        <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-bold text-content-primary">Your Personalized Routine</h3>
-            <p className="text-sm text-content-secondary mt-0.5">Morning and evening protocols tailored to your skin</p>
+            <h3 className="text-lg font-bold text-content-primary">Your Recommended Routine</h3>
+            <p className="text-sm text-content-secondary mt-0.5">Category-based steps tailored to your skin profile</p>
           </div>
-          <ClinicalPrescription 
-            morning={[
-              { name: "Gentle PH Barrier Cleanser", type: "Cleanser", why: "Low hydration baseline", match: "98%", benefit: "Maintains natural lipids" },
-              { name: "C15 Super Booster", type: "Serum", why: "Texture refinement needed", match: "94%", benefit: "Evens tone & clarity" }
-            ]}
-            night={[
-              { name: "Omga+ Lipid Cleanser", type: "Cleanser", why: "Double cleanse protocol", match: "96%", benefit: "Removes cellular debris" },
-              { name: "Clinical 1% Retinol", type: "Treatment", why: "Cellular renewal target", match: "92%", benefit: "Refines overall texture" }
-            ]}
-          />
-        </section>
+
+          <div className="grid lg:grid-cols-2 gap-6">
+            {/* Morning Routine */}
+            <GlassCard className="p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                  <Sun size={20} className="text-amber-400" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-content-primary">Morning</h4>
+                  <p className="text-[10px] text-content-muted font-medium">Protect + hydrate + brighten</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {getMorningSteps(scan).map((step, i) => (
+                  <motion.div
+                    key={step.step}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-skin-violet/15 flex items-center justify-center flex-shrink-0">
+                      <span className="text-[11px] font-black text-skin-violet">{step.step}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-content-primary">{step.category}</p>
+                      <p className="text-xs text-content-muted leading-relaxed mt-0.5">{step.rationale}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </GlassCard>
+
+            {/* Evening Routine */}
+            <GlassCard className="p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-skin-violet/10 flex items-center justify-center border border-skin-violet/20">
+                  <Sparkles size={20} className="text-skin-violet" />
+                </div>
+                <div>
+                  <h4 className="text-base font-bold text-content-primary">Evening</h4>
+                  <p className="text-[10px] text-content-muted font-medium">Cleanse + treat + repair</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {getEveningSteps(scan).map((step, i) => (
+                  <motion.div
+                    key={step.step}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                    className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-skin-violet/15 flex items-center justify-center flex-shrink-0">
+                      <span className="text-[11px] font-black text-skin-violet">{step.step}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-content-primary">{step.category}</p>
+                      <p className="text-xs text-content-muted leading-relaxed mt-0.5">{step.rationale}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </GlassCard>
+          </div>
+        </div>
 
         {/* J. NEXT ACTIONS */}
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
