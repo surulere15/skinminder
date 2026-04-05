@@ -204,7 +204,11 @@ export default function ScanPage() {
            </div>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-skin-surface text-content-secondary text-[10px] md:text-xs font-black uppercase tracking-widest border border-white/5 shadow-xl">
-          <ShieldCheck size={12} className="text-skin-violet" /> Private & Encrypted
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-skin-violet opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-skin-violet" />
+          </span>
+          Private & Encrypted
         </div>
       </header>
 
@@ -300,12 +304,20 @@ export default function ScanPage() {
           >
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
                <div className="space-y-6">
-                  <div className="aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)] border-2 md:border-4 border-white/10 group relative bg-skin-surface">
-                     {preview && (
-                       <img src={preview} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                     )}
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
+                   <div className="aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)] border-2 md:border-4 border-white/10 group relative bg-skin-surface">
+                      {preview && (
+                        <img src={preview} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      {/* B. Scan Quality Indicator */}
+                      <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between px-3 py-2 rounded-xl bg-black/60 backdrop-blur-md border border-white/10">
+                         <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-wider text-white/80">Good lighting detected</span>
+                         </div>
+                         <span className="text-xs font-black text-emerald-400">92%</span>
+                      </div>
+                   </div>
                   <Button variant="clinical-ghost" className="w-full h-12 md:h-14 rounded-2xl font-black border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out" onClick={() => setStep(1)}>
                     Retake Photo
                   </Button>

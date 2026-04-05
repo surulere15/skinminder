@@ -116,6 +116,17 @@ export function ScanCapture({
                 Works on all skin tones
               </span>
             </div>
+
+            {/* A. LIVE INTELLIGENCE INDICATOR */}
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-skin-violet opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-skin-violet" />
+              </span>
+              <p className="text-[10px] font-black uppercase tracking-widest text-skin-violet/80">
+                AI Engine Active • Real-time analysis ready
+              </p>
+            </div>
           </motion.div>
         ) : (
           <motion.div
