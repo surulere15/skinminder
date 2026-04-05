@@ -7,25 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PremiumCard } from "@/components/ui/premium-card";
-import { 
-  Sparkles, 
-  ArrowLeft, 
-  Share2, 
-  Download, 
-  CheckCircle2,
-  AlertCircle,
-  Clock,
-  ChevronRight,
-  ShieldCheck,
-  Eye,
-  Zap,
-  Droplets,
-  Sun,
-  Activity,
-  Fingerprint,
-  Loader2,
-  Camera
-} from "lucide-react";
+import { Droplets, Sun, Activity, Fingerprint, Loader2, Camera, ShieldCheck, Eye, Zap, Sparkles, AlertCircle, Clock, ChevronRight, ArrowLeft, Share2, Download, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -81,6 +63,71 @@ function generateInterpretation(scan: any): string {
   body += " This usually means your skin may benefit more from tone-evening support, barrier-safe hydration, and a less aggressive routine.";
 
   return body;
+}
+
+// Primary diagnosis summary cards
+function getProfileCards(scan: any) {
+  const hydration = Math.round((scan.hydration_score || 0.68) * 100);
+  const oilBalance = Math.round((scan.oil_balance || 0.8) * 100);
+  const irritation = Math.round((scan.irritation_probability || 0.15) * 100);
+
+  // Determine skin type
+  let skinType = "Balanced";
+  if (oilBalance < 40 && hydration < 50) skinType = "Dry";
+  else if (oilBalance > 75 && hydration < 60) skinType = "Oily";
+  else if (oilBalance > 70 && hydration > 65) skinType = "Combination";
+  else if (irritation > 30) skinType = "Sensitive";
+
+  // Determine skin archetype
+  let archetype = "Normal / Resilient";
+  if (irritation > 25 && hydration < 60) archetype = "PIH-Prone / Barrier Sensitive";
+  else if (hydration < 50) archetype = "Dehydration-Prone";
+  else if (oilBalance > 75) archetype = "Sebum-Active / Congestion-Prone";
+  else if (hydration > 75 && oilBalance > 60) archetype = "Balanced / Resilient";
+
+  // Determine barrier condition
+  let barrier = "Healthy";
+  if (irritation > 35) barrier = "Stressed";
+  else if (irritation > 20) barrier = "Mildly stressed";
+  else if (hydration < 50) barrier = "Compromised";
+
+  // Determine routine priority
+  let priority = "Maintain + protect";
+  if (hydration < 55) priority = "Hydrate + repair barrier";
+  else if (irritation > 25) priority = "Soothe + strengthen";
+  else if (oilBalance > 75) priority = "Balance + clarify";
+  else priority = "Brighten + protect + repair";
+
+  return [
+    {
+      label: "Skin Type",
+      value: skinType,
+      icon: Fingerprint,
+      bgColor: "bg-skin-violet/10",
+      iconColor: "text-skin-violet",
+    },
+    {
+      label: "Skin Archetype",
+      value: archetype,
+      icon: Sparkles,
+      bgColor: "bg-skin-gold/10",
+      iconColor: "text-skin-gold",
+    },
+    {
+      label: "Barrier Condition",
+      value: barrier,
+      icon: ShieldCheck,
+      bgColor: irritation > 25 ? "bg-amber-500/10" : "bg-emerald-400/10",
+      iconColor: irritation > 25 ? "text-amber-400" : "text-emerald-400",
+    },
+    {
+      label: "Routine Priority",
+      value: priority,
+      icon: Zap,
+      bgColor: "bg-skin-glow/10",
+      iconColor: "text-skin-glow",
+    },
+  ];
 }
 
 // Metric card data generator
@@ -573,7 +620,34 @@ export default function ScanResultsPage() {
           </div>
         </GlassCard>
 
-        {/* E. INTELLIGENCE MAP */}
+        {/* E. PRIMARY DIAGNOSIS SUMMARY — Skin Profile */}
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-bold text-content-primary">Your Skin Profile</h3>
+            <p className="text-sm text-content-secondary mt-0.5">Your personalized skin identity based on this analysis</p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {getProfileCards(scan).map((card, i) => (
+              <motion.div
+                key={card.label}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <GlassCard className="p-5 md:p-6 h-full">
+                  <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center mb-3", card.bgColor)}>
+                    <card.icon size={18} className={card.iconColor} />
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-skin-muted mb-1">{card.label}</p>
+                  <p className="text-base font-bold text-content-primary leading-tight">{card.value}</p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* G. INTELLIGENCE MAP */}
         <GlassCard className="p-6 md:p-8">
           <div className="mb-6">
             <h3 className="text-lg font-bold text-content-primary">Skin Health Map</h3>
@@ -582,10 +656,10 @@ export default function ScanResultsPage() {
           <SkinRadar />
         </GlassCard>
 
-        {/* E. PREDICTIVE MODELING */}
+        {/* H. PREDICTIVE MODELING */}
         <PredictiveModeling />
 
-        {/* F. ACTION PLAN — MORNING / EVENING ROUTINE */}
+        {/* I. ACTION PLAN — MORNING / EVENING ROUTINE */}
         <section className="space-y-6">
           <div>
             <h3 className="text-lg font-bold text-content-primary">Your Personalized Routine</h3>
@@ -603,7 +677,7 @@ export default function ScanResultsPage() {
           />
         </section>
 
-        {/* G. NEXT ACTIONS */}
+        {/* J. NEXT ACTIONS */}
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Link href="/scan" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full h-14 px-12 rounded-2xl font-bold border border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out">
@@ -623,7 +697,7 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* H. MEDICAL DISCLAIMER */}
+        {/* K. MEDICAL DISCLAIMER */}
         <GlassCard className="p-5 md:p-6 !border-amber-500/15 !bg-amber-500/5">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
