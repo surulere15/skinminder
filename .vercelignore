@@ -5,7 +5,6 @@ build/
 apps/mobile/
 architecture-scaffold/
 v3-scaffold/
-v4-modular-monolith/
 db/
 npm-cache/
 *.tgz
