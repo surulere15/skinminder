@@ -47,7 +47,6 @@
       ]
     },
     "privacy": "https://skinminder.ai/privacy",
-    },
     "web": {
       "bundler": "metro",
       "output": "static",
