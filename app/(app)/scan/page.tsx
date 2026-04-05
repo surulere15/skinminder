@@ -169,7 +169,7 @@ export default function ScanPage() {
   const visibleConcerns = showAllConcerns ? SKIN_CONCERNS : SKIN_CONCERNS.slice(0, 12);
 
   return (
-    <div className="min-h-screen p-4 md:p-8 lg:p-12 max-w-3xl mx-auto space-y-8 md:space-y-12 bg-skin-dark text-content-primary">
+    <div className="min-h-screen px-4 py-12 md:px-8 lg:px-12 max-w-3xl mx-auto space-y-12 md:space-y-16 bg-skin-dark text-content-primary">
       {/* Header */}
       <header className="flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3 md:gap-4">
@@ -219,12 +219,12 @@ export default function ScanPage() {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className="space-y-8 md:space-y-12 relative z-10"
+            className="relative z-10"
           >
              <ScanCapture onCapture={handleCapture} />
 
              {/* Trust signals */}
-             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs text-content-muted font-medium">
+             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 md:gap-6 text-xs text-content-muted font-medium">
                 <span className="flex items-center gap-1.5">
                    <Zap size={14} className="text-skin-violet" />
                    10-second scan
@@ -241,7 +241,7 @@ export default function ScanPage() {
                 </span>
              </div>
 
-             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <PremiumCard glass={false} className="p-5 md:p-6 rounded-[2rem] flex items-start gap-4 bg-skin-surface border border-white/5 shadow-xl hover:bg-white/5 transition-all">
                    <div className="w-10 h-10 rounded-xl bg-skin-violet/10 flex items-center justify-center text-skin-violet flex-shrink-0 border border-skin-violet/20">
                       <Zap size={20} />
@@ -270,10 +270,10 @@ export default function ScanPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-6 md:space-y-8 relative z-10"
+            className="space-y-8 md:space-y-12 relative z-10"
           >
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
-               <div className="space-y-4 md:space-y-6">
+               <div className="space-y-6">
                   <div className="aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border-2 md:border-4 border-white/10 group relative bg-skin-surface">
                      {preview && (
                        <img src={preview} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -286,7 +286,7 @@ export default function ScanPage() {
                </div>
 
                <div className="space-y-8 md:space-y-10">
-                  <section className="space-y-4 md:space-y-5 text-left">
+                  <section className="space-y-4 text-left">
                      <h3 className="text-xs font-black uppercase tracking-widest text-skin-muted ml-1">1. Body Area</h3>
                      <div className="grid grid-cols-2 gap-2 md:gap-3">
                         {visibleAreas.map(area => (
@@ -311,7 +311,7 @@ export default function ScanPage() {
                      )}
                   </section>
 
-                  <section className="space-y-4 md:space-y-5 text-left">
+                  <section className="space-y-4 text-left">
                      <h3 className="text-xs font-black uppercase tracking-widest text-skin-muted ml-1">2. Current Concerns <span className="text-white/30 font-normal normal-case tracking-normal">(optional)</span></h3>
                      <div className="flex flex-wrap gap-2">
                         {visibleConcerns.map(concern => (
@@ -337,7 +337,7 @@ export default function ScanPage() {
                    </section>
 
                    {/* Results Preview — "What you'll get" */}
-                   <section className="space-y-4 text-left">
+                   <section className="space-y-4 pt-2 text-left">
                       <h3 className="text-xs font-black uppercase tracking-widest text-skin-muted ml-1">What you'll get</h3>
                       <div className="rounded-2xl border border-white/8 bg-skin-surface/50 overflow-hidden">
                         {[
@@ -363,7 +363,7 @@ export default function ScanPage() {
                       </div>
                    </section>
 
-                    <div className="pt-4 md:pt-8 space-y-3 md:space-y-4">
+                    <div className="pt-8 space-y-4">
                        <Button 
                          size="lg" 
                          variant="premium" 
@@ -467,7 +467,7 @@ export default function ScanPage() {
       </AnimatePresence>
 
       {/* Trust Message */}
-      <footer className="text-center pt-8 md:pt-16 relative z-10">
+      <footer className="text-center pt-12 md:pt-16 relative z-10">
          <div className="max-w-md mx-auto p-5 md:p-6 rounded-2xl md:rounded-3xl bg-skin-surface border border-white/5 opacity-80 backdrop-blur-sm shadow-2xl">
             <p className="text-[10px] text-content-muted font-black uppercase tracking-widest mb-3">Built for trust</p>
             <p className="text-xs text-content-secondary font-bold leading-relaxed">
