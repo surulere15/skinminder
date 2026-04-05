@@ -334,29 +334,74 @@ export default function ScanPage() {
                          Show all {SKIN_CONCERNS.length} concerns →
                        </button>
                      )}
-                  </section>
+                   </section>
 
-                   <div className="pt-4 md:pt-8 space-y-3 md:space-y-4">
-                      <Button 
-                        size="lg" 
-                        variant="premium" 
-                        className={cn(
-                          "w-full h-[72px] text-lg font-black rounded-3xl shadow-2xl shadow-skin-violet/20 transition-all",
-                          !bodyArea ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] active:scale-[0.98]"
-                        )}
-                        disabled={!bodyArea || isUploading}
-                        onClick={handleStartAnalysis}
-                      >
-                        {isUploading ? (
-                          <><Loader2 className="mr-3 animate-spin w-6 h-6" /> Running AI Core...</>
-                        ) : (
-                          <>Start Skin Analysis <ChevronRight className="ml-2 w-6 h-6" /></>
-                        )}
-                      </Button>
-                      <p className="text-center text-xs text-content-muted font-medium">
-                        Takes ~15 seconds • Private • No extra signup required
-                      </p>
-                   </div>
+                   {/* Results Preview — "What you'll get" */}
+                   <section className="space-y-4 text-left">
+                      <h3 className="text-xs font-black uppercase tracking-widest text-skin-muted ml-1">What you'll get</h3>
+                      <div className="rounded-2xl border border-white/8 bg-skin-surface/50 overflow-hidden">
+                        {[
+                          ["Skin type classification", "Know your skin's baseline"],
+                          ["Acne & pigmentation detection", "See visible concerns clearly"],
+                          ["Oil & hydration levels", "Understand your skin's balance"],
+                          ["Personalized routine", "Simple steps tailored to you"],
+                          ["Product recommendations", "Matches your actual skin needs"],
+                        ].map(([title, desc], i) => (
+                          <div key={title} className={cn(
+                            "flex items-start gap-3 px-4 py-3",
+                            i < 4 && "border-b border-white/5"
+                          )}>
+                            <div className="w-5 h-5 rounded-full bg-skin-violet/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <Sparkles size={10} className="text-skin-violet" />
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-content-primary">{title}</p>
+                              <p className="text-[11px] text-content-muted leading-relaxed">{desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                   </section>
+
+                    <div className="pt-4 md:pt-8 space-y-3 md:space-y-4">
+                       <Button 
+                         size="lg" 
+                         variant="premium" 
+                         className={cn(
+                           "w-full h-[72px] text-lg font-black rounded-3xl shadow-2xl shadow-skin-violet/20 transition-all",
+                           !bodyArea ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] active:scale-[0.98]"
+                         )}
+                         disabled={!bodyArea || isUploading}
+                         onClick={handleStartAnalysis}
+                       >
+                         {isUploading ? (
+                           <><Loader2 className="mr-3 animate-spin w-6 h-6" /> Running AI Core...</>
+                         ) : (
+                           <>Start Skin Analysis <ChevronRight className="ml-2 w-6 h-6" /></>
+                         )}
+                       </Button>
+                       <p className="text-center text-xs text-content-muted font-medium">
+                         Takes ~15 seconds • Private • No extra signup required
+                       </p>
+
+                       {/* Micro trust row */}
+                       <div className="flex flex-col items-center gap-2 pt-2">
+                          <div className="flex flex-wrap items-center justify-center gap-4 text-[11px] text-content-muted font-medium">
+                             <span className="flex items-center gap-1.5">
+                                <ShieldCheck size={12} className="text-skin-gold" />
+                                Encrypted analysis
+                             </span>
+                             <span className="flex items-center gap-1.5">
+                                <Sparkles size={12} className="text-skin-violet" />
+                                Dermatology-aligned logic
+                             </span>
+                             <span className="flex items-center gap-1.5">
+                                <Zap size={12} className="text-skin-glow" />
+                                Works on all skin tones
+                             </span>
+                          </div>
+                       </div>
+                    </div>
                 </div>
              </div>
           </motion.div>
