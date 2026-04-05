@@ -990,7 +990,53 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* K. NEXT ACTIONS */}
+        {/* K. PROGRESS / RETENTION — "Track your skin over time" */}
+        <GlassCard className="p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-skin-violet/10 flex items-center justify-center flex-shrink-0 border border-skin-violet/20">
+                <Activity size={22} className="text-skin-violet" />
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold text-content-primary">Track Your Skin Over Time</h3>
+                <div className="space-y-2">
+                  {[
+                    "Today's scan has been saved to your profile",
+                    "Compare future scans to see what changes",
+                    "Monitor pigmentation, hydration, and texture trends",
+                    "Build a routine that improves over time",
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <CheckCircle2 size={14} className="text-emerald-400 flex-shrink-0" />
+                      <p className="text-sm text-content-secondary">{item}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
+              <Link href="/progress" className="w-full sm:w-auto">
+                <Button className="w-full h-12 px-8 rounded-2xl font-bold shadow-xl shadow-skin-violet/20 transition-all duration-300 ease-out hover:scale-[1.01] active:scale-[0.98]">
+                  Save Result & Track Progress
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                className="w-full h-12 px-8 rounded-2xl font-bold border border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out"
+                onClick={() => {
+                  // Set a reminder for 7 days
+                  router.push("/scan");
+                }}
+              >
+                <Clock size={14} className="mr-2" />
+                Scan Again in 7 Days
+              </Button>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* O. NEXT ACTIONS */}
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Link href="/scan" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full h-14 px-12 rounded-2xl font-bold border border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out">
@@ -1010,7 +1056,25 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* L. MEDICAL DISCLAIMER */}
+        {/* M. CONFIDENCE + PRIVACY FOOTER */}
+        <div className="flex flex-wrap items-center justify-center gap-6 py-6 text-[11px] text-content-muted font-medium">
+          <span className="flex items-center gap-1.5">
+            <ShieldCheck size={12} className="text-skin-gold" />
+            Your scan was processed securely
+          </span>
+          <span className="hidden md:block h-1 w-1 rounded-full bg-white/15" />
+          <span className="flex items-center gap-1.5">
+            <Eye size={12} className="text-skin-violet" />
+            Results are private to your account
+          </span>
+          <span className="hidden md:block h-1 w-1 rounded-full bg-white/15" />
+          <span className="flex items-center gap-1.5">
+            <AlertCircle size={12} className="text-amber-400" />
+            SkinMinder provides cosmetic analysis, not medical diagnosis
+          </span>
+        </div>
+
+        {/* N. MEDICAL DISCLAIMER */}
         <GlassCard className="p-5 md:p-6 !border-amber-500/15 !bg-amber-500/5">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
