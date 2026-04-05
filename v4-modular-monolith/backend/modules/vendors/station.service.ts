@@ -1,4 +1,4 @@
 export class StationService {
-  async claim() { return {}; }
-  async handoff() { return {}; }
+  async claimScan(_token: string, _userId: string) { return ""; }
+  async generateHandoffToken(_scanId: string) { return ""; }
 }

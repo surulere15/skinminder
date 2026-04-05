@@ -1,3 +1,3 @@
 export class OrchestrationService {
-  async processScan() { return { error: "Orchestration not available" }; }
+  async analyze(_params: any) { return { error: "Orchestration not available" }; }
 }

@@ -1,3 +1,3 @@
 export class PartnerService {
-  async getConfig() { return {}; }
+  async getPartnerByApiKey(_key: string) { return null; }
 }

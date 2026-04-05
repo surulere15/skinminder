@@ -1,3 +1,3 @@
 export class AggregationService {
-  async aggregate() { return {}; }
+  async getAnalytics(_sellerId: string) { return {}; }
 }
