@@ -48,6 +48,23 @@ async function compressImage(file: File): Promise<File> {
   });
 }
 
+// Glass card with depth, noise, and inner shadow
+function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn(
+      "relative rounded-[24px] border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-[0_12px_40px_rgba(0,0,0,0.28)] overflow-hidden",
+      "transition-all duration-300 ease-out hover:-translate-y-[2px] hover:border-white/18 hover:bg-white/[0.05]",
+      className
+    )}>
+      {/* Noise texture overlay */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.015]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />
+      {/* Inner shadow */}
+      <div className="pointer-events-none absolute inset-0 rounded-[24px] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]" />
+      <div className="relative z-10">{children}</div>
+    </div>
+  );
+}
+
 export default function ScanPage() {
   const [step, setStep] = useState(1);
   const [file, setFile] = useState<File | null>(null);
@@ -170,11 +187,14 @@ export default function ScanPage() {
 
   return (
     <div className="min-h-screen px-4 py-12 md:px-8 lg:px-12 max-w-3xl mx-auto space-y-12 md:space-y-16 bg-skin-dark text-content-primary">
+      {/* Global noise texture */}
+      <div className="pointer-events-none fixed inset-0 -z-10 opacity-[0.012]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />
+
       {/* Header */}
       <header className="flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3 md:gap-4">
            {step > 1 && !isUploading && (
-             <Button variant="ghost" size="icon" onClick={() => setStep(step - 1)} className="rounded-full hover:bg-skin-muted/10 text-content-primary">
+             <Button variant="ghost" size="icon" onClick={() => setStep(step - 1)} className="rounded-full hover:bg-skin-muted/10 text-content-primary transition-all duration-300 ease-out">
                 <ArrowLeft size={20} />
              </Button>
            )}
@@ -195,7 +215,7 @@ export default function ScanPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex items-start gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/20"
+            className="flex items-start gap-3 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 backdrop-blur-sm"
           >
             <AlertTriangle size={18} className="text-red-400 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
@@ -242,24 +262,30 @@ export default function ScanPage() {
              </div>
 
              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <PremiumCard glass={false} className="p-5 md:p-6 rounded-[2rem] flex items-start gap-4 bg-skin-surface border border-white/5 shadow-xl hover:bg-white/5 transition-all">
+                <GlassCard className="p-5 md:p-6">
                    <div className="w-10 h-10 rounded-xl bg-skin-violet/10 flex items-center justify-center text-skin-violet flex-shrink-0 border border-skin-violet/20">
-                      <Zap size={20} />
+                      <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}>
+                        <Zap size={20} />
+                      </motion.div>
                    </div>
-                   <p className="text-sm font-black leading-tight text-content-secondary opacity-90">Instant results in seconds</p>
-                </PremiumCard>
-                <PremiumCard glass={false} className="p-5 md:p-6 rounded-[2rem] flex items-start gap-4 bg-skin-surface border border-white/5 shadow-xl hover:bg-white/5 transition-all">
+                   <p className="mt-3 text-sm font-black leading-tight text-content-secondary opacity-90">Instant results in seconds</p>
+                </GlassCard>
+                <GlassCard className="p-5 md:p-6">
                    <div className="w-10 h-10 rounded-xl bg-skin-gold/10 flex items-center justify-center text-skin-gold flex-shrink-0 border border-skin-gold/20">
-                      <Sparkles size={20} />
+                      <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}>
+                        <Sparkles size={20} />
+                      </motion.div>
                    </div>
-                   <p className="text-sm font-black leading-tight text-content-secondary opacity-90">7 specific AI metrics scored</p>
-                </PremiumCard>
-                <PremiumCard glass={false} className="p-5 md:p-6 rounded-[2rem] flex items-start gap-4 bg-skin-surface border border-white/5 shadow-xl hover:bg-white/5 transition-all">
+                   <p className="mt-3 text-sm font-black leading-tight text-content-secondary opacity-90">7 specific AI metrics scored</p>
+                </GlassCard>
+                <GlassCard className="p-5 md:p-6">
                    <div className="w-10 h-10 rounded-xl bg-skin-glow/10 flex items-center justify-center text-skin-glow flex-shrink-0 border border-skin-glow/20">
-                      <ShieldCheck size={20} />
+                      <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 2 }}>
+                        <ShieldCheck size={20} />
+                      </motion.div>
                    </div>
-                   <p className="text-sm font-black leading-tight text-content-secondary opacity-90">Encrypted data pipeline</p>
-                </PremiumCard>
+                   <p className="mt-3 text-sm font-black leading-tight text-content-secondary opacity-90">Encrypted data pipeline</p>
+                </GlassCard>
             </div>
           </motion.div>
         )}
@@ -274,13 +300,13 @@ export default function ScanPage() {
           >
             <div className="grid md:grid-cols-2 gap-8 md:gap-12">
                <div className="space-y-6">
-                  <div className="aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border-2 md:border-4 border-white/10 group relative bg-skin-surface">
+                  <div className="aspect-[4/5] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)] border-2 md:border-4 border-white/10 group relative bg-skin-surface">
                      {preview && (
                        <img src={preview} alt="Preview" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                      )}
                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
-                  <Button variant="clinical-ghost" className="w-full h-12 md:h-14 rounded-2xl font-black border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all" onClick={() => setStep(1)}>
+                  <Button variant="clinical-ghost" className="w-full h-12 md:h-14 rounded-2xl font-black border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out" onClick={() => setStep(1)}>
                     Retake Photo
                   </Button>
                </div>
@@ -294,7 +320,7 @@ export default function ScanPage() {
                             key={area}
                             onClick={() => setBodyArea(area)}
                             className={cn(
-                              "p-3 md:p-4 rounded-xl md:rounded-2xl border-2 text-xs md:text-sm font-black capitalize transition-all",
+                              "p-3 md:p-4 rounded-xl md:rounded-2xl border-2 text-xs md:text-sm font-black capitalize transition-all duration-300 ease-out",
                               bodyArea === area 
                                 ? "border-skin-violet bg-skin-violet/10 text-content-primary shadow-lg shadow-skin-violet/10" 
                                 : "border-white/5 bg-skin-surface text-content-muted hover:border-white/10 hover:text-content-secondary"
@@ -319,7 +345,7 @@ export default function ScanPage() {
                             key={concern}
                             onClick={() => toggleConcern(concern)}
                             className={cn(
-                              "px-4 py-2 md:px-5 md:py-2.5 rounded-full border-2 text-[11px] md:text-xs font-black capitalize transition-all",
+                              "px-4 py-2 md:px-5 md:py-2.5 rounded-full border-2 text-[11px] md:text-xs font-black capitalize transition-all duration-300 ease-out",
                               selectedConcerns.includes(concern) 
                                 ? "border-skin-violet bg-skin-violet/10 text-content-primary shadow-lg shadow-skin-violet/10" 
                                 : "border-white/5 bg-skin-surface text-content-muted hover:border-white/10 hover:text-content-secondary"
@@ -339,7 +365,7 @@ export default function ScanPage() {
                    {/* Results Preview — "What you'll get" */}
                    <section className="space-y-4 pt-2 text-left">
                       <h3 className="text-xs font-black uppercase tracking-widest text-skin-muted ml-1">What you'll get</h3>
-                      <div className="rounded-2xl border border-white/8 bg-skin-surface/50 overflow-hidden">
+                      <GlassCard className="!border-white/8 !bg-skin-surface/50">
                         {[
                           ["Skin type classification", "Know your skin's baseline"],
                           ["Acne & pigmentation detection", "See visible concerns clearly"],
@@ -360,26 +386,31 @@ export default function ScanPage() {
                             </div>
                           </div>
                         ))}
-                      </div>
+                      </GlassCard>
                    </section>
 
                     <div className="pt-8 space-y-4">
-                       <Button 
-                         size="lg" 
-                         variant="premium" 
-                         className={cn(
-                           "w-full h-[72px] text-lg font-black rounded-3xl shadow-2xl shadow-skin-violet/20 transition-all",
-                           !bodyArea ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] active:scale-[0.98]"
-                         )}
-                         disabled={!bodyArea || isUploading}
-                         onClick={handleStartAnalysis}
-                       >
-                         {isUploading ? (
-                           <><Loader2 className="mr-3 animate-spin w-6 h-6" /> Running AI Core...</>
-                         ) : (
-                           <>Start Skin Analysis <ChevronRight className="ml-2 w-6 h-6" /></>
-                         )}
-                       </Button>
+                       {/* Premium CTA Button with glow */}
+                       <div className="relative group">
+                         {/* Glow effect on hover */}
+                         <div className="absolute -inset-1 rounded-[2rem] bg-skin-violet/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                         <Button 
+                           size="lg" 
+                           variant="premium" 
+                           className={cn(
+                             "relative w-full h-[72px] text-lg font-black rounded-3xl shadow-[0_12px_40px_rgba(108,123,255,0.2)] transition-all duration-300 ease-out",
+                             !bodyArea ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] active:scale-[0.98] hover:shadow-[0_16px_48px_rgba(108,123,255,0.3)]"
+                           )}
+                           disabled={!bodyArea || isUploading}
+                           onClick={handleStartAnalysis}
+                         >
+                           {isUploading ? (
+                             <><Loader2 className="mr-3 animate-spin w-6 h-6" /> Running AI Core...</>
+                           ) : (
+                             <>Start Skin Analysis <ChevronRight className="ml-2 w-6 h-6" /></>
+                           )}
+                         </Button>
+                       </div>
                        <p className="text-center text-xs text-content-muted font-medium">
                          Takes ~15 seconds • Private • No extra signup required
                        </p>
@@ -417,7 +448,7 @@ export default function ScanPage() {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 bg-skin-dark/95 backdrop-blur-xl flex flex-col items-center justify-center p-6"
           >
-            <div className="relative w-56 md:w-64 h-72 md:h-80 rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/20 mb-8 md:mb-10 bg-skin-surface">
+            <div className="relative w-56 md:w-64 h-72 md:h-80 rounded-[3rem] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)] border-4 border-white/20 mb-8 md:mb-10 bg-skin-surface">
               <img src={preview} alt="Scanning area" className="w-full h-full object-cover opacity-60" />
               {/* Scanning Laser Line */}
               <motion.div 
@@ -437,7 +468,9 @@ export default function ScanPage() {
             >
               <div className="space-y-2">
                 <div className="flex items-center justify-center gap-3">
-                   <Sparkles className="animate-pulse w-5 h-5 text-skin-violet" />
+                   <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}>
+                     <Sparkles className="w-5 h-5 text-skin-violet" />
+                   </motion.div>
                    <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-content-primary">Analyzing your skin</h2>
                 </div>
                 <div className="h-6 overflow-hidden">
@@ -468,13 +501,13 @@ export default function ScanPage() {
 
       {/* Trust Message */}
       <footer className="text-center pt-12 md:pt-16 relative z-10">
-         <div className="max-w-md mx-auto p-5 md:p-6 rounded-2xl md:rounded-3xl bg-skin-surface border border-white/5 opacity-80 backdrop-blur-sm shadow-2xl">
+         <GlassCard className="max-w-md mx-auto p-5 md:p-6 opacity-80">
             <p className="text-[10px] text-content-muted font-black uppercase tracking-widest mb-3">Built for trust</p>
             <p className="text-xs text-content-secondary font-bold leading-relaxed">
               Your photos are encrypted and only visible to you. 
               SkinMinder provides cosmetic analysis — not medical diagnosis.
             </p>
-         </div>
+         </GlassCard>
       </footer>
     </div>
   );
