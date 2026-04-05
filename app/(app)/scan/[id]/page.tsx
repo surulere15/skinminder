@@ -591,27 +591,23 @@ export default function ScanResultsPage() {
               Your Skin Analysis
             </h1>
             <p className="text-sm text-content-secondary leading-relaxed max-w-2xl">
-              {intel.summary || "Your skin currently appears balanced in some areas, with mild pigmentation sensitivity and early texture concerns."}
+              {intel.summary || "Your skin appears generally balanced, with mild pigmentation sensitivity and early texture irregularity. Your strongest area is oil balance, while your biggest opportunity is tone-evening support."}
             </p>
           </div>
 
           {/* Quick confidence indicators */}
           <div className="flex flex-wrap items-center gap-3 md:gap-4 text-[11px] text-content-muted font-medium">
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5">
-              <Eye size={11} className="text-skin-violet" />
-              Quality: {scan.scan_quality || 92}%
+              <ShieldCheck size={11} className="text-emerald-400" />
+              Scan Confidence: {scan.confidence || "High"}
             </span>
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5">
               <Sun size={11} className="text-skin-gold" />
-              Lighting: {scan.lighting_quality || "Good"}
+              Photo Quality: {scan.lighting_quality || "Good"}
             </span>
             <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5">
-              <ShieldCheck size={11} className="text-emerald-400" />
-              Confidence: {scan.confidence || "High"}
-            </span>
-            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5">
-              <Clock size={11} />
-              Just now
+              <Eye size={11} className="text-skin-violet" />
+              Assessment Type: Cosmetic AI analysis
             </span>
           </div>
         </header>
@@ -706,8 +702,8 @@ export default function ScanResultsPage() {
         {/* C. SKIN HEALTH SCORECARDS */}
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-bold text-content-primary">Skin Health Metrics</h3>
-            <p className="text-sm text-content-secondary mt-0.5">Detailed analysis of your skin's current condition</p>
+            <h3 className="text-lg font-bold text-content-primary">Your Skin Metrics</h3>
+            <p className="text-sm text-content-secondary mt-0.5">A structured breakdown of the visible skin signals detected from your scan</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -824,8 +820,8 @@ export default function ScanResultsPage() {
         {/* H. PERSONALIZED ROUTINE — Morning / Evening */}
         <div className="space-y-6">
           <div>
-            <h3 className="text-lg font-bold text-content-primary">Your Recommended Routine</h3>
-            <p className="text-sm text-content-secondary mt-0.5">Category-based steps tailored to your skin profile</p>
+            <h3 className="text-lg font-bold text-content-primary">Your Personalized Routine</h3>
+            <p className="text-sm text-content-secondary mt-0.5">Built around hydration stability, pigmentation support, and barrier-safe consistency</p>
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6">
