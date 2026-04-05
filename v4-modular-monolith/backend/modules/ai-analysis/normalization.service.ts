@@ -12,4 +12,5 @@ export class NormalizationService {
     return { score: 0.8, passed: true, confidenceScore: 0.9, metrics: {}, isAcceptable: true, feedback: "" };
   }
   calculateConfidenceScore(_metrics: Record<string, number>) { return 0.9; }
+  async normalizeImage(_url: string) { return { normalizedPath: _url }; }
 }
