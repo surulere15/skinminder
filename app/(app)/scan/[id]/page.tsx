@@ -35,6 +35,54 @@ import { ClinicalPrescription } from "@/components/ui/clinical-prescription";
 import { AIDiagnosticOverlay } from "@/components/ui/ai-diagnostic-overlay";
 import { PredictiveModeling } from "@/components/ui/predictive-modeling";
 
+// Generate human-readable AI interpretation from scan data
+function generateInterpretation(scan: any): string {
+  const hydration = Math.round((scan.hydration_score || 0.68) * 100);
+  const oilBalance = Math.round((scan.oil_balance || 0.8) * 100);
+  const texture = Math.round((scan.texture_score || 0.55) * 100);
+  const pigmentation = Math.round((scan.pigmentation_score || 0.72) * 100);
+  const redness = Math.round((1 - (scan.irritation_probability || 0.15)) * 100);
+
+  // Find strongest and weakest areas
+  const metrics = [
+    { label: "oil balance", score: oilBalance },
+    { label: "hydration", score: hydration },
+    { label: "redness control", score: redness },
+    { label: "texture consistency", score: texture },
+    { label: "pigmentation evenness", score: pigmentation },
+  ].sort((a, b) => b.score - a.score);
+
+  const strongest = metrics[0];
+  const weakest = metrics[metrics.length - 1];
+  const secondWeakest = metrics[metrics.length - 2];
+
+  // Build interpretation
+  const overall = hydration + oilBalance + texture + pigmentation + redness;
+  const avgScore = overall / 5;
+
+  let intro: string;
+  if (avgScore >= 75) {
+    intro = "Your analysis suggests a skin pattern that is generally healthy and well-balanced";
+  } else if (avgScore >= 60) {
+    intro = "Your analysis suggests a skin pattern that is generally stable";
+  } else {
+    intro = "Your analysis suggests your skin is showing several areas that could benefit from more targeted support";
+  }
+
+  const strongestList = metrics.filter(m => m.score >= 65).map(m => m.label);
+  const concernList = metrics.filter(m => m.score < 65).map(m => m.label);
+
+  let body = `Your analysis suggests a skin pattern that is ${avgScore >= 70 ? "generally healthy" : "generally stable"}, with the strongest areas being ${strongestList.length > 0 ? strongestList.join(" and ") : strongest.label}.`;
+
+  if (concernList.length > 0) {
+    body += ` The most noticeable concerns are ${concernList.join(" and ")}.`;
+  }
+
+  body += " This usually means your skin may benefit more from tone-evening support, barrier-safe hydration, and a less aggressive routine.";
+
+  return body;
+}
+
 // Metric card data generator
 function getMetricCards(scan: any) {
   const hydration = Math.round((scan.hydration_score || 0.68) * 100);
@@ -497,7 +545,35 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* D. INTELLIGENCE MAP */}
+        {/* D. AI INTERPRETATION — "What SkinMinder sees" */}
+        <GlassCard className="p-6 md:p-8">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-skin-violet/10 flex items-center justify-center flex-shrink-0 border border-skin-violet/20 mt-0.5">
+              <Sparkles size={18} className="text-skin-violet" />
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-bold text-content-primary">What SkinMinder sees</h3>
+                <p className="text-sm text-content-secondary mt-1">Intelligent interpretation of your skin patterns</p>
+              </div>
+              <p className="text-sm text-content-muted leading-relaxed max-w-3xl">
+                {intel.interpretation || generateInterpretation(scan)}
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-skin-violet/10 border border-skin-violet/20">
+                  <ShieldCheck size={12} className="text-skin-violet" />
+                  <span className="text-[11px] font-bold text-skin-violet">Barrier-safe approach recommended</span>
+                </div>
+                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-skin-gold/10 border border-skin-gold/20">
+                  <Sun size={12} className="text-skin-gold" />
+                  <span className="text-[11px] font-bold text-skin-gold">Consistent sun protection advised</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </GlassCard>
+
+        {/* E. INTELLIGENCE MAP */}
         <GlassCard className="p-6 md:p-8">
           <div className="mb-6">
             <h3 className="text-lg font-bold text-content-primary">Skin Health Map</h3>
