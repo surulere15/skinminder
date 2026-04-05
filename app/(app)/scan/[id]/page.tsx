@@ -35,6 +35,125 @@ import { ClinicalPrescription } from "@/components/ui/clinical-prescription";
 import { AIDiagnosticOverlay } from "@/components/ui/ai-diagnostic-overlay";
 import { PredictiveModeling } from "@/components/ui/predictive-modeling";
 
+// Metric card data generator
+function getMetricCards(scan: any) {
+  const hydration = Math.round((scan.hydration_score || 0.68) * 100);
+  const oilBalance = Math.round((scan.oil_balance || 0.8) * 100);
+  const texture = Math.round((scan.texture_score || 0.55) * 100);
+  const poreVisibility = Math.round((scan.pore_score || 0.6) * 100);
+  const pigmentation = Math.round((scan.pigmentation_score || 0.72) * 100);
+  const redness = Math.round((1 - (scan.irritation_probability || 0.15)) * 100);
+  const breakoutRisk = Math.round((1 - (scan.acne_risk || 0.2)) * 100);
+
+  function getStatus(score: number) {
+    if (score >= 80) return { label: "Excellent", color: "text-emerald-400" };
+    if (score >= 65) return { label: "Good", color: "text-emerald-400/80" };
+    if (score >= 50) return { label: "Moderate", color: "text-amber-400" };
+    if (score >= 35) return { label: "Needs attention", color: "text-amber-400/80" };
+    return { label: "Priority concern", color: "text-red-400" };
+  }
+
+  function getBarColor(score: number) {
+    if (score >= 65) return "bg-emerald-400/80";
+    if (score >= 50) return "bg-amber-400/80";
+    return "bg-red-400/80";
+  }
+
+  return [
+    {
+      label: "Hydration",
+      score: hydration,
+      status: getStatus(hydration).label,
+      statusColor: getStatus(hydration).color,
+      barColor: getBarColor(hydration),
+      icon: Droplets,
+      bgColor: "bg-skin-violet/10",
+      iconColor: "text-skin-violet",
+      explanation: hydration >= 65
+        ? "Your skin appears reasonably hydrated, though some areas may benefit from more moisture retention support."
+        : "Your skin shows signs of dehydration. Consider incorporating a hydrating serum and barrier-supporting moisturizer.",
+    },
+    {
+      label: "Oil Balance",
+      score: oilBalance,
+      status: getStatus(oilBalance).label,
+      statusColor: getStatus(oilBalance).color,
+      barColor: getBarColor(oilBalance),
+      icon: Zap,
+      bgColor: "bg-skin-gold/10",
+      iconColor: "text-skin-gold",
+      explanation: oilBalance >= 65
+        ? "Sebum production appears well-regulated. Your skin maintains a healthy oil-to-moisture ratio."
+        : "Oil production appears uneven. A gentle balancing cleanser and lightweight moisturizer may help regulate sebum.",
+    },
+    {
+      label: "Texture",
+      score: texture,
+      status: getStatus(texture).label,
+      statusColor: getStatus(texture).color,
+      barColor: getBarColor(texture),
+      icon: Activity,
+      bgColor: "bg-skin-glow/10",
+      iconColor: "text-skin-glow",
+      explanation: texture >= 65
+        ? "Surface smoothness is generally good, with only slight texture inconsistency in some areas."
+        : "Surface smoothness shows noticeable inconsistency. Gentle exfoliation and consistent hydration may help refine texture.",
+    },
+    {
+      label: "Pore Visibility",
+      score: poreVisibility,
+      status: getStatus(poreVisibility).label,
+      statusColor: getStatus(poreVisibility).color,
+      barColor: getBarColor(poreVisibility),
+      icon: Eye,
+      bgColor: "bg-skin-violet/10",
+      iconColor: "text-skin-violet",
+      explanation: poreVisibility >= 65
+        ? "Pores appear refined and minimally visible. Your skin's surface structure is in good condition."
+        : "Pores appear more visible than ideal, particularly in the T-zone. Consistent cleansing and niacinamide may help.",
+    },
+    {
+      label: "Pigmentation",
+      score: pigmentation,
+      status: getStatus(pigmentation).label,
+      statusColor: getStatus(pigmentation).color,
+      barColor: getBarColor(pigmentation),
+      icon: Sun,
+      bgColor: "bg-amber-500/10",
+      iconColor: "text-amber-400",
+      explanation: pigmentation >= 65
+        ? "Skin tone appears relatively even, with only mild pigmentation irregularity in some areas."
+        : "Visible uneven tone suggests mild to moderate pigmentation irregularity. Consistent sun protection and targeted brightening may help.",
+    },
+    {
+      label: "Redness & Sensitivity",
+      score: redness,
+      status: getStatus(redness).label,
+      statusColor: getStatus(redness).color,
+      barColor: getBarColor(redness),
+      icon: ShieldCheck,
+      bgColor: "bg-red-400/10",
+      iconColor: "text-red-400",
+      explanation: redness >= 65
+        ? "Your skin barrier appears resilient with minimal visible redness or sensitivity markers."
+        : "Visible redness suggests mild barrier sensitivity. Gentle, fragrance-free products and barrier repair ingredients may help.",
+    },
+    {
+      label: "Breakout Risk",
+      score: breakoutRisk,
+      status: getStatus(breakoutRisk).label,
+      statusColor: getStatus(breakoutRisk).color,
+      barColor: getBarColor(breakoutRisk),
+      icon: Sparkles,
+      bgColor: "bg-skin-glow/10",
+      iconColor: "text-skin-glow",
+      explanation: breakoutRisk >= 65
+        ? "Current breakout indicators are low. Your skin appears clear with minimal active inflammation."
+        : "Some breakout indicators are present. A consistent cleansing routine and targeted spot treatment may help manage active concerns.",
+    },
+  ];
+}
+
 // Glass card with depth
 function GlassCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
@@ -301,7 +420,7 @@ export default function ScanResultsPage() {
             <GlassCard className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-widest text-skin-muted">Skin Score</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-skin-muted">Overall Skin Score</p>
                   <p className="text-[10px] font-black uppercase text-skin-violet tracking-[0.2em] opacity-60 mt-0.5">vs Biological Potential</p>
                 </div>
                 <div className="text-right">
@@ -323,29 +442,62 @@ export default function ScanResultsPage() {
                   />
                 </div>
               </div>
-
-              {/* Dermal markers */}
-              <div className="grid grid-cols-2 gap-3 mt-6">
-                {[
-                  { label: "Hydration", value: `${Math.round((scan.hydration_score || 0.68) * 100)}%`, icon: Droplets, color: "text-skin-violet" },
-                  { label: "Pigmentation", value: `${Math.round((scan.pigmentation_score || 0.72) * 100)}%`, icon: Sun, color: "text-skin-gold" },
-                  { label: "Texture", value: `${Math.round((scan.texture_score || 0.55) * 100)}%`, icon: Activity, color: "text-skin-glow" },
-                  { label: "Oil Balance", value: `${Math.round((scan.oil_balance || 0.8) * 100)}%`, icon: Zap, color: "text-skin-violet" },
-                ].map((item) => (
-                  <div key={item.label} className="p-3 rounded-xl bg-white/[0.03] border border-white/5">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <item.icon size={12} className={item.color} />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-content-muted opacity-60">{item.label}</span>
-                    </div>
-                    <span className="text-lg font-black text-content-primary">{item.value}</span>
-                  </div>
-                ))}
-              </div>
             </GlassCard>
           </div>
         </div>
 
-        {/* C. INTELLIGENCE MAP */}
+        {/* C. SKIN HEALTH SCORECARDS */}
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-bold text-content-primary">Skin Health Metrics</h3>
+            <p className="text-sm text-content-secondary mt-0.5">Detailed analysis of your skin's current condition</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {getMetricCards(scan).map((metric, i) => (
+              <motion.div
+                key={metric.label}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <GlassCard className="p-5 md:p-6 h-full">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={cn("w-9 h-9 rounded-xl flex items-center justify-center", metric.bgColor)}>
+                        <metric.icon size={18} className={metric.iconColor} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-content-primary">{metric.label}</p>
+                        <p className={cn("text-[10px] font-black uppercase tracking-wider", metric.statusColor)}>
+                          {metric.status}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-2xl font-black text-content-primary">{metric.score}</p>
+                      <p className="text-[9px] font-bold text-content-muted opacity-40">/100</p>
+                    </div>
+                  </div>
+
+                  {/* Score bar */}
+                  <div className="h-1.5 w-full bg-white/[0.04] rounded-full overflow-hidden mb-3">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${metric.score}%` }}
+                      transition={{ duration: 1.2, delay: 0.3 + i * 0.1, ease: "circOut" }}
+                      className={cn("h-full rounded-full", metric.barColor)}
+                    />
+                  </div>
+
+                  <p className="text-xs text-content-muted leading-relaxed">{metric.explanation}</p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* D. INTELLIGENCE MAP */}
         <GlassCard className="p-6 md:p-8">
           <div className="mb-6">
             <h3 className="text-lg font-bold text-content-primary">Skin Health Map</h3>
@@ -354,10 +506,10 @@ export default function ScanResultsPage() {
           <SkinRadar />
         </GlassCard>
 
-        {/* D. PREDICTIVE MODELING */}
+        {/* E. PREDICTIVE MODELING */}
         <PredictiveModeling />
 
-        {/* E. ACTION PLAN — MORNING / EVENING ROUTINE */}
+        {/* F. ACTION PLAN — MORNING / EVENING ROUTINE */}
         <section className="space-y-6">
           <div>
             <h3 className="text-lg font-bold text-content-primary">Your Personalized Routine</h3>
@@ -375,7 +527,7 @@ export default function ScanResultsPage() {
           />
         </section>
 
-        {/* F. NEXT ACTIONS */}
+        {/* G. NEXT ACTIONS */}
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Link href="/scan" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full h-14 px-12 rounded-2xl font-bold border border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out">
@@ -395,7 +547,7 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* G. MEDICAL DISCLAIMER */}
+        {/* H. MEDICAL DISCLAIMER */}
         <GlassCard className="p-5 md:p-6 !border-amber-500/15 !bg-amber-500/5">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
