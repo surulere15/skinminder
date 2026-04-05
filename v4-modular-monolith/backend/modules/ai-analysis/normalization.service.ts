@@ -13,4 +13,5 @@ export class NormalizationService {
   }
   calculateConfidenceScore(_metrics: Record<string, number>) { return 0.9; }
   async normalizeImage(_url: string) { return { normalizedPath: _url }; }
+  checkConsistency(_prev: any, _quality: ScanQualityResult) { return { isConsistent: true, deviations: [] }; }
 }
