@@ -130,6 +130,107 @@ function getProfileCards(scan: any) {
   ];
 }
 
+// Product recommendations grouped by routine role
+function getProductGroups(scan: any) {
+  const hydration = Math.round((scan.hydration_score || 0.68) * 100);
+  const pigmentation = Math.round((scan.pigmentation_score || 0.72) * 100);
+  const irritation = Math.round((scan.irritation_probability || 0.15) * 100);
+  const oilBalance = Math.round((scan.oil_balance || 0.8) * 100);
+
+  const groups: { role: string; products: any[] }[] = [];
+
+  // Cleanse group
+  const cleanseProducts = [
+    {
+      name: "Gentle pH-Balanced Cleanser",
+      category: "Cleanser",
+      why: "A mild, non-stripping cleanser that respects your skin's natural acid mantle while removing daily buildup.",
+      image: "",
+      url: "/products/cleanser",
+    },
+  ];
+  if (oilBalance > 70) {
+    cleanseProducts.push({
+      name: "Salicylic Acid Cleanser",
+      category: "Cleanser",
+      why: "Your oil balance suggests a gentle BHA cleanser could help manage excess sebum without over-drying.",
+      image: "",
+      url: "/products/bha-cleanser",
+    });
+  }
+  groups.push({ role: "Cleanse", products: cleanseProducts });
+
+  // Treat group
+  const treatProducts: any[] = [];
+  if (pigmentation < 70) {
+    treatProducts.push({
+      name: "Vitamin C Brightening Serum",
+      category: "Treatment",
+      why: "Your pigmentation score suggests a vitamin C serum could help support tone evenness and reduce dark spot visibility over time.",
+      image: "",
+      url: "/products/vitamin-c",
+    });
+  }
+  if (irritation > 25) {
+    treatProducts.push({
+      name: "Centella Barrier Repair Serum",
+      category: "Treatment",
+      why: "Your barrier condition indicates centella or panthenol-based support could help strengthen your skin's natural defense.",
+      image: "",
+      url: "/products/centella",
+    });
+  }
+  if (treatProducts.length === 0) {
+    treatProducts.push({
+      name: "Niacinamide 10% Serum",
+      category: "Treatment",
+      why: "A versatile treatment serum that supports pore refinement, tone evenness, and oil balance for overall skin health.",
+      image: "",
+      url: "/products/niacinamide",
+    });
+  }
+  groups.push({ role: "Treat", products: treatProducts });
+
+  // Hydrate group
+  const hydrateProducts = [
+    {
+      name: "Hyaluronic Acid Hydrating Serum",
+      category: "Hydration",
+      why: hydration < 60
+        ? "Your hydration levels suggest your skin would benefit from a multi-weight hyaluronic acid serum for deeper moisture support."
+        : "A lightweight hydrating serum helps maintain your skin's moisture balance throughout the day.",
+      image: "",
+      url: "/products/hyaluronic-acid",
+    },
+  ];
+  if (hydration < 55) {
+    hydrateProducts.push({
+      name: "Ceramide-Rich Moisturizer",
+      category: "Hydration",
+      why: "Your barrier condition suggests ceramide-based hydration could help repair and strengthen your skin's moisture barrier.",
+      image: "",
+      url: "/products/ceramide",
+    });
+  }
+  groups.push({ role: "Hydrate", products: hydrateProducts });
+
+  // Protect group
+  groups.push({
+    role: "Protect",
+    products: [
+      {
+        name: "SPF 50+ Daily Sunscreen",
+        category: "Protection",
+        why: "Daily sun protection is the single most important step for preventing further pigmentation and maintaining your skin's improvements.",
+        image: "",
+        url: "/products/sunscreen",
+      },
+    ],
+  });
+
+  return groups;
+}
+
 // Routine step generators — category-based, not brand-based
 function getMorningSteps(scan: any) {
   const hydration = Math.round((scan.hydration_score || 0.68) * 100);
@@ -823,7 +924,73 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* J. NEXT ACTIONS */}
+        {/* J. PRODUCT RECOMMENDATIONS */}
+        <div className="space-y-6">
+          <div className="flex items-end justify-between">
+            <div>
+              <h3 className="text-lg font-bold text-content-primary">Suggested Products for Your Skin Profile</h3>
+              <p className="text-sm text-content-secondary mt-0.5">Matched to your routine goals and visible skin concerns</p>
+            </div>
+          </div>
+
+          {/* Grouped by routine role */}
+          {getProductGroups(scan).map((group) => (
+            <div key={group.role} className="space-y-4">
+              <h4 className="text-xs font-black uppercase tracking-widest text-skin-muted ml-1">{group.role}</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {group.products.map((product, i) => (
+                  <motion.div
+                    key={product.name}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <GlassCard className="p-4 h-full flex flex-col">
+                      {/* Product image placeholder */}
+                      <div className="aspect-square rounded-2xl bg-white/[0.03] border border-white/5 mb-4 flex items-center justify-center overflow-hidden">
+                        {product.image ? (
+                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-12 h-12 rounded-xl bg-white/[0.04] flex items-center justify-center">
+                            <Droplets size={20} className="text-content-muted opacity-30" />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Badge className="rounded-full px-2 py-0.5 bg-skin-violet/10 text-skin-violet border border-skin-violet/20 text-[9px] font-black uppercase tracking-wider">
+                            {product.category}
+                          </Badge>
+                        </div>
+                        <p className="text-sm font-bold text-content-primary leading-tight mb-1">{product.name}</p>
+                        <p className="text-xs text-content-muted leading-relaxed">{product.why}</p>
+                      </div>
+
+                      <Button
+                        variant="ghost"
+                        className="mt-4 w-full h-10 rounded-xl text-xs font-bold border border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out"
+                        onClick={() => product.url && window.open(product.url, '_blank')}
+                      >
+                        View Product <ChevronRight size={12} className="ml-1" />
+                      </Button>
+                    </GlassCard>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          {/* Trust note */}
+          <div className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.02] border border-white/5">
+            <ShieldCheck size={16} className="text-skin-gold flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-content-muted leading-relaxed">
+              Products are recommended based on your visible skin profile and routine goals. We do not sell these products and receive no commission — these are suggestions to help you build an effective routine.
+            </p>
+          </div>
+        </div>
+
+        {/* K. NEXT ACTIONS */}
         <div className="flex flex-col sm:flex-row gap-4 pt-4">
           <Link href="/scan" className="w-full sm:w-auto">
             <Button variant="ghost" className="w-full h-14 px-12 rounded-2xl font-bold border border-white/5 text-content-secondary hover:bg-white/5 hover:text-content-primary transition-all duration-300 ease-out">
@@ -843,7 +1010,7 @@ export default function ScanResultsPage() {
           </div>
         </div>
 
-        {/* K. MEDICAL DISCLAIMER */}
+        {/* L. MEDICAL DISCLAIMER */}
         <GlassCard className="p-5 md:p-6 !border-amber-500/15 !bg-amber-500/5">
           <div className="flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
