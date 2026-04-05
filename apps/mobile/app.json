@@ -21,6 +21,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.skinminder.app",
+      "associatedDomains": ["applinks:skinminder.ai"],
       "infoPlist": {
         "NSCameraUsageDescription": "SkinMinder uses your camera to analyze your skin and provide personalized recommendations.",
         "NSPhotoLibraryUsageDescription": "SkinMinder accesses your photos to let you upload existing skin images for analysis.",
@@ -36,7 +37,16 @@
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [{ "scheme": "skinminder", "host": "*" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
       ]
+    },
+    "privacy": "https://skinminder.ai/privacy",
     },
     "web": {
       "bundler": "metro",

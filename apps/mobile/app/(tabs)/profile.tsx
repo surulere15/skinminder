@@ -19,7 +19,7 @@ export default function ProfileScreen() {
         Alert.alert("Notifications", "Coming soon.");
         break;
       case "Privacy & Security":
-        Alert.alert("Privacy & Security", "Coming soon.");
+        Linking.openURL("https://skinminder.ai/privacy");
         break;
       case "Data & Storage":
         Alert.alert("Data & Storage", "Coming soon.");
