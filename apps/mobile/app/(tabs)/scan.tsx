@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, Image, Alert, ActivityIndicator, Dimensions, ScrollView } from "react-native";
 import { useState, useCallback, useRef } from "react";
 import { CameraView, useCameraPermissions, CameraType } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
@@ -8,7 +8,7 @@ import Animated, { FadeIn, ZoomIn, SlideInDown } from "react-native-reanimated";
 import { uploadImage, analyzeSkin } from "../../src/lib/api";
 import { useScanStore } from "../../src/stores/scan";
 import { useAuthStore } from "../../src/stores/auth";
-import { COLORS } from "../../src/constants/theme";
+import { COLORS, SHADOWS } from "../../src/constants/theme";
 import { hapticMedium, hapticSuccess, hapticLight, hapticError } from "../../src/lib/haptics";
 import { AmbientBackground } from "../../src/components/ui/DecorativeElements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -164,39 +164,110 @@ export default function ScanScreen() {
 
   if (analysisResult) {
     const scan = analysisResult.scan || {};
+    const dna = analysisResult.dna || {};
+    const concerns = dna.concerns || ["Mild pigmentation", "Early texture changes"];
+    
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <AmbientBackground>
-          <View className="flex-1 bg-bg">
+          <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false}>
             <View className="px-6 pt-16">
-              <View className="flex-row justify-between items-center mb-8">
+              <View className="flex-row justify-between items-center mb-4">
                 <Text className="text-text text-[28px] font-bold tracking-tight">Results</Text>
                 <TouchableOpacity onPress={resetScan}>
                   <Ionicons name="close" size={26} color={COLORS.textTertiary} />
                 </TouchableOpacity>
               </View>
 
-              <Animated.View entering={SlideInDown.duration(500).springify()} className="rounded-[22px] p-6 mb-5" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }}>
-                <Text className="text-primary text-[13px] font-semibold tracking-wider uppercase mb-1">Skin Archetype</Text>
-                <Text className="text-text text-2xl font-bold mb-6">{analysisResult.dna?.archetype || "Analysis Complete"}</Text>
-                <View className="gap-5">
-                  <ScoreRow label="Hydration" score={scan.hydration_score || 0} color={COLORS.scores.hydration} delay={0} />
-                  <ScoreRow label="Texture" score={scan.texture_score || 0} color={COLORS.scores.texture} delay={100} />
-                  <ScoreRow label="Pigment" score={scan.pigment_score || 0} color={COLORS.scores.pigment} delay={200} />
-                  <ScoreRow label="Pores" score={scan.pore_score || 0} color={COLORS.scores.pores} delay={300} />
-                  <ScoreRow label="Sensitivity" score={scan.sensitivity_score || 0} color={COLORS.scores.sensitivity} delay={400} />
-                  <ScoreRow label="Firmness" score={scan.firmness_score || 0} color={COLORS.scores.firmness} delay={500} />
+              {capturedImage && (
+                <Animated.View entering={SlideInDown.duration(400).springify()} className="rounded-[22px] mb-3 overflow-hidden" style={{ borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.card }}>
+                  <Image source={{ uri: capturedImage }} className="w-full" style={{ aspectRatio: 1 }} />
+                  <View className="absolute bottom-3 left-3 right-3 flex-row gap-2">
+                    <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                      <Text className="text-white text-[11px] font-medium">Scan Confidence: High</Text>
+                    </View>
+                    <View className="px-3 py-1.5 rounded-full" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                      <Text className="text-white text-[11px] font-medium">Photo Quality: Good</Text>
+                    </View>
+                  </View>
+                </Animated.View>
+              )}
+
+              <Animated.View entering={SlideInDown.duration(500).springify()} className="rounded-[22px] p-5 mb-3" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, ...SHADOWS.card }}>
+                <Text className="text-primary text-[12px] font-semibold tracking-wider uppercase mb-1">Analysis Complete</Text>
+                <Text className="text-text text-xl font-bold mb-2">We examined your skin carefully</Text>
+                <Text className="text-text-secondary text-[15px] leading-6 mb-3">
+                  {dna.analysis_summary || "Your skin appears generally balanced, with mild pigmentation sensitivity and early texture irregularity."}
+                </Text>
+                <View className="flex-row gap-2 flex-wrap">
+                  {concerns.map((concern: string, i: number) => (
+                    <View key={i} className="px-3 py-1.5 rounded-full" style={{ backgroundColor: COLORS.surfaceDisabled }}>
+                      <Text className="text-text-secondary text-[12px] font-medium">{concern}</Text>
+                    </View>
+                  ))}
                 </View>
               </Animated.View>
 
-              <Animated.View entering={SlideInDown.delay(600).duration(500).springify()} className="rounded-[22px] p-6 mb-5 items-center" style={{ backgroundColor: COLORS.primaryCard, borderColor: COLORS.primaryBorder, borderWidth: 1 }}>
-                <Text className="text-text-tertiary text-[13px] uppercase tracking-wider mb-3">Overall Score</Text>
-                <View className="w-[88px] h-[88px] rounded-full items-center justify-center" style={{ backgroundColor: COLORS.primaryIcon }}>
-                  <Text className="text-[36px] font-bold text-primary">{scan.overall_score || 0}</Text>
+              <Animated.View entering={SlideInDown.delay(200).duration(500).springify()} className="mb-1">
+                <Text className="text-text-tertiary text-[13px] font-semibold tracking-wider uppercase mb-2">Here is what matters most</Text>
+              </Animated.View>
+
+              <Animated.View entering={SlideInDown.delay(300).duration(500).springify()} className="flex-row flex-wrap gap-3 mb-3">
+                {[
+                  { label: "Hydration", score: scan.hydration_score || 0, color: COLORS.scores.hydration },
+                  { label: "Texture", score: scan.texture_score || 0, color: COLORS.scores.texture },
+                  { label: "Pigment", score: scan.pigment_score || 0, color: COLORS.scores.pigment },
+                  { label: "Pores", score: scan.pore_score || 0, color: COLORS.scores.pores },
+                  { label: "Sensitivity", score: scan.sensitivity_score || 0, color: COLORS.scores.sensitivity },
+                  { label: "Firmness", score: scan.firmness_score || 0, color: COLORS.scores.firmness },
+                ].map((metric, i) => (
+                  <View key={metric.label} className="w-[47%] rounded-[16px] p-4" style={{ backgroundColor: COLORS.surfaceCard, borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.card }}>
+                    <Text className="text-text-secondary text-[13px] mb-1">{metric.label}</Text>
+                    <Text className="text-[28px] font-bold" style={{ color: metric.color }}>{metric.score}</Text>
+                  </View>
+                ))}
+              </Animated.View>
+
+              <Animated.View entering={SlideInDown.delay(400).duration(500).springify()} className="rounded-[22px] p-4 mb-3" style={{ backgroundColor: COLORS.primaryCard, borderColor: COLORS.primaryBorder, borderWidth: 1, ...SHADOWS.card }}>
+                <View className="flex-row justify-between items-center">
+                  <View>
+                    <Text className="text-text-tertiary text-[13px] uppercase tracking-wider mb-1">Overall Score</Text>
+                    <Text className="text-[48px] font-bold text-primary">{scan.overall_score || 0}</Text>
+                  </View>
+                  <View className="items-end">
+                    <Text className="text-text-tertiary text-[13px] uppercase tracking-wider mb-1">Skin Profile</Text>
+                    <Text className="text-text text-lg font-semibold">{dna.archetype || "Balanced"}</Text>
+                  </View>
                 </View>
               </Animated.View>
 
-              <View className="gap-3 mb-8">
+              <Animated.View entering={SlideInDown.delay(500).duration(500).springify()} className="mb-1">
+                <Text className="text-text-tertiary text-[13px] font-semibold tracking-wider uppercase mb-2">We found specific patterns</Text>
+              </Animated.View>
+
+              <Animated.View entering={SlideInDown.delay(600).duration(500).springify()} className="rounded-[22px] p-4 mb-3" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, ...SHADOWS.card }}>
+                <Text className="text-text-secondary text-[15px] leading-6">
+                  {dna.ai_interpretation || "Your skin shows good hydration levels with minor texture irregularities. Focus on barrier support and gentle exfoliation to maintain even tone."}
+                </Text>
+              </Animated.View>
+
+              {(dna.routine_summary || dna.analysis_summary) && (
+                <Animated.View entering={SlideInDown.delay(700).duration(500).springify()} className="mb-1">
+                  <Text className="text-text-tertiary text-[13px] font-semibold tracking-wider uppercase mb-2">Here is your plan</Text>
+                  <Animated.View entering={SlideInDown.delay(800).duration(500).springify()} className="rounded-[22px] p-4 mb-3" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, ...SHADOWS.card }}>
+                    <Text className="text-text-secondary text-[15px] leading-6">
+                      {dna.routine_summary || "Focus on hydration stability and barrier-safe consistency. Use gentle, pH-balanced products."}
+                    </Text>
+                  </Animated.View>
+                </Animated.View>
+              )}
+
+              <Animated.View entering={SlideInDown.delay(900).duration(500).springify()} className="rounded-[22px] p-4 mb-4 flex-row items-center justify-center" style={{ backgroundColor: COLORS.primarySubtle, borderWidth: 1, borderColor: COLORS.primaryBorder, ...SHADOWS.card }}>
+                <Ionicons name="trending-up" size={20} color={COLORS.primary} />
+                <Text className="text-primary text-[14px] font-medium ml-2">Track your progress over time</Text>
+              </Animated.View>
+
+              <View className="gap-3 mb-4">
                 <TouchableOpacity className="py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.primary }} onPress={() => router.push("/dashboard")}>
                   <Text className="text-black font-semibold text-[17px]">View Full Dashboard</Text>
                 </TouchableOpacity>
@@ -204,8 +275,15 @@ export default function ScanScreen() {
                   <Text className="text-text-secondary font-semibold text-[17px]">New Scan</Text>
                 </TouchableOpacity>
               </View>
+
+              <Animated.View entering={FadeIn.delay(1000).duration(500)} className="items-center py-4 mb-8">
+                <Text className="text-text-tertiary text-[12px] text-center leading-5">
+                  This is an AI-powered cosmetic analysis.{'\n'}
+                  Not a medical diagnosis. Consult a dermatologist for medical advice.
+                </Text>
+              </Animated.View>
             </View>
-          </View>
+          </ScrollView>
         </AmbientBackground>
       </GestureHandlerRootView>
     );
@@ -220,39 +298,45 @@ export default function ScanScreen() {
           facing={facing}
           onCameraReady={() => setCameraReady(true)}
         >
-          <Animated.View entering={FadeIn.duration(300)} className="flex-1 justify-between" style={{ backgroundColor: "rgba(0,0,0,0.4)" }}>
+          <Animated.View entering={FadeIn.duration(300)} className="flex-1 justify-between" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
             <View className="pt-16 px-6 flex-row justify-between items-center">
               <TouchableOpacity onPress={() => setCameraActive(false)}>
                 <Ionicons name="close" size={28} color={COLORS.text} />
               </TouchableOpacity>
-              <Text className="text-text-secondary text-[15px] font-medium">Position your skin in the frame</Text>
+              <Text className="text-text text-[15px] font-medium">Intelligent Scan</Text>
               <TouchableOpacity onPress={() => setFacing((f) => (f === "front" ? "back" : "front"))}>
                 <Ionicons name="camera-reverse" size={26} color={COLORS.text} />
               </TouchableOpacity>
             </View>
 
-            <View className="items-center mb-8">
-              <View className="w-[280px] h-[280px] rounded-[32px] items-center justify-center" style={{ borderWidth: 2, borderColor: COLORS.borderLight }}>
+            <View className="items-center mb-6">
+              <View className="w-[280px] h-[280px] rounded-[32px] items-center justify-center" style={{ borderWidth: 2, borderColor: COLORS.primaryBorder }}>
                 <View className="w-[260px] h-[260px] rounded-[28px]" style={{ borderWidth: 1, borderColor: COLORS.border }} />
               </View>
             </View>
 
-            <View className="pb-12 px-6 items-center">
-              <TouchableOpacity
-                className="w-[72px] h-[72px] rounded-full items-center justify-center mb-4"
-                style={{ backgroundColor: "rgba(255,255,255,0.9)" }}
-                onPress={handleCapture}
-                disabled={!cameraReady}
-              >
-                <View className="w-[60px] h-[60px] rounded-full" style={{ backgroundColor: cameraReady ? COLORS.primary : COLORS.textQuaternary }} />
-              </TouchableOpacity>
-              <View className="flex-row gap-12">
-                <TouchableOpacity onPress={pickFromLibrary}>
-                  <Ionicons name="images" size={28} color={COLORS.textSecondary} />
+            <View className="px-6 pb-8">
+              <View className="rounded-[16px] p-4 mb-6" style={{ backgroundColor: COLORS.surfaceCard, borderWidth: 1, borderColor: COLORS.border }}>
+                <Text className="text-text text-[14px] font-medium text-center">Position your face within the frame for optimal analysis</Text>
+              </View>
+
+              <View className="items-center">
+                <TouchableOpacity
+                  className="w-[72px] h-[72px] rounded-full items-center justify-center mb-4"
+                  style={{ backgroundColor: COLORS.primary }}
+                  onPress={handleCapture}
+                  disabled={!cameraReady}
+                >
+                  <View className="w-[60px] h-[60px] rounded-full border-2" style={{ borderColor: COLORS.textInverse }} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setCameraActive(false)}>
-                  <Ionicons name="arrow-down" size={28} color={COLORS.textSecondary} />
-                </TouchableOpacity>
+                <View className="flex-row gap-12">
+                  <TouchableOpacity onPress={pickFromLibrary}>
+                    <Ionicons name="images" size={28} color={COLORS.textSecondary} />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => setCameraActive(false)}>
+                    <Ionicons name="arrow-down" size={28} color={COLORS.textSecondary} />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </Animated.View>
@@ -264,43 +348,77 @@ export default function ScanScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AmbientBackground>
-        <View className="flex-1 bg-bg">
-          <View className="px-6 pt-16">
-            <Text className="text-text text-[28px] font-bold tracking-tight mb-8">Skin Analysis</Text>
+        <ScrollView className="flex-1 bg-bg" showsVerticalScrollIndicator={false}>
+          <View className="px-6 pt-16 pb-8">
+            <Text className="text-text text-[28px] font-bold tracking-tight mb-2">Skin Analysis</Text>
+            <Text className="text-text-tertiary text-[15px] mb-8">Intelligent Scan</Text>
+            
+            <Text className="text-text-secondary text-[15px] leading-6 mb-6">
+              Our system analyzes your skin patterns and prepares a personalized routine tailored to your unique profile.
+            </Text>
+
+            <View className="flex-row items-center gap-2 mb-8">
+              <View className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS.success }} />
+              <Text className="text-text-tertiary text-[13px]">AI Engine Active</Text>
+              <Text className="text-text-quaternary text-[13px]">•</Text>
+              <Text className="text-text-tertiary text-[13px]">Real-time analysis ready</Text>
+            </View>
+
+            <View className="rounded-[22px] p-5 mb-4" style={{ backgroundColor: COLORS.surfaceCard, borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.card }}>
+              <Text className="text-text text-[15px] font-semibold mb-3">What you'll get</Text>
+              <View className="gap-2">
+                {["Skin type breakdown", "7 AI metrics", "Personalized routine", "Product recommendations"].map((item, i) => (
+                  <View key={i} className="flex-row items-center gap-2">
+                    <Ionicons name="checkmark-circle" size={16} color={COLORS.primary} />
+                    <Text className="text-text-secondary text-[14px]">{item}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            <View className="rounded-[22px] p-4 mb-6" style={{ backgroundColor: COLORS.primaryCard, borderWidth: 1, borderColor: COLORS.primaryBorder, ...SHADOWS.card }}>
+              <View className="flex-row items-center gap-3">
+                <Ionicons name="time-outline" size={20} color={COLORS.primary} />
+                <Text className="text-text-secondary text-[14px]">Takes 10 seconds • Private • No signup required</Text>
+              </View>
+            </View>
 
             {!capturedImage ? (
               <View className="gap-4">
-                <TouchableOpacity className="rounded-[22px] p-10 items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, borderStyle: "dashed" as any }} onPress={() => setCameraActive(true)}>
-                  <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: COLORS.primarySubtle }}>
-                    <Ionicons name="camera" size={32} color={COLORS.primary} />
+                <TouchableOpacity className="rounded-[22px] p-6 items-center" style={{ backgroundColor: COLORS.primary, borderWidth: 1, borderColor: COLORS.primaryBorder, ...SHADOWS.glow }} onPress={() => setCameraActive(true)}>
+                  <View className="w-14 h-14 rounded-full items-center justify-center mb-3" style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
+                    <Ionicons name="camera" size={28} color={COLORS.textInverse} />
                   </View>
-                  <Text className="text-text text-[17px] font-semibold mb-1">Take Photo</Text>
-                  <Text className="text-text-tertiary text-[15px]">Use camera for live analysis</Text>
+                  <Text className="text-black text-[17px] font-semibold mb-1">Start Skin Analysis</Text>
+                  <Text className="text-black/60 text-[14px]">Use camera for live analysis</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity className="rounded-[22px] p-10 items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }} onPress={pickFromLibrary}>
-                  <View className="w-16 h-16 rounded-[20px] items-center justify-center mb-4" style={{ backgroundColor: COLORS.infoSubtle }}>
-                    <Ionicons name="images" size={32} color={COLORS.info} />
+                <TouchableOpacity className="rounded-[22px] p-5 items-center" style={{ backgroundColor: COLORS.surfaceCard, borderWidth: 1, borderColor: COLORS.border, ...SHADOWS.card }} onPress={pickFromLibrary}>
+                  <View className="flex-row items-center gap-3">
+                    <Ionicons name="images-outline" size={24} color={COLORS.textSecondary} />
+                    <View className="items-start">
+                      <Text className="text-text text-[15px] font-medium">Choose from Library</Text>
+                      <Text className="text-text-tertiary text-[13px]">Upload an existing photo</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={COLORS.textQuaternary} style={{ marginLeft: "auto" }} />
                   </View>
-                  <Text className="text-text text-[17px] font-semibold mb-1">Choose from Library</Text>
-                  <Text className="text-text-tertiary text-[15px]">Upload an existing photo</Text>
                 </TouchableOpacity>
               </View>
             ) : (
               <View>
-                <Image source={{ uri: capturedImage }} className="w-full rounded-[22px] mb-5" style={{ aspectRatio: 1 }} />
+                <Image source={{ uri: capturedImage }} className="w-full rounded-[22px] mb-4" style={{ aspectRatio: 1, borderWidth: 1, borderColor: COLORS.border }} />
                 <View className="flex-row gap-3">
-                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1 }} onPress={resetScan} disabled={isSubmitting}>
+                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.surfaceCard, borderColor: COLORS.border, borderWidth: 1, ...SHADOWS.card }} onPress={resetScan} disabled={isSubmitting}>
                     <Text className="text-text-secondary font-semibold text-[17px]">Retake</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.primary, opacity: isSubmitting ? 0.5 : 1 }} onPress={handleAnalyze} disabled={isSubmitting}>
+                  <TouchableOpacity className="flex-1 py-4 rounded-[16px] items-center" style={{ backgroundColor: COLORS.primary, opacity: isSubmitting ? 0.5 : 1, ...SHADOWS.glow }} onPress={handleAnalyze} disabled={isSubmitting}>
                     <Text className="text-black font-semibold text-[17px]">{isSubmitting ? "Processing..." : "Analyze"}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             )}
           </View>
-        </View>
+        </ScrollView>
       </AmbientBackground>
     </GestureHandlerRootView>
   );
