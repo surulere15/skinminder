@@ -16,4 +16,7 @@ export class PartnerService {
   async getPartnerStats(_partnerId: string): Promise<PartnerStats> {
     return { totalViews: 0, totalMatches: 0, totalConversions: 0, conversionRate: 0 };
   }
+  async getPartnerIntelligence(_partnerId: string): Promise<PartnerStats> {
+    return { totalViews: 0, totalMatches: 0, totalConversions: 0, conversionRate: 0 };
+  }
 }
