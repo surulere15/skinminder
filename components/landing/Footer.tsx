@@ -5,8 +5,7 @@ export default function Footer() {
         <div>
           <p className="text-sm font-medium">Skinminder</p>
           <p className="mt-1 text-xs text-white/42">
-            A premium skin guidance platform designed to help users understand
-            their skin, simplify routines, and track progress over time.
+            Premium skin guidance designed for clarity, consistency, and progress.
           </p>
         </div>
 

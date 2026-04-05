@@ -3,10 +3,10 @@ import GlassCard from "./GlassCard";
 
 export default function Solution() {
   const items = [
-    ["Scan", "Capture a guided skin check in seconds."],
-    ["Understand", "See what may be happening with breakouts, dark spots, redness, or irritation."],
-    ["Follow", "Get a simple routine you can actually stay consistent with."],
-    ["Track", "See whether your skin is improving over time."],
+    ["Scan", "Guided skin check in seconds."],
+    ["Understand", "See visible concerns more clearly."],
+    ["Follow", "Use a simpler routine with confidence."],
+    ["Track", "Monitor progress over time."],
   ];
 
   return (

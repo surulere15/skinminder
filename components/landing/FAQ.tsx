@@ -5,23 +5,23 @@ export default function FAQ() {
   const faqs = [
     [
       "Does Skinminder diagnose skin conditions?",
-      "No. Skinminder is designed to help users understand visible skin patterns and follow clearer guidance. It does not replace professional medical care.",
+      "No. Skinminder helps users understand visible skin patterns and follow clearer guidance. It does not replace professional medical care.",
     ],
     [
-      "What can it help me with?",
-      "It can help you check visible concerns such as breakouts, dark spots, redness, irritation, and routine consistency.",
+      "What can it help with?",
+      "It helps you check visible concerns like breakouts, dark spots, redness, irritation, and routine consistency.",
     ],
     [
-      "Why would I keep using it?",
-      "Because the value increases over time. Repeated scans and progress tracking help you see whether your routine is actually helping.",
+      "Why keep using it?",
+      "Because the value increases over time. Repeated scans and progress tracking help you see whether your routine is working.",
     ],
     [
-      "Is it only for one skin type?",
-      "No. Skinminder is designed to support a broad range of skin tones and user contexts.",
+      "Is it for all skin tones?",
+      "Skinminder is designed to support a broad range of skin tones and user contexts.",
     ],
     [
       "Is the routine complicated?",
-      "No. The goal is to simplify what you do, not overload you with unnecessary steps.",
+      "No. The goal is to simplify what you do, not overload you.",
     ],
   ];
 

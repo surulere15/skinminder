@@ -25,9 +25,9 @@ export default function ProgressSection() {
             The value gets stronger the more you use it.
           </h2>
           <p className="mt-5 text-sm leading-8 text-white/66 md:text-base">
-            Skinminder is not just about one scan. It is built to help you see
-            what changes, what stays the same, and whether your routine is
-            moving your skin in the right direction.
+            Skinminder is built for more than one scan. Over time, it helps you
+            see what is changing, what is stable, and whether your routine is
+            moving in the right direction.
           </p>
 
           <ul className="mt-8 space-y-3 text-sm text-white/65">

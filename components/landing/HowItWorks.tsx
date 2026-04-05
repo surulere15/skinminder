@@ -3,9 +3,9 @@ import GlassCard from "./GlassCard";
 
 export default function HowItWorks() {
   const steps = [
-    ["01", "Scan your skin", "Take a guided photo to start your skin check."],
-    ["02", "Get clear insights", "Understand visible patterns like acne, dark spots, irritation, and routine-related stress."],
-    ["03", "Follow and improve", "Use a simple routine and track how your skin changes over time."],
+    ["01", "Scan your skin", "Take a guided photo to begin your skin check."],
+    ["02", "Get clear insights", "See readable observations and next-step guidance."],
+    ["03", "Follow and improve", "Stay consistent and track how your skin changes over time."],
   ];
 
   return (

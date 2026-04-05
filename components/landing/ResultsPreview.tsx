@@ -9,11 +9,10 @@ export default function ResultsPreview() {
             What you get
           </p>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
-            Clear output, not generic AI noise.
+            Clear guidance, designed to be understood.
           </h2>
           <p className="mt-5 max-w-xl text-sm leading-8 text-white/66 md:text-base">
-            Skinminder is designed to give you useful, structured feedback that
-            feels calm, readable, and practical.
+            Skinminder gives you structured feedback that feels calm, readable, and useful — not overwhelming.
           </p>
 
           <ul className="mt-8 space-y-3 text-sm text-white/65">
@@ -27,7 +26,7 @@ export default function ResultsPreview() {
         <GlassCard className="p-6">
           <div className="grid gap-4 md:grid-cols-2">
             {[
-              ["Observations", "Mild breakouts are visible along the cheeks with dark spots from previous irritation."],
+              ["Observations", "Mild breakouts are visible along the cheeks, with dark spots from previous irritation."],
               ["Interpretation", "This appears consistent with mild acne and post-inflammatory marks."],
               ["Routine Guidance", "Keep the routine simple: gentle cleanser, niacinamide, moisturizer, and daily sunscreen."],
               ["Safety Notes", "If your skin feels sensitive, avoid layering multiple strong treatments at once."],

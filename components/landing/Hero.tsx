@@ -18,8 +18,7 @@ export default function Hero() {
           </h1>
 
           <p className="mt-7 max-w-xl text-base leading-8 text-white/68 md:text-lg">
-            Scan your skin, get clear insights, and follow a simple routine that
-            works — without guesswork, overwhelm, or confusing product advice.
+            Scan your skin, get clear insights, and follow a simpler routine with more confidence.
           </p>
 
           <div className="mt-9 flex flex-col gap-4 sm:flex-row">
@@ -41,7 +40,7 @@ export default function Hero() {
           </div>
 
           <p className="mt-6 text-sm text-white/50">
-            No diagnosis. No guesswork. Just clear, safe guidance.
+            Clear guidance. No guesswork. Built for consistency.
           </p>
         </div>
 

@@ -3,9 +3,9 @@ import GlassCard from "./GlassCard";
 
 export default function FeatureGrid() {
   const items = [
-    ["Skin Scan", "Start with a guided photo-based skin check."],
-    ["Clear Insights", "Understand visible concerns in calm, readable language."],
-    ["Routine Guidance", "Get simple steps without overwhelming complexity."],
+    ["Skin Scan", "Start with a guided photo-based check."],
+    ["Clear Insights", "Understand visible concerns in plain language."],
+    ["Routine Guidance", "Get simple steps without unnecessary complexity."],
     ["Progress Tracking", "See changes over time and stay consistent."],
     ["Smart Reminders", "Keep your routine and scans on track."],
     ["Multi-Language Ready", "Designed for broader access across global markets."],

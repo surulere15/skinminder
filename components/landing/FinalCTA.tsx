@@ -8,11 +8,11 @@ export default function FinalCTA() {
         <GlassCard className="overflow-hidden p-8 md:p-12">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="text-3xl font-semibold tracking-tight md:text-5xl">
-              Start with clarity.
+              Start with more clarity.
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-sm leading-8 text-white/66 md:text-base">
-              Get a clearer view of your skin, follow a routine that makes
-              sense, and track your progress with more confidence.
+              Get a clearer view of your skin, follow a simpler routine, and
+              track progress with more confidence.
             </p>
 
             <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
@@ -33,7 +33,7 @@ export default function FinalCTA() {
             </div>
 
             <p className="mt-5 text-sm text-white/45">
-              Built for people who want smarter skin guidance without the confusion.
+              Smarter skin guidance without the confusion.
             </p>
           </div>
         </GlassCard>

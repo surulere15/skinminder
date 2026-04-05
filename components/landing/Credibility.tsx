@@ -3,9 +3,9 @@ import GlassCard from "./GlassCard";
 
 export default function Credibility() {
   const items = [
-    ["Designed for real use", "Built for repeat skin checks, not one-time novelty."],
-    ["Structured guidance", "Clear output designed to reduce confusion, not add more of it."],
-    ["Premium experience", "A calm, polished interface that feels modern and credible."],
+    ["Built for repeat use", "Designed around consistency, not one-time novelty."],
+    ["Structured by design", "Output is organized to reduce confusion, not add more of it."],
+    ["Designed to feel trustworthy", "Calm language, premium UI, and simple next steps."],
   ];
 
   return (

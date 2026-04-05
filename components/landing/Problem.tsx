@@ -3,16 +3,16 @@ import GlassCard from "./GlassCard";
 export default function Problem() {
   const pains = [
     {
-      title: "Too much conflicting advice",
-      desc: "Online skincare tips rarely match your actual skin.",
+      title: "Conflicting advice",
+      desc: "Most skincare advice is generic. Your skin is not.",
     },
     {
-      title: "Too many unnecessary products",
-      desc: "Most routines become more expensive before they become more effective.",
+      title: "Routine overload",
+      desc: "More products do not always mean better results.",
     },
     {
-      title: "No clear way to track progress",
-      desc: "It is hard to know if your skin is improving or just fluctuating.",
+      title: "No clear progress",
+      desc: "It is hard to tell whether your skin is improving or just fluctuating.",
     },
   ];
 
@@ -27,13 +27,12 @@ export default function Problem() {
             Skincare gets confusing faster than it gets effective.
           </h2>
           <p className="mt-6 text-sm leading-8 text-white/66 md:text-base">
-            Too many products. Too much advice. Too little clarity on what your
+            Too many products. Too much advice. Not enough clarity on what your
             skin actually needs.
           </p>
           <p className="mt-4 text-sm leading-8 text-white/66 md:text-base">
-            Most people are left guessing what is really happening, which
-            products matter, whether their routine is working, and when they are
-            doing too much.
+            Most people are left guessing what is happening, what to use, and
+            whether anything is really working.
           </p>
           <p className="mt-6 text-sm font-medium text-white/80">
             Skinminder brings structure, clarity, and consistency back into the

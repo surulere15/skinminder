@@ -1,9 +1,9 @@
 export default function TrustStrip() {
   const items = [
-    "Designed for multiple skin tones",
-    "Built for repeat use, not one-time novelty",
-    "Simple guidance without product overload",
-    "Premium experience, globally ready",
+    "Designed for diverse skin tones",
+    "Built for repeat use",
+    "Clear guidance, less overload",
+    "Global-ready experience",
   ];
 
   return (

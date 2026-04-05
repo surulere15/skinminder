@@ -3,10 +3,10 @@ import GlassCard from "./GlassCard";
 
 export default function Benefits() {
   const items = [
-    ["Understand your skin more clearly", "See what may be happening without trying to decode random advice online."],
+    ["Understand your skin", "See what may be happening without decoding random advice online."],
     ["Simplify your routine", "Focus on what matters instead of stacking too many products."],
-    ["Track real progress", "Compare scans over time to see whether your routine is actually helping."],
-    ["Stay more consistent", "A clearer process makes it easier to keep going."],
+    ["Track what changes", "Compare scans over time to see whether your routine is helping."],
+    ["Stay consistent", "A clearer process makes it easier to keep going."],
   ];
 
   return (
