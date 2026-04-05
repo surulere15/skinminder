@@ -1,0 +1,14 @@
+node_modules/
+build/
+.vercel/
+.git/
+apps/mobile/
+architecture-scaffold/
+v3-scaffold/
+v4-modular-monolith/
+db/
+npm-cache/
+*.tgz
+test_face.jpg
+.env.local
+.env.*.local

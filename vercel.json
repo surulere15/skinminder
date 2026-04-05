@@ -2,19 +2,16 @@
   "github": {
     "silent": true
   },
-  "buildCommand": "npm run build",
-  "installCommand": "npm install",
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install",
   "framework": "nextjs",
   "regions": ["iad1"],
   "functions": {
-    "build/server.js": {
-      "maxDuration": 300
+    "app/api/scan/route.ts": {
+      "maxDuration": 120
+    },
+    "app/api/upload/route.ts": {
+      "maxDuration": 60
     }
-  },
-  "crons": [
-    {
-      "path": "/api/health",
-      "schedule": "*/5 * * * *"
-    }
-  ]
+  }
 }

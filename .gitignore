@@ -61,7 +61,3 @@ test_*.png
 architecture-scaffold/
 v3-scaffold/
 npm-cache/
-
-# Misc
-__styled_jsx__/
-Library/
