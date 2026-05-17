@@ -101,6 +101,9 @@ const config: Config = {
         'shimmer': 'shimmer 2s infinite',
         'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
       },
+      boxShadow: {
+        glow: '0 0 20px rgba(201, 169, 110, 0.4), 0 0 40px rgba(201, 169, 110, 0.2)',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],
