@@ -63,8 +63,8 @@ export async function runFullSkinOrchestration(params: {
   const startTime = Date.now();
   const { userId, imageUrl, bodyArea, userProfile, concerns, metadata } = params;
   const normalization = new NormalizationService();
-  const orchestrationService = new OrchestrationService(); // Instantiate OrchestrationService
-  const phenotypes = new PhenotypeService(); // Instantiate PhenotypeService
+  const orchestrationService = new OrchestrationService(process.env.ANTHROPIC_API_KEY);
+  const phenotypes = new PhenotypeService();
 
   try {
     // -----------------------------------------------------------------------
@@ -117,7 +117,14 @@ export async function runFullSkinOrchestration(params: {
     const graph = new GraphService();
     if (interpretation?.environment) {
         try {
-            environmentId = await graph.recordEnvironment(interpretation.environment);
+            environmentId = await graph.recordEnvironment({
+                scanId: 'temp',
+                humidity: interpretation.environment.humidity,
+                uvIndex: interpretation.environment.uv_index,
+                temperature: 20,
+                pollution: interpretation.environment.pollution,
+                location: metadata?.location || 'unknown',
+            });
         } catch (e) {
             console.warn("[Orchestrator] Environment recording failed:", e);
         }

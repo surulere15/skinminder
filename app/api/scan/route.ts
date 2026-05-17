@@ -44,13 +44,12 @@ async function handlePost(request: NextRequest) {
     profile = data;
   }
 
-  const orchestrator = new OrchestrationService();
+  const orchestrator = new OrchestrationService(process.env.ANTHROPIC_API_KEY);
   const analysis = await orchestrator.analyze({
     userId: finalUserId,
     imageUrl,
-    bodyArea,
-    userProfile: profile,
-    concerns: concerns || [],
+    location: profile?.location,
+    skinTone: profile?.skin_tone_category,
   });
 
   if (analysis.error || !analysis.data) {
