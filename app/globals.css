@@ -4,198 +4,174 @@
 
 @layer base {
   :root {
-    /* SkinMinder VisionOS Glass Design System (2026 Premium) */
+    /* SkinMinder Elite "Master Class" Design System (2026) */
     
-    /* Base Palette - Soft neutral, no pure white */
-    --glass-bg: 247 248 250;           /* #F7F8FA - soft neutral */
-    --glass-surface: 255 255 255;       /* #FFFFFF - translucent surface */
-    --glass-border: 255 255 255;         /* white for border */
+    /* Core Chromatic Logic - Balanced for ultra-dark environments */
+    --background: 0 0% 0%;                /* Pure Black #000000 */
+    --foreground: 0 0% 100%;             /* Pure White #FFFFFF */
     
-    /* Glass Opacity Layers */
-    --glass-1: rgba(255, 255, 255, 0.4);
-    --glass-2: rgba(255, 255, 255, 0.6);
-    --glass-3: rgba(255, 255, 255, 0.75);
-    --glass-4: rgba(255, 255, 255, 0.85);
+    /* Flagship Accent: Clinical Gold */
+    --accent-gold-h: 39;
+    --accent-gold-s: 50%;
+    --accent-gold-l: 61%;                /* #C9A96E */
+    --accent-gold: var(--accent-gold-h) var(--accent-gold-s) var(--accent-gold-l);
+    --gold-glow: hsla(var(--accent-gold-h), var(--accent-gold-s), var(--accent-gold-l), 0.15);
     
-    /* Subtle Accent - Gold (premium, not loud) */
-    --accent-gold: 198 168 91;          /* #C6A85B */
+    /* Surface Logic - Depth-based layering */
+    --glass-surface: 0 0% 2%;             /* #050505 */
+    --glass-elevated: 0 0% 4%;            /* #0A0A0A */
+    --glass-border: hsla(0, 0%, 100%, 0.08);
+    --glass-border-bright: hsla(0, 0%, 100%, 0.12);
     
     /* Text Hierarchy */
-    --text-primary: 28 28 30;           /* #1C1C1E - high contrast */
-    --text-secondary: 107 114 128;      /* #6B7280 - soft gray */
-    --text-tertiary: 156 163 175;       /* #9CA3AF - subtle */
+    --text-primary: 0 0% 100%;
+    --text-secondary: 240 5% 65%;        /* Zinc-400 */
+    --text-muted: 240 4% 46%;            /* Zinc-500 */
     
-    /* Status Colors - Soft, medical tone */
-    --status-success: 104 211 145;      /* #68D391 - mint */
-    --status-warning: 246 173 85;       /* #F6AD55 - soft amber */
-    --status-danger: 252 129 129;       /* #FC8181 - soft rose */
-    
-    /* SkinMinder Brand */
-    --skin-primary: 157 164 255;
-    --skin-violet: 157 164 255;
-    --skin-pearl: 250 251 255;
-    --skin-muted: 107 114 128;
-    --skin-dark: 28 28 30;
-    --skin-graphite: 55 65 81;
-    
-    /* Standardized Themed Variables */
-    --background: var(--glass-bg);
-    --foreground: var(--text-primary);
+    /* Status Signals - High-fidelity clinical glows */
+    --status-success: 158 82% 45%;       /* Emerald-500 */
+    --status-warning: 38 92% 50%;        /* Amber-500 */
+    --status-danger: 0 72% 51%;          /* Red-500 */
 
-    --primary: var(--skin-primary);
-    --primary-foreground: 255 255 255;
+    /* Standard Shadcn/ui Mapping */
+    --primary: var(--accent-gold);
+    --primary-foreground: 0 0% 0%;
     
-    --secondary: var(--glass-2);
-    --secondary-foreground: var(--text-primary);
+    --secondary: 0 0% 9%;                /* Zinc-900 */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: var(--glass-2);
-    --muted-foreground: var(--text-secondary);
+    --muted: 0 0% 9%;
+    --muted-foreground: 240 5% 65%;
 
     --accent: var(--accent-gold);
-    --accent-foreground: var(--text-primary);
+    --accent-foreground: 0 0% 0%;
 
-    --card: var(--glass-3);
-    --card-foreground: var(--text-primary);
+    --card: 0 0% 2%;
+    --card-foreground: 0 0% 100%;
 
-    --border: rgba(255, 255, 255, 0.4);
-    --input: var(--glass-2);
-    --ring: var(--skin-primary);
+    --border: 0 0% 12%;                 /* Zinc-800 */
+    --input: 0 0% 12%;
+    --ring: var(--accent-gold);
 
-    --radius: 20px;
-    --max-width: 1280px;
+    --radius: 24px;
+    --max-width: 1440px;
 
-    /* Soft elevation - no heavy shadows */
-    --shadow-glass: 0 4px 24px -6px rgba(0, 0, 0, 0.08);
-    --shadow-float: 0 8px 32px -8px rgba(0, 0, 0, 0.12);
+    /* Shadow Patterns */
+    --shadow-elite: 0 20px 50px -12px rgba(0, 0, 0, 0.8), 0 0 1px 0 rgba(255, 255, 255, 0.1);
+    --shadow-glow: 0 0 30px -10px hsla(var(--accent-gold-h), var(--accent-gold-s), var(--accent-gold-l), 0.3);
   }
 }
 
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
-  body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: var(--font-sans);
+  html, body {
+    @apply bg-black text-foreground antialiased;
+    font-family: system-ui, -apple-system, sans-serif;
+    scroll-behavior: smooth;
+    min-height: 100%;
+  }
+  
+  ::selection {
+    background-color: hsla(var(--accent-gold-h), var(--accent-gold-s), var(--accent-gold-l), 0.3);
+    color: white;
+  }
+  /* Force dark context for all children to prevent white gaps */
+  main, section, div, header, footer {
+    @apply bg-transparent;
   }
 }
 
 @layer components {
-  /* VisionOS Glass Card - Core Component */
-  .glass-card {
-    @apply relative overflow-hidden;
+  /* Elite Master Glass - Multi-layered depth */
+  .glass-master {
+    @apply relative overflow-hidden backdrop-blur-3xl;
     background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.75) 0%,
-      rgba(255, 255, 255, 0.5) 100%
+      165deg,
+      hsla(0, 0%, 100%, 0.05) 0%,
+      hsla(0, 0%, 100%, 0.01) 100%
     );
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: var(--shadow-glass);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-elite);
   }
-
-  /* Glass Panel - Larger surface */
-  .glass-panel {
-    @apply relative overflow-hidden;
+  .glass-master::before {
+    content: "";
+    @apply absolute inset-0 pointer-events-none opacity-20;
     background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.65) 0%,
-      rgba(255, 255, 255, 0.35) 100%
+      135deg, 
+      hsla(0, 0%, 100%, 0.1) 0%, 
+      transparent 40%, 
+      transparent 60%, 
+      hsla(0, 0%, 100%, 0.05) 100%
     );
-    backdrop-filter: blur(30px) saturate(200%);
-    -webkit-backdrop-filter: blur(30px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    box-shadow: var(--shadow-float);
+    z-index: -1;
   }
 
-  /* Pearlized surface - Subtle edge glow */
-  .pearlized {
-    @apply relative overflow-hidden;
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 
-      inset 0 1px 1px rgba(255, 255, 255, 0.6),
-      0 2px 8px -2px rgba(0, 0, 0, 0.06);
+  /* High-Fidelity Clinical Mesh Background */
+  .dermal-grid {
+    background-image: 
+      radial-gradient(circle at 2px 2px, hsla(0, 0%, 100%, 0.03) 1px, transparent 0);
+    background-size: 24px 24px;
   }
 
-  /* Soft Surface - No blur */
-  .soft-surface {
-    @apply bg-white/60 border border-white/40;
-    box-shadow: 0 2px 12px -4px rgba(0, 0, 0, 0.08);
-  }
-
-  /* VisionOS-style floating layer */
-  .glass-float {
-    @apply relative;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(40px) saturate(250%);
-    -webkit-backdrop-filter: blur(40px) saturate(250%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 
-      0 24px 48px -12px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  }
-
-  /* Clinical Button - Premium feel */
-  .clinical-btn {
-    @apply relative overflow-hidden transition-all duration-200 
-           bg-skin-violet text-white font-semibold rounded-2xl
-           shadow-lg shadow-skin-violet/20
-           hover:brightness-105 active:scale-[0.98];
-  }
-
-  /* Glass Ghost Button */
-  .glass-ghost {
-    @apply relative overflow-hidden transition-all duration-200 
-           bg-white/30 border border-white/40 font-medium rounded-2xl;
-    color: rgb(var(--text-primary));
-  }
-  .glass-ghost:hover {
-    @apply bg-white/50 border-white/60;
-  }
-
-  /* Typography - Clean hierarchy */
-  .text-premium { @apply font-semibold tracking-tight; }
-  .text-heading { @apply font-semibold tracking-tight; color: rgb(var(--text-primary)); }
-  .text-body-soft { @apply font-normal; color: rgb(var(--text-secondary)); }
-  .text-micro { @apply text-xs font-medium uppercase tracking-wider; }
-
-  /* Gradient Backgrounds */
-  .bg-glass-gradient {
-    background: linear-gradient(
-      180deg,
-      #F7F8FA 0%,
-      #EDEFF3 100%
-    );
-  }
-
-  .bg-glass-mesh {
+  .dermal-mesh {
+    @apply fixed inset-0 pointer-events-none -z-50;
     background: 
-      radial-gradient(circle at 20% 20%, rgba(157, 164, 255, 0.06) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(198, 168, 91, 0.04) 0%, transparent 50%),
-      linear-gradient(180deg, #F7F8FA 0%, #EDEFF3 100%);
+      radial-gradient(circle at 15% 15%, hsla(var(--accent-gold-h), 50%, 50%, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, hsla(var(--accent-gold-h), 50%, 40%, 0.03) 0%, transparent 40%),
+      linear-gradient(to bottom, #000000, #050505);
   }
 
-  /* Soft pearl border - mimics VisionOS edge glow */
-  .pearl-edge {
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  /* Intelligence Panel - Glowing gold active state */
+  .active-hub {
+    background-color: hsla(var(--primary), 0.1);
+    border-color: hsla(var(--primary), 0.3);
+    @apply text-white shadow-glow;
+    backdrop-filter: blur(12px);
   }
 
-  /* Subtle hover lift */
-  .hover-lift-glass {
-    @apply transition-all duration-300;
-  }
-  .hover-lift-glass:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.12);
+  /* Premium Diagnostic Button */
+  .clinical-btn {
+    @apply relative overflow-hidden transition-all duration-300 font-bold uppercase tracking-widest text-[11px]
+           text-black rounded-2xl shadow-lg hover:shadow-glow hover:scale-[1.02] active:scale-[0.98];
+    background-color: hsl(var(--primary));
   }
 
-  .glass-hover {
-    @apply transition-all duration-200 hover:bg-white/70;
+  .clinical-btn-ghost {
+    @apply relative overflow-hidden transition-all duration-300 font-bold uppercase tracking-widest text-[11px]
+           border text-white/60 rounded-2xl hover:text-white;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .clinical-btn-ghost:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Typography - Professional diagnostic styling */
+  .text-diagnostic {
+    @apply font-bold italic uppercase tracking-tighter;
+    font-feature-settings: "ss01", "ss02";
+  }
+  
+  .text-label {
+    @apply text-[10px] font-black uppercase tracking-[0.2em] text-white/40;
+  }
+
+  /* Micro-interactions */
+  .hover-glow:hover {
+    border-color: hsla(var(--primary), 0.4);
+    @apply shadow-glow;
+  }
+
+  /* Animation primitives */
+  .animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
   }
 }

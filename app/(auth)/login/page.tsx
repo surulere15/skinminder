@@ -38,36 +38,43 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center premium-gradient px-6 py-20">
+    <div className="min-h-screen flex items-center justify-center bg-black px-6 py-20 relative overflow-hidden">
+      {/* Background Blobs */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[#c9a96e]/10 blur-3xl opacity-50" />
+        <div className="absolute right-[-8%] top-[10%] h-[360px] w-[360px] rounded-full bg-white/[0.03] blur-3xl opacity-50" />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         <div className="flex flex-col items-center mb-8 space-y-4">
           <Link href="/" className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg">
-              <Sparkles className="text-primary-foreground w-7 h-7" />
+            <div className="w-12 h-12 rounded-2xl bg-[#c9a96e] flex items-center justify-center shadow-lg shadow-[#c9a96e]/20">
+              <Sparkles className="text-black w-7 h-7" />
             </div>
-            <Logo3D className="h-10 w-40" />
+            <Logo3D className="h-10 w-40 text-white" />
           </Link>
         </div>
 
-        <Card className="border-none shadow-2xl bg-skin-surface p-4">
+        <Card className="border border-white/10 shadow-2xl bg-white/[0.03] backdrop-blur-xl p-4">
           <CardHeader className="space-y-1 text-center pt-6">
-            <CardTitle className="text-3xl font-black text-content-primary">Welcome Back</CardTitle>
-            <CardDescription className="text-base font-medium text-content-secondary">
+            <CardTitle className="text-3xl font-black text-white">Welcome Back</CardTitle>
+            <CardDescription className="text-base font-medium text-white/50">
               Continue your skin intelligence journey.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-10 pt-0">
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-content-primary ml-1">Email</label>
+                <label className="text-xs font-black uppercase tracking-widest text-[#c9a96e] ml-1">Email</label>
                 <Input 
                   type="email" 
                   placeholder="name@example.com" 
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -75,11 +82,12 @@ export default function LoginPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between ml-1">
-                  <label className="text-xs font-black uppercase tracking-widest text-content-primary">Password</label>
-                  <Link href="#" className="text-xs font-bold text-content-primary hover:underline">Forgot password?</Link>
+                  <label className="text-xs font-black uppercase tracking-widest text-[#c9a96e]">Password</label>
+                  <Link href="#" className="text-xs font-bold text-white/50 hover:text-white hover:underline">Forgot password?</Link>
                 </div>
                 <Input 
                   type="password" 
+                  className="bg-white/5 border-white/10 text-white"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -102,9 +110,9 @@ export default function LoginPage() {
             </form>
 
             <div className="mt-8 text-center">
-              <p className="text-sm text-content-primary font-medium">
+              <p className="text-sm text-white/50 font-medium">
                 Don't have an account?{" "}
-                <Link href="/signup" className="text-content-primary font-black hover:underline">
+                <Link href="/signup" className="text-[#c9a96e] font-black hover:underline">
                   Create one now
                 </Link>
               </p>

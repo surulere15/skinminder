@@ -2,6 +2,7 @@ const withSentryConfig = require('@sentry/nextjs').withSentryConfig;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  optimizeFonts: false,
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'res.cloudinary.com' },
@@ -9,9 +10,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    serverActions: {
-      bodySizeLimit: '10mb',
-    },
+    serverActions: true,
     serverComponentsExternalPackages: ['@napi-rs/canvas'],
   },
 };

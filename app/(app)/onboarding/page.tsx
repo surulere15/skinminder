@@ -67,7 +67,7 @@ export default function OnboardingPage() {
                 });
               }}
               className={`p-4 rounded-2xl border-2 transition-all text-sm font-bold capitalize ${
-                concern === c ? "border-primary bg-muted/50 shadow-sm" : "border-transparent bg-muted/50"
+                concern === c ? "border-[#c9a96e] bg-[#c9a96e]/10 text-[#c9a96e] shadow-sm" : "border-white/5 bg-white/[0.02] text-white/40"
               }`}
             >
               {concern === c && <Check size={16} className="inline mr-2" />}
@@ -83,12 +83,12 @@ export default function OnboardingPage() {
       description: "Scan once a week to see your skin improve over time.",
       content: (
         <div className="space-y-6 text-center py-8">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-            <Sparkles className="w-10 h-10 text-primary" />
+          <div className="w-20 h-20 rounded-full bg-[#c9a96e]/10 flex items-center justify-center mx-auto border border-[#c9a96e]/20">
+            <Sparkles className="w-10 h-10 text-[#c9a96e]" />
           </div>
           <div className="space-y-2">
-            <p className="text-lg font-medium">Your goal: Track {concern} progress</p>
-            <p className="text-sm text-muted">Weekly scans will show you what's working</p>
+            <p className="text-lg font-bold text-white">Your goal: Track {concern} progress</p>
+            <p className="text-sm text-white/40">Weekly scans will show you what's working</p>
           </div>
         </div>
       )
@@ -98,17 +98,23 @@ export default function OnboardingPage() {
   const currentStep = steps[step - 1];
 
   return (
-    <div className="min-h-screen p-6 flex items-center justify-center">
-      <div className="max-w-2xl w-full space-y-8">
+    <div className="min-h-screen bg-black text-white p-6 flex items-center justify-center relative overflow-hidden">
+      {/* Background Blobs */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[#c9a96e]/10 blur-3xl opacity-50" />
+        <div className="absolute right-[-8%] top-[10%] h-[360px] w-[360px] rounded-full bg-white/[0.03] blur-3xl opacity-50" />
+      </div>
+
+      <div className="max-w-2xl w-full space-y-8 relative z-10">
         <div className="flex items-center gap-4 px-4 py-4">
-          <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+          <div className="flex-1 h-2 bg-white/10 rounded-full overflow-hidden">
             <motion.div 
-              className="h-full bg-primary"
+              className="h-full bg-[#c9a96e]"
               initial={{ width: "0%" }}
               animate={{ width: `${(step / steps.length) * 100}%` }}
             />
           </div>
-          <span className="text-xs font-medium">{step}/{steps.length}</span>
+          <span className="text-xs font-bold text-white/50">{step}/{steps.length}</span>
         </div>
 
         <AnimatePresence mode="wait">
@@ -118,11 +124,11 @@ export default function OnboardingPage() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
           >
-            <Card className="border-none shadow-2xl bg-white/80 backdrop-blur-xl">
+            <Card className="border border-white/10 shadow-2xl bg-white/[0.03] backdrop-blur-2xl">
               <CardContent className="p-10 space-y-8">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-black tracking-tight">{currentStep.title}</h1>
-                  <p className="text-muted font-medium">{currentStep.description}</p>
+                <div className="space-y-2 text-center sm:text-left">
+                  <h1 className="text-3xl font-black tracking-tight text-white">{currentStep.title}</h1>
+                  <p className="text-white/50 font-medium">{currentStep.description}</p>
                 </div>
 
                 <div className="min-h-[200px]">

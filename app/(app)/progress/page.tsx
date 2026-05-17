@@ -24,7 +24,7 @@ import {
   Loader2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PremiumCard } from "@/components/ui/premium-card";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -94,26 +94,39 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] bg-background text-content-primary">
-        <Loader2 className="w-12 h-12 text-primary animate-spin" />
-        <p className="mt-6 text-content-muted text-[10px] font-bold uppercase tracking-widest animate-pulse">Sequencing Dermal trajectory...</p>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] bg-black text-white relative overflow-hidden">
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-primary/10 blur-3xl opacity-50" />
+        </div>
+        <div className="relative">
+          <Loader2 className="w-12 h-12 text-primary animate-spin" />
+          <motion.div
+            className="absolute inset-0 rounded-full bg-primary/20"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+        </div>
+        <p className="mt-8 text-[11px] font-black uppercase tracking-[0.2em] text-primary animate-pulse italic">Sequencing Dermal trajectory...</p>
       </div>
     );
   }
 
   if (scans.length === 0) {
     return (
-      <div className="flex-1 p-8 pt-20 flex flex-col items-center justify-center text-center bg-background">
-        <div className="w-20 h-20 bg-skin-surface rounded-2xl flex items-center justify-center mb-8 border border-white/5 shadow-inner">
-          <Activity className="w-10 h-10 text-primary/40" />
+      <div className="flex-1 p-8 pt-20 flex flex-col items-center justify-center text-center bg-black min-h-[80vh] relative overflow-hidden">
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-primary/10 blur-3xl opacity-50" />
         </div>
-        <h2 className="text-3xl font-semibold tracking-tight mb-4 text-content-primary">No Biological Record</h2>
-        <p className="text-content-secondary mb-10 max-w-sm font-normal opacity-80 leading-relaxed">
+        <div className="w-24 h-24 bg-primary/10 rounded-[2rem] flex items-center justify-center mb-10 border border-primary/20 shadow-glow transition-transform hover:scale-110 duration-700">
+          <Activity className="w-12 h-12 text-primary/60" />
+        </div>
+        <h2 className="text-4xl lg:text-6xl text-diagnostic leading-none mb-6">No Biological Record</h2>
+        <p className="text-white/40 text-xl font-medium max-w-lg italic mb-12">
           Your chronological dermal trajectory will initialize once you complete your first clinical scan.
         </p>
         <Link href="/scan/new">
-          <Button variant="clinical" size="lg" className="h-14 px-8 shadow-lg">
-              Start Clinical Scan <ChevronRight className="ml-2 w-5 h-5" />
+          <Button variant="flagship" className="h-20 px-12 text-lg shadow-glow">
+              Start Record Initialization <ChevronRight className="ml-3 w-6 h-6" />
           </Button>
         </Link>
       </div>
@@ -124,195 +137,162 @@ export default function ProgressPage() {
   const lastScan = chartData[chartData.length - 1];
   
   const scoreChange = lastScan && firstScan ? lastScan.score - firstScan.score : 0;
-  const hydrationChange = lastScan && firstScan ? lastScan.hydration - firstScan.hydration : 0;
-
-  // Determine if change is meaningful (not just image variance)
-  const MIN_CHANGE_THRESHOLD = 5;
-  const isScoreMeaningful = Math.abs(scoreChange) >= MIN_CHANGE_THRESHOLD;
-  const hasReliableTrend = chartData.length >= 3;
-
-  // Get trend message and styling
-  const getTrendInfo = () => {
-    if (!hasReliableTrend) {
-      return { 
-        message: "Scan at least 3 times for reliable trend detection", 
-        className: "bg-skin-surface border-white/10 text-content-muted" 
-      };
-    }
-    if (!isScoreMeaningful) {
-      return { 
-        message: "No meaningful change detected yet - keep scanning consistently", 
-        className: "bg-skin-surface border-white/10 text-content-muted" 
-      };
-    }
-    if (scoreChange > 0) {
-      return { 
-        message: "Your routine is working. Keep it up!", 
-        className: "bg-green-500/10 border-green-500/20 text-green-600" 
-      };
-    }
-    return { 
-      message: "Consider adjusting your routine based on your latest scan", 
-      className: "bg-amber-500/10 border-amber-500/20 text-amber-600" 
-    };
-  };
-
-  const trendInfo = getTrendInfo();
+  const hydrationChange = lastScan && firstScan ? Math.round((lastScan.hydration - firstScan.hydration) * 100) : 0;
 
   return (
-    <div className="flex-1 space-y-12 p-4 md:p-8 pt-6 pb-20 bg-background min-h-screen text-content-primary">
-      <div className="flex items-center justify-between border-b border-white/5 pb-10">
-        <div className="text-left space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-skin-surface text-content-secondary text-[10px] font-bold uppercase tracking-widest border border-white/5 shadow-md">
-            <TrendingUp size={12} className="text-primary" /> Longitudinal Analysis
+    <div className="flex-1 space-y-24 p-8 lg:p-16 bg-black min-h-screen text-white relative overflow-hidden">
+      {/* Background Blobs */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-primary/10 blur-3xl opacity-50" />
+        <div className="absolute right-[-8%] top-[10%] h-[360px] w-[360px] rounded-full bg-white/[0.03] blur-3xl opacity-50" />
+      </div>
+
+      <div className="flex items-center justify-between border-b border-white/5 pb-16 relative z-10">
+        <div className="text-left space-y-6 flex-1">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20 shadow-glow italic">
+            <TrendingUp size={14} className="text-primary" /> Longitudinal Analysis Active
           </div>
-          <h2 className="text-4xl font-semibold tracking-tight text-content-primary">Progress Timeline</h2>
-          <p className="text-content-muted font-bold uppercase tracking-widest text-[10px]">Mapping your biological dermal trajectory.</p>
+          <h2 className="text-4xl lg:text-7xl text-diagnostic leading-none">Progress Timeline</h2>
+          <p className="text-white/40 text-xl font-medium max-w-2xl border-l-2 border-primary/30 pl-8 py-1 italic">
+             Biological trajectory initialized. Mapping dermal biomarkers across temporal sequences.
+          </p>
         </div>
       </div>
 
-      {/* Trend Message Banner */}
-      {scans.length > 0 && (
-        <div className={cn("p-4 rounded-xl border text-sm font-medium", trendInfo.className)}>
-          {trendInfo.message}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Trend Summary Cards */}
-        <Card className="bg-skin-surface border border-white/5 shadow-xl rounded-2xl overflow-hidden transition-all hover:bg-white/[0.02]">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                <Activity size={20} />
-              </div>
-              <span className={cn(
-                "text-[10px] font-bold uppercase tracking-widest flex items-center px-3 py-1 rounded-full border shadow-sm",
-                scoreChange >= 0 ? "bg-success/10 border-success/20 text-success" : "bg-destructive/10 border-destructive/20 text-destructive"
-              )}>
-                {scoreChange >= 0 ? <TrendingUp size={12} className="mr-1.5" /> : <TrendingDown size={12} className="mr-1.5" />}
-                {Math.abs(scoreChange)} pts
-              </span>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+        <PremiumCard className="p-10 border-white/5 group hover:border-primary/20 transition-all duration-500">
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow transition-transform group-hover:scale-110">
+              <Activity size={24} />
             </div>
-            <p className="text-[10px] font-bold text-content-muted uppercase tracking-widest mb-2">Overall Vitality</p>
-            <div className="text-4xl font-semibold text-content-primary">{lastScan?.score || 0}</div>
-          </CardContent>
-        </Card>
+            <span className={cn(
+              "text-[10px] font-black uppercase tracking-widest flex items-center px-4 py-1.5 rounded-full border shadow-glow italic",
+              scoreChange >= 0 ? "bg-emerald-400/10 border-emerald-400/20 text-emerald-400" : "bg-red-400/10 border-red-400/20 text-red-400"
+            )}>
+              {scoreChange >= 0 ? <TrendingUp size={14} className="mr-2" /> : <TrendingDown size={14} className="mr-2" />}
+              {Math.abs(scoreChange)} PTS DELTA
+            </span>
+          </div>
+          <p className="text-label text-primary/60 mb-2">OVERALL VITALITY</p>
+          <div className="text-5xl font-black text-white italic tracking-tighter">{lastScan?.score || 0}</div>
+        </PremiumCard>
 
-        <Card className="bg-skin-surface border border-white/5 shadow-xl rounded-2xl overflow-hidden transition-all hover:bg-white/[0.02]">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                <Droplets size={20} />
-              </div>
-              <span className={cn(
-                "text-[10px] font-bold uppercase tracking-widest flex items-center px-3 py-1 rounded-full border shadow-sm",
-                hydrationChange >= 0 ? "bg-success/10 border-success/20 text-success" : "bg-destructive/10 border-destructive/20 text-destructive"
-              )}>
-                {hydrationChange >= 0 ? <TrendingUp size={12} className="mr-1.5" /> : <TrendingDown size={12} className="mr-1.5" />}
-                {Math.abs(hydrationChange)}%
-              </span>
+        <PremiumCard className="p-10 border-white/5 group hover:border-primary/20 transition-all duration-500">
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-14 h-14 rounded-2xl bg-emerald-400/10 flex items-center justify-center text-emerald-400 border border-emerald-400/20 shadow-glow transition-transform group-hover:scale-110">
+              <Droplets size={24} />
             </div>
-            <p className="text-[10px] font-bold text-content-muted uppercase tracking-widest mb-2">Hydration Index</p>
-            <div className="text-4xl font-semibold text-content-primary">{lastScan?.hydration || 0}%</div>
-          </CardContent>
-        </Card>
+            <span className={cn(
+              "text-[10px] font-black uppercase tracking-widest flex items-center px-4 py-1.5 rounded-full border shadow-glow italic",
+              hydrationChange >= 0 ? "bg-emerald-400/10 border-emerald-400/20 text-emerald-400" : "bg-red-400/10 border-red-400/20 text-red-400"
+            )}>
+              {hydrationChange >= 0 ? <TrendingUp size={14} className="mr-2" /> : <TrendingDown size={14} className="mr-2" />}
+              {Math.abs(hydrationChange)}% DELTA
+            </span>
+          </div>
+          <p className="text-label text-emerald-400/40 mb-2">HYDRATION INDEX</p>
+          <div className="text-5xl font-black text-white italic tracking-tighter">{Math.round((lastScan?.hydration || 0) * 100)}%</div>
+        </PremiumCard>
 
-        <Card className="bg-skin-surface border border-white/5 shadow-xl rounded-2xl overflow-hidden transition-all hover:bg-white/[0.02]">
-          <CardContent className="p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                <Layers size={20} />
-              </div>
-              <span className="text-[10px] font-bold text-content-muted uppercase tracking-widest opacity-40">Clinical Baseline</span>
+        <PremiumCard variant="elevated" className="p-10 border-white/5 group hover:border-primary/20 transition-all duration-500">
+          <div className="flex items-center justify-between mb-8">
+            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow transition-transform group-hover:scale-110">
+              <Layers size={24} />
             </div>
-            <p className="text-[10px] font-bold text-content-muted uppercase tracking-widest mb-2">Texture Score</p>
-            <div className="text-4xl font-semibold text-content-primary">{lastScan?.texture || 0}</div>
-          </CardContent>
-        </Card>
+            <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.25em] italic">CLINICAL BASELINE</span>
+          </div>
+          <p className="text-label text-primary/40 mb-2">TEXTURE STABILITY</p>
+          <div className="text-5xl font-black text-white italic tracking-tighter">{Math.round((lastScan?.texture || 0) * 100)}</div>
+        </PremiumCard>
       </div>
 
-      {chartData.length > 1 ? (
-        <Card className="bg-skin-surface border border-white/5 shadow-2xl overflow-hidden rounded-2xl">
-          <CardHeader className="p-10 pb-0">
-            <CardTitle className="text-xl font-semibold flex items-center gap-3 text-content-primary">
-              <Activity className="w-5 h-5 text-primary" /> Multi-Engine Trajectory
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-10 pt-10">
-            <div className="h-[400px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--skin-accent)" stopOpacity={0.15}/>
-                      <stop offset="95%" stopColor="var(--skin-accent)" stopOpacity={0}/>
-                    </linearGradient>
-                    <linearGradient id="colorHydration" x1="0" y1="0" x2="0" y2="1">
-                       <stop offset="5%" stopColor="var(--skin-success)" stopOpacity={0.1}/>
-                       <stop offset="95%" stopColor="var(--skin-success)" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis 
-                    dataKey="date" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 10, fill: 'var(--skin-content-muted)', fontWeight: 700 }}
-                    dy={20}
-                  />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fontSize: 10, fill: 'var(--skin-content-muted)', fontWeight: 700 }}
-                    domain={['dataMin - 10', 'dataMax + 10']}
-                  />
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.02)" />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 30px 60px rgba(0,0,0,0.4)', fontWeight: 'bold', padding: '16px', backgroundColor: 'var(--skin-surface-elevated)', color: 'var(--skin-content-primary)' }}
-                    labelStyle={{ color: 'var(--skin-content-muted)', marginBottom: '8px', textTransform: 'uppercase', fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em' }}
-                    cursor={{ stroke: 'var(--skin-accent)', strokeWidth: 1, strokeDasharray: '4 4' }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="score" 
-                    name="Overall Vitality"
-                    stroke="var(--skin-accent)" 
-                    strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#colorScore)" 
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="hydration" 
-                    name="Hydration"
-                    stroke="var(--skin-success)" 
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                    fillOpacity={1} 
-                    fill="url(#colorHydration)" 
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+      <div className="relative z-10">
+        {chartData.length > 1 ? (
+          <PremiumCard variant="master" className="p-1 border-white/5">
+            <div className="p-10 pb-0">
+              <h3 className="text-3xl text-diagnostic leading-none">Multi-Engine Trajectory</h3>
+              <p className="text-label text-white/20 mt-4 italic tracking-[0.1em]">Longitudinal performance mapping across neural engines.</p>
             </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="glass-panel border-skin-border/10 shadow-xl shadow-black/5 flex items-center justify-center h-56 rounded-[3rem] bg-white text-left px-10">
-          <div className="flex gap-4 items-center">
-            <Info className="text-skin-violet" size={32} />
-            <p className="text-skin-muted font-bold text-lg leading-tight">Sequence at least 2 integrated scans to unlock your biological trajectory graph.</p>
-          </div>
-        </Card>
-      )}
+            <div className="p-10 pt-16">
+              <div className="h-[450px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.2}/>
+                        <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorHydration" x1="0" y1="0" x2="0" y2="1">
+                         <stop offset="5%" stopColor="#34d399" stopOpacity={0.1}/>
+                         <stop offset="95%" stopColor="#34d399" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis 
+                      dataKey="date" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.4)', fontWeight: 900 }}
+                      dy={20}
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fontSize: 10, fill: 'rgba(255,255,255,0.4)', fontWeight: 900 }}
+                      domain={['dataMin - 10', 'dataMax + 10']}
+                    />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.02)" />
+                    <Tooltip 
+                      contentStyle={{ borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 30px 60px rgba(0,0,0,0.4)', fontWeight: 'bold', padding: '16px', backgroundColor: 'rgba(0,0,0,0.8)', color: 'white' }}
+                      labelStyle={{ color: 'rgba(255,255,255,0.4)', marginBottom: '8px', textTransform: 'uppercase', fontSize: '10px', fontWeight: 900, letterSpacing: '0.1em' }}
+                      cursor={{ stroke: '#c9a96e', strokeWidth: 1, strokeDasharray: '4 4' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="score" 
+                      name="Overall Vitality"
+                      stroke="#c9a96e" 
+                      strokeWidth={4}
+                      fillOpacity={1} 
+                      fill="url(#colorScore)" 
+                      animationDuration={2000}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="hydration" 
+                      name="Hydration"
+                      stroke="#34d399" 
+                      strokeWidth={2}
+                      strokeDasharray="8 8"
+                      fillOpacity={1} 
+                      fill="url(#colorHydration)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </PremiumCard>
+        ) : (
+          <PremiumCard variant="elevated" className="h-72 border-white/5 flex items-center justify-center p-12">
+            <div className="flex gap-10 items-center max-w-3xl">
+              <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow transition-all group-hover:scale-110">
+                 <Activity size={32} />
+              </div>
+              <p className="text-white/40 text-xl font-medium italic leading-relaxed">
+                Chronological pattern mapping requires a minimum of <span className="text-primary italic">2 clinical capture sequences</span>. Proceed to initialization to begin biological trajectory analysis.
+              </p>
+            </div>
+          </PremiumCard>
+        )}
+      </div>
 
       {/* History Timeline */}
-      <div className="mt-20 space-y-10 text-left">
-         <div className="px-6">
-           <h3 className="text-2xl font-semibold tracking-tight text-content-primary">Biological Analysis Log</h3>
-           <p className="text-content-muted text-[10px] font-bold uppercase tracking-[0.2em] mt-2 opacity-60">Chronological storage of integrated dermal sequencing.</p>
+      <div className="mt-32 space-y-16 text-left relative z-10">
+         <div className="border-b border-white/5 pb-10">
+            <h3 className="text-3xl lg:text-5xl text-diagnostic leading-none">Biological Analysis Log</h3>
+            <p className="text-label text-white/30 mt-4 italic">Sequential record of clinical dermal intelligence captures.</p>
          </div>
          
-         <div className="relative border-l-2 border-skin-border/10 ml-6 md:ml-10 space-y-10 pl-10 md:pl-16 pb-12">
+         <div className="relative border-l-2 border-white/5 space-y-12 pl-12 md:pl-20 pb-24 ml-6 lg:ml-10">
             {scans.slice().reverse().map((scan, index) => {
                const prevScan = index < scans.length - 1 ? scans[index + 1] : null;
                const scoreDiff = prevScan && scan.overall_score && prevScan.overall_score 
@@ -320,60 +300,63 @@ export default function ProgressPage() {
                  : 0;
 
                const raw = scan.analysis_raw;
-               const summary = raw?.intelligence?.summary || "Comprehensive 7-engine biological scan completed.";
+               const summary = raw?.intelligence?.summary || "Comprehensive biological sequence completed. Biomarkers localized and analyzed.";
 
                return (
                   <motion.div 
                      key={scan.id}
-                     initial={{ opacity: 0, x: -30 }}
-                     animate={{ opacity: 1, x: 0 }}
-                     transition={{ delay: index * 0.1 }}
+                     initial={{ opacity: 0, x: -40 }}
+                     whileInView={{ opacity: 1, x: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ duration: 0.8, delay: index * 0.1, ease: "circOut" }}
                      className="relative"
                   >
                      {/* Timeline Node */}
-                     <div className="absolute -left-[53px] md:-left-[67px] top-2 w-10 h-10 rounded-xl bg-skin-surface border border-white/5 flex items-center justify-center shadow-xl">
-                        <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--skin-accent-rgb),0.4)]" />
+                     <div className="absolute -left-[61px] md:-left-[93px] top-6 w-12 h-12 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-elite z-20">
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-glow animate-pulse" />
                      </div>
                      
-                     <div className="flex flex-col md:flex-row gap-8 bg-skin-surface border border-white/5 rounded-2xl p-8 shadow-xl transition-all hover:bg-white/[0.02]">
-                        <div className="flex-1 space-y-5">
-                           <div className="flex flex-wrap items-center gap-4">
-                              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-background text-content-secondary font-bold text-[10px] uppercase tracking-widest border border-white/5">
-                                 <Calendar size={14} className="text-primary" /> {format(parseISO(scan.created_at), "MMM d, yyyy")}
-                              </span>
-                              {scoreDiff !== 0 && (
-                                <span className={cn(
-                                  "text-[10px] font-bold uppercase tracking-widest flex items-center px-3 py-1.5 rounded-full border",
-                                  scoreDiff > 0 ? "bg-success/10 border-success/20 text-success" : "bg-destructive/10 border-destructive/20 text-destructive"
-                                )}>
-                                  {scoreDiff > 0 ? <TrendingUp size={14} className="mr-2" /> : <TrendingDown size={14} className="mr-2" />}
-                                  {Math.abs(scoreDiff)} pts variance
+                     <PremiumCard className="p-8 md:p-12 group relative border-white/5 hover:border-primary/20 transition-all duration-700">
+                        <div className="flex flex-col md:flex-row gap-12">
+                          <div className="flex-1 space-y-10">
+                             <div className="flex flex-wrap items-center gap-6">
+                                <span className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-black text-white/40 font-black text-[10px] uppercase tracking-[0.25em] border border-white/10 italic">
+                                   <Calendar size={14} className="text-primary" /> {format(parseISO(scan.created_at), "MMM d, yyyy")}
                                 </span>
-                              )}
-                           </div>
-                           <p className="text-lg font-medium leading-relaxed text-content-primary opacity-90">
-                              "{summary}"
-                           </p>
-                           <Link href={`/scan/${scan.id}`} className="group inline-flex items-center text-primary text-[10px] font-bold uppercase tracking-widest hover:opacity-80 transition-opacity">
-                              View Intelligence Report <ChevronRight size={14} className="ml-1 group-hover:translate-x-1 transition-transform" />
-                           </Link>
+                                {scoreDiff !== 0 && (
+                                  <span className={cn(
+                                    "text-[10px] font-black uppercase tracking-widest flex items-center px-5 py-2.5 rounded-xl border shadow-glow italic",
+                                    scoreDiff > 0 ? "bg-emerald-400/10 border-emerald-400/20 text-emerald-400" : "bg-red-400/10 border-red-400/20 text-red-400"
+                                  )}>
+                                    {scoreDiff > 0 ? <TrendingUp size={16} className="mr-2" /> : <TrendingDown size={16} className="mr-2" />}
+                                    {Math.abs(scoreDiff)} PTS DELTA
+                                  </span>
+                                )}
+                             </div>
+                             <p className="text-xl md:text-2xl font-medium leading-relaxed text-white/60 italic border-l-4 border-primary/20 pl-8">
+                                "{summary}"
+                             </p>
+                             <Link href={`/scan/${scan.id}`} className="group inline-flex items-center text-primary text-[10px] font-black uppercase tracking-[0.3em] hover:opacity-80 transition-all italic underline underline-offset-[12px]">
+                                DECRYPT FULL REPORT <ChevronRight size={14} className="ml-2 group-hover:translate-x-4 transition-transform duration-500" />
+                             </Link>
+                          </div>
+                          
+                          <div className="w-full md:w-64 aspect-[4/5] rounded-[2.5rem] bg-black overflow-hidden relative border border-white/5 flex-shrink-0 shadow-elite transition-all duration-1000 group-hover:border-primary/30">
+                             {scan.image_url ? (
+                                <img src={scan.image_url} alt="Scan context" className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale brightness-125 opacity-40 group-hover:opacity-100 group-hover:grayscale-0" />
+                             ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center text-white/10">
+                                   <Camera size={32} />
+                                </div>
+                             )}
+                             <div className="absolute top-5 right-5 w-14 h-14 rounded-2xl bg-black/80 backdrop-blur-xl flex items-center justify-center text-primary font-black text-xl border border-primary/30 shadow-glow italic">
+                                {scan.overall_score || '?'}
+                             </div>
+                          </div>
                         </div>
-                        
-                        <div className="w-full md:w-40 aspect-square rounded-xl bg-background overflow-hidden relative border border-white/5 flex-shrink-0 shadow-inner group">
-                           {scan.image_url ? (
-                              <img src={scan.image_url} alt="Scan context" className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 opacity-80" />
-                           ) : (
-                              <div className="w-full h-full flex flex-col items-center justify-center text-content-muted">
-                                 <Camera size={28} className="opacity-20" />
-                              </div>
-                           )}
-                           <div className="absolute top-3 right-3 w-10 h-10 rounded-lg bg-skin-surface-elevated/90 backdrop-blur-md flex items-center justify-center text-content-primary font-bold text-xs border border-white/10 shadow-xl">
-                              {scan.overall_score || '?'}
-                           </div>
-                        </div>
-                     </div>
+                     </PremiumCard>
                   </motion.div>
-               )
+               );
             })}
          </div>
       </div>

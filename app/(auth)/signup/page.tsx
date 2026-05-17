@@ -65,13 +65,16 @@ export default function SignupPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center premium-gradient px-6 py-20 text-center">
-        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-6 max-w-sm">
-          <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mx-auto shadow-xl">
-             <CheckCircle2 className="text-content-primary w-10 h-10" />
+      <div className="min-h-screen flex items-center justify-center bg-black px-6 py-20 text-center relative overflow-hidden">
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[#c9a96e]/10 blur-3xl opacity-50" />
+        </div>
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-6 max-w-sm relative z-10">
+          <div className="w-20 h-20 rounded-full bg-[#c9a96e]/10 border border-[#c9a96e]/20 flex items-center justify-center mx-auto shadow-xl">
+             <CheckCircle2 className="text-[#c9a96e] w-10 h-10" />
           </div>
-          <h2 className="text-3xl font-outfit font-black">Check Your Email</h2>
-          <p className="text-content-muted font-medium">We've sent a magic link to {email} to confirm your account.</p>
+          <h2 className="text-3xl font-outfit font-black text-white">Check Your Email</h2>
+          <p className="text-white/50 font-medium">We've sent a magic link to {email} to confirm your account.</p>
           <Link href="/login" className="block">
             <Button variant="outline" className="w-full">Back to Login</Button>
           </Link>
@@ -81,26 +84,32 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center premium-gradient px-6 py-20">
+    <div className="min-h-screen flex items-center justify-center bg-black px-6 py-20 relative overflow-hidden">
+      {/* Background Blobs */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[#c9a96e]/10 blur-3xl opacity-50" />
+        <div className="absolute right-[-8%] top-[10%] h-[360px] w-[360px] rounded-full bg-white/[0.03] blur-3xl opacity-50" />
+      </div>
+
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="w-full max-w-md relative z-10"
       >
         <div className="flex flex-col items-center mb-8 space-y-4">
           <Link href="/" className="flex flex-col items-center gap-2">
-            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg">
-              <Sparkles className="text-primary-foreground w-7 h-7" />
+            <div className="w-12 h-12 rounded-2xl bg-[#c9a96e] flex items-center justify-center shadow-lg shadow-[#c9a96e]/20">
+              <Sparkles className="text-black w-7 h-7" />
             </div>
-            <Logo3D className="h-10 w-40" />
+            <Logo3D className="h-10 w-40 text-white" />
           </Link>
         </div>
 
-        <Card className="border-none shadow-2xl glass">
+        <Card className="border border-white/10 shadow-2xl bg-white/[0.03] backdrop-blur-xl">
           <CardHeader className="space-y-1 text-center pt-10 px-10">
-            <CardTitle className="text-3xl font-black">Begin Your Journey</CardTitle>
-            <CardDescription className="text-base font-medium">
+            <CardTitle className="text-3xl font-black text-white">Begin Your Journey</CardTitle>
+            <CardDescription className="text-base font-medium text-white/50">
               Create your account to unlock skin intelligence.
             </CardDescription>
           </CardHeader>
@@ -111,7 +120,7 @@ export default function SignupPage() {
                   type="button"
                   onClick={() => setRole("user")}
                   className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                    role === "user" ? "border-primary bg-muted/50 ring-4 ring-primary/10" : "border-transparent bg-muted/50 opacity-60"
+                    role === "user" ? "border-[#c9a96e] bg-[#c9a96e]/10 ring-4 ring-[#c9a96e]/5 text-[#c9a96e]" : "border-white/5 bg-white/[0.02] text-white/40 opacity-60"
                   }`}
                 >
                   <span className="font-bold text-sm">Consumer</span>
@@ -120,7 +129,7 @@ export default function SignupPage() {
                   type="button"
                   onClick={() => setRole("seller")}
                   className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${
-                    role === "seller" ? "border-secondary bg-muted/50 ring-4 ring-secondary/10" : "border-transparent bg-muted/50 opacity-60"
+                    role === "seller" ? "border-[#c9a96e] bg-[#c9a96e]/10 ring-4 ring-[#c9a96e]/5 text-[#c9a96e]" : "border-white/5 bg-white/[0.02] text-white/40 opacity-60"
                   }`}
                 >
                   <span className="font-bold text-sm">Seller</span>
@@ -128,20 +137,22 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-content-muted ml-1">Email</label>
+                <label className="text-xs font-black uppercase tracking-widest text-[#c9a96e] ml-1">Email</label>
                 <Input 
                   type="email" 
                   placeholder="name@example.com" 
+                  className="bg-white/5 border-white/10 text-white placeholder:text-white/20"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-black uppercase tracking-widest text-content-muted ml-1">Password</label>
+                <label className="text-xs font-black uppercase tracking-widest text-[#c9a96e] ml-1">Password</label>
                 <Input 
                   type="password" 
                   placeholder="Create a strong password"
+                  className="bg-white/5 border-white/10 text-white"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -163,16 +174,16 @@ export default function SignupPage() {
               </Button>
             </form>
 
-            <div className="mt-8 text-center text-xs text-content-muted font-medium leading-relaxed">
+            <div className="mt-8 text-center text-xs text-white/40 font-medium leading-relaxed">
               By signing up, you agree to our{" "}
-              <Link href="/terms" className="underline hover:text-foreground">Terms</Link> and{" "}
-              <Link href="/privacy" className="underline hover:text-foreground">Privacy Policy</Link>.
+              <Link href="/terms" className="underline hover:text-white">Terms</Link> and{" "}
+              <Link href="/privacy" className="underline hover:text-white">Privacy Policy</Link>.
             </div>
 
             <div className="mt-8 text-center">
-              <p className="text-sm text-content-muted font-medium">
+              <p className="text-sm text-white/40 font-medium">
                 Already have an account?{" "}
-                <Link href="/login" className="text-primary-foreground font-black hover:underline">
+                <Link href="/login" className="text-[#c9a96e] font-black hover:underline">
                   Sign In
                 </Link>
               </p>

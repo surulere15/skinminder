@@ -61,6 +61,9 @@ const config: Config = {
           graphite: 'rgb(var(--skin-graphite) / <alpha-value>)',
           rose: 'rgb(var(--status-danger) / <alpha-value>)',
           gold: 'rgb(var(--accent-gold) / <alpha-value>)',
+          brand: {
+            gold: '#c9a96e',
+          },
           glow: 'rgb(var(--skin-primary) / <alpha-value>)',
         },
         content: {

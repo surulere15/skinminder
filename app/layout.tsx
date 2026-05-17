@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import "@/lib/validate-env";
@@ -8,9 +7,6 @@ import { PushProvider } from "@/lib/push-context";
 import { ServiceWorkerRegistration } from "@/components/ui/service-worker-registration";
 import { SubscriptionProvider } from "@/lib/subscription";
 import { I18nProvider } from "@/lib/i18n/use-i18n";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 const url = process.env.NEXT_PUBLIC_SITE_URL || 'https://skinminder.ai';
 
@@ -72,13 +68,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("font-sans", inter.variable)}>
+    <html lang="en" suppressHydrationWarning className="font-sans antialiased">
       <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable,
-          outfit.variable
-        )}
+        className="min-h-screen bg-background font-sans antialiased text-white selection:bg-[#c9a96e]/30"
       >
         {process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER === "postHog" && process.env.NEXT_PUBLIC_POSTHOG_KEY && (
           <script

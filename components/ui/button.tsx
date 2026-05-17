@@ -4,31 +4,32 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-2xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-skin-violet/50 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-[1.25rem] text-[11px] font-black uppercase tracking-[0.15em] italic transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.96]",
   {
     variants: {
       variant: {
         default:
-          "bg-skin-violet text-white shadow-lg shadow-skin-violet/20 hover:brightness-105",
+          "bg-primary text-black shadow-lg shadow-primary/10 hover:brightness-110 hover:shadow-glow",
         destructive:
-          "bg-skin-rose text-white shadow-lg shadow-skin-rose/20 hover:brightness-105",
+          "bg-red-500/80 text-white shadow-lg shadow-red-500/20 hover:bg-red-500",
         outline:
-          "glass-ghost text-skin-dark",
+          "bg-white/[0.05] border border-white/10 text-white/70 hover:bg-white/10 hover:text-white",
         secondary:
-          "bg-white/50 text-skin-dark glass-hover",
-        ghost: "hover:bg-white/30 text-skin-dark",
-        link: "text-skin-violet underline-offset-4 hover:underline",
-        clinical: "bg-skin-violet text-white shadow-lg shadow-skin-violet/20 hover:brightness-105 font-semibold",
-        "clinical-ghost": "glass-ghost text-skin-muted hover:text-skin-dark",
-        premium: "bg-skin-violet text-white shadow-xl shadow-skin-violet/25 hover:brightness-105 active:scale-[0.98] transition-all font-semibold",
-        "volumetric-scan": "bg-gradient-to-r from-skin-violet to-skin-glow text-white shadow-lg shadow-skin-violet/20 hover:brightness-110 font-bold",
-        "glass": "glass-float text-skin-dark hover:bg-white/90",
+          "bg-white/[0.03] text-white/60 hover:bg-white/[0.08] hover:text-white",
+        ghost: "hover:bg-white/10 text-white/40 hover:text-white/80",
+        link: "text-primary underline-offset-4 hover:underline",
+        clinical: "clinical-btn",
+        "clinical-ghost": "clinical-btn-ghost",
+        premium: "bg-primary text-black shadow-elite hover:shadow-glow hover:scale-[1.02] active:scale-[0.98]",
+        "volumetric-scan": "bg-gradient-to-r from-primary via-primary/80 to-primary text-black shadow-glow font-black",
+        flagship: "bg-primary text-black shadow-glow hover:scale-[1.02] active:scale-[0.98] rounded-full px-12",
+        "glass": "glass-master text-white hover:bg-white/10",
       },
       size: {
-        default: "h-12 px-6 py-2",
-        sm: "h-10 rounded-xl px-4 text-xs",
-        lg: "h-14 rounded-2xl px-10 text-base",
-        icon: "h-12 w-12 rounded-2xl",
+        default: "h-13 px-8 py-3",
+        sm: "h-10 rounded-xl px-5 text-[10px]",
+        lg: "h-16 rounded-[1.5rem] px-12 text-sm",
+        icon: "h-13 w-13 rounded-2xl",
       },
     },
     defaultVariants: {

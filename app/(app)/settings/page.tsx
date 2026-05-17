@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { PremiumCard } from "@/components/ui/premium-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -58,169 +59,177 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="p-12 flex flex-col items-center justify-center min-h-[60vh] bg-skin-pearl">
-        <Loader2 className="w-12 h-12 text-skin-violet animate-spin mb-4" />
-        <p className="font-outfit font-black tracking-tight text-skin-dark">Loading your settings...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6 relative overflow-hidden">
+        <div className="fixed inset-0 -z-10">
+          <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[#c9a96e]/10 blur-3xl opacity-50" />
+        </div>
+        <div className="relative">
+          <Loader2 className="w-12 h-12 text-[#c9a96e] animate-spin" />
+          <motion.div
+            className="absolute inset-0 rounded-full bg-[#c9a96e]/20"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
+        </div>
+        <p className="mt-8 text-[11px] font-black uppercase tracking-[0.2em] text-[#c9a96e] animate-pulse italic">Synchronizing Intelligence...</p>
       </div>
     );
   }
 
   return (
-    <div className="p-8 lg:p-12 space-y-12 max-w-4xl mx-auto bg-skin-pearl min-h-screen">
-      {/* Header */}
-      <header className="space-y-2 relative z-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-skin-muted/5 text-skin-dark text-[10px] font-black uppercase tracking-widest border border-skin-border/10">
-          <User size={12} /> Account
-        </div>
-        <h1 className="text-4xl lg:text-5xl font-outfit font-black tracking-tight text-skin-dark text-left">Settings</h1>
-        <p className="text-skin-muted font-medium text-lg max-w-xl opacity-90 text-left">
-          Manage your profile, preferences, and privacy.
-        </p>
-      </header>
+    <div className="min-h-screen relative overflow-hidden bg-black text-white p-6 lg:p-12">
+      {/* Background Blobs */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-8%] h-[420px] w-[420px] rounded-full bg-[#c9a96e]/10 blur-3xl opacity-50" />
+        <div className="absolute right-[-8%] top-[10%] h-[360px] w-[360px] rounded-full bg-white/[0.03] blur-3xl opacity-50" />
+      </div>
+
+      <div className="max-w-4xl mx-auto space-y-12 md:space-y-24 relative z-10">
+        {/* Header */}
+        <header className="space-y-6">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-[0.25em] shadow-glow italic">
+            <User size={14} className="text-primary" /> Biological Account
+          </div>
+          <h1 className="text-4xl lg:text-7xl text-diagnostic leading-none">Account Settings</h1>
+          <p className="text-white/40 text-xl font-medium max-w-2xl border-l-2 border-primary/30 pl-8 py-1 italic">
+             Configuration matrix for dermal parameters and clinical preferences.
+          </p>
+        </header>
 
       {/* Profile Section */}
-      <Card className="border-none bg-white/5 border border-skin-border/10 shadow-xl shadow-black/5 rounded-[3rem] overflow-hidden relative z-10">
-        <CardHeader className="p-8 pb-0 text-left">
-          <CardTitle className="text-2xl font-outfit font-black tracking-tight text-skin-dark">
-            Profile Information
-          </CardTitle>
-          <CardDescription className="font-bold text-skin-muted opacity-80">
-            This helps us personalize your skincare intelligence.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-8 space-y-6 text-left">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-skin-muted ml-1">Full Name</label>
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="h-14 rounded-2xl border-2 border-skin-border/20 text-base focus-visible:ring-skin-violet focus-visible:border-skin-violet"
-                placeholder="Your full name"
-              />
+        <PremiumCard variant="master" className="p-1 border-white/5 relative z-10">
+          <div className="p-10 pb-0 border-b border-white/5">
+            <h3 className="text-3xl text-diagnostic">Biological Profile</h3>
+            <p className="text-label text-white/30 mt-4 italic">Baseline data synchronization for optimized skincare intelligence.</p>
+          </div>
+          <div className="p-10 space-y-12">
+            <div className="grid md:grid-cols-2 gap-10">
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-2 italic">Dermal Identifier</label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-16 rounded-2xl bg-black/40 border-white/5 text-white placeholder:text-white/10 text-lg font-black focus-visible:ring-primary focus-visible:border-primary transition-all italic tracking-tight"
+                  placeholder="Clinical ID"
+                />
+              </div>
+              <div className="space-y-4">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-2 italic">Biological Age</label>
+                <Input
+                  type="number"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  className="h-16 rounded-2xl bg-black/40 border-white/5 text-white placeholder:text-white/10 text-lg font-black focus-visible:ring-primary focus-visible:border-primary transition-all italic tracking-tight"
+                  placeholder="Years"
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-skin-muted ml-1">Age</label>
-              <Input
-                type="number"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="h-14 rounded-2xl border-2 border-skin-border/20 text-base focus-visible:ring-skin-violet focus-visible:border-skin-violet"
-                placeholder="Your age"
-              />
+
+            <div className="space-y-6">
+              <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20 ml-2 italic">Baseline Dermal Category</label>
+              <div className="flex flex-wrap gap-4">
+                {SKIN_TYPES.map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => setSkinType(type.toLowerCase())}
+                    className={cn(
+                      "px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.25em] transition-all border italic shadow-elite",
+                      skinType === type.toLowerCase()
+                        ? "border-primary bg-primary/10 text-primary shadow-glow scale-105"
+                        : "border-white/5 bg-black/40 text-white/40 hover:border-white/20 hover:text-white/60"
+                    )}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-8 border-t border-white/5">
+              <Button
+                onClick={handleSave}
+                disabled={isSaving}
+                variant="flagship"
+                className="h-20 px-16 shadow-glow"
+              >
+                {isSaving ? (
+                  <><Loader2 className="mr-4 animate-spin" size={24} /> Syncing Matrix...</>
+                ) : (
+                  <><Save className="mr-4" size={24} /> Update Parameters</>
+                )}
+              </Button>
             </div>
           </div>
+        </PremiumCard>
 
-          <div className="space-y-2">
-            <label className="text-[10px] font-black uppercase tracking-widest text-skin-muted ml-1">Skin Type</label>
-            <div className="flex flex-wrap gap-3">
-              {SKIN_TYPES.map((type) => (
+      {/* Language */}
+        <PremiumCard className="p-1 border-white/5 relative z-10">
+          <div className="p-10 pb-0 border-b border-white/5">
+            <h3 className="text-3xl text-diagnostic">Clinical Region</h3>
+            <p className="text-label text-white/30 mt-4 italic">Linguistic configuration for biological intelligence reporting.</p>
+          </div>
+          <div className="p-10">
+            <div className="flex flex-wrap gap-6">
+              {supportedLocales.map((loc) => (
                 <button
-                  key={type}
-                  onClick={() => setSkinType(type.toLowerCase())}
+                  key={loc.code}
+                  onClick={() => setLocale(loc.code)}
                   className={cn(
-                    "px-6 py-3 rounded-2xl text-sm font-black transition-all border-2",
-                    skinType === type.toLowerCase()
-                      ? "border-skin-violet bg-skin-violet/5 text-skin-violet shadow-sm"
-                      : "border-skin-border/20 bg-transparent text-skin-muted hover:border-skin-border/40 hover:text-skin-dark"
+                    "flex items-center gap-4 px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all border italic shadow-elite",
+                    locale === loc.code
+                      ? "border-primary bg-primary/10 text-primary shadow-glow scale-105"
+                      : "border-white/5 bg-black/40 text-white/40 hover:border-white/20 hover:text-white/60"
                   )}
                 >
-                  {type}
+                  <Globe size={18} className={locale === loc.code ? "text-primary" : "text-white/20"} />
+                  <span className="text-lg">{loc.flag}</span>
+                  <span>{loc.name}</span>
                 </button>
               ))}
             </div>
           </div>
-
-          <Separator className="bg-skin-border/10" />
-
-          <div className="flex justify-end">
-            <Button
-              onClick={handleSave}
-              disabled={isSaving}
-              variant="premium"
-              className="h-14 px-10 rounded-2xl font-black shadow-xl shadow-skin-violet/20 hover:scale-[1.02] transition-all"
-            >
-              {isSaving ? (
-                <><Loader2 className="mr-2 animate-spin" size={18} /> Saving...</>
-              ) : (
-                <><Save className="mr-2" size={18} /> Save Changes</>
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Language */}
-      <Card className="border-none bg-white/5 border border-skin-border/10 shadow-xl shadow-black/5 rounded-[3rem] overflow-hidden relative z-10">
-        <CardHeader className="p-8 pb-0 text-left">
-          <CardTitle className="text-2xl font-outfit font-black tracking-tight text-skin-dark">
-            Language
-          </CardTitle>
-          <CardDescription className="font-bold text-skin-muted opacity-80">
-            Choose your preferred language.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-8">
-          <div className="flex flex-wrap gap-3">
-            {supportedLocales.map((loc) => (
-              <button
-                key={loc.code}
-                onClick={() => setLocale(loc.code)}
-                className={cn(
-                  "flex items-center gap-2 px-6 py-3 rounded-2xl text-sm font-black transition-all border-2",
-                  locale === loc.code
-                    ? "border-skin-violet bg-skin-violet/5 text-skin-violet shadow-sm"
-                    : "border-skin-border/20 bg-transparent text-skin-muted hover:border-skin-border/40 hover:text-skin-dark"
-                )}
-              >
-                <Globe size={16} />
-                <span>{loc.flag}</span>
-                <span>{loc.name}</span>
-              </button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+        </PremiumCard>
 
       {/* Preferences */}
-      <div className="grid md:grid-cols-2 gap-6 relative z-10">
-        <Card className="border-none bg-white/5 border border-skin-border/10 shadow-xl shadow-black/5 rounded-[2.5rem] p-8 space-y-6 group hover:bg-white/10 transition-all cursor-pointer text-left">
-          <div className="w-12 h-12 rounded-2xl bg-skin-muted/5 flex items-center justify-center text-skin-dark border border-skin-border/10 group-hover:bg-skin-violet group-hover:text-skin-pearl group-hover:border-skin-violet transition-all">
-            <Bell size={24} />
-          </div>
-          <div className="space-y-1">
-            <h3 className="font-outfit font-black text-xl tracking-tight text-skin-dark">Notifications</h3>
-            <p className="text-sm text-skin-muted font-medium opacity-90">Scan reminders, routine nudges, and wellness tips.</p>
-          </div>
-          <Badge variant="secondary" className="text-[8px] font-black bg-skin-muted/5 text-skin-dark border-skin-border/10 rounded-full">Coming Soon</Badge>
-        </Card>
+        <div className="grid md:grid-cols-2 gap-8 relative z-10">
+          <PremiumCard className="p-10 border-white/5 space-y-8 group hover:border-primary/20 transition-all duration-500 cursor-pointer">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow transition-all group-hover:scale-110">
+              <Bell size={32} />
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-2xl text-diagnostic leading-none">Signal Alerts</h3>
+              <p className="text-label text-white/30 italic">Temporal routine notifications and status updates.</p>
+            </div>
+            <span className="inline-flex px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-[9px] font-black uppercase tracking-[0.3em] text-white/20 italic">MODULE ENCRYPTED</span>
+          </PremiumCard>
 
-        <Card className="border-none bg-white/5 border border-skin-border/10 shadow-xl shadow-black/5 rounded-[2.5rem] p-8 space-y-6 group hover:bg-white/10 transition-all cursor-pointer text-left">
-          <div className="w-12 h-12 rounded-2xl bg-skin-muted/5 flex items-center justify-center text-skin-dark border border-skin-border/10 group-hover:bg-skin-graphite group-hover:text-skin-pearl group-hover:border-skin-graphite transition-all">
-            <Shield size={24} />
-          </div>
-          <div className="space-y-1">
-            <h3 className="font-outfit font-black text-xl tracking-tight text-skin-dark">Privacy & Data</h3>
-            <p className="text-sm text-skin-muted font-medium opacity-90">Manage your data, export scans, or delete your account.</p>
-          </div>
-          <div className="flex justify-end">
-            <ChevronRight className="opacity-40 group-hover:translate-x-1 group-hover:opacity-100 transition-all" size={20} />
-          </div>
-        </Card>
-      </div>
+          <PremiumCard className="p-10 border-white/5 space-y-8 group hover:border-primary/20 transition-all duration-500 cursor-pointer">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow transition-all group-hover:scale-110">
+              <Shield size={32} />
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-2xl text-diagnostic leading-none">Privacy Node</h3>
+              <p className="text-label text-white/30 italic">Secure data management and biological vault architecture.</p>
+            </div>
+            <div className="flex justify-end pr-4">
+              <ChevronRight className="text-primary/40 group-hover:translate-x-4 group-hover:text-primary transition-all transition-transform duration-500" size={32} />
+            </div>
+          </PremiumCard>
+        </div>
 
       {/* Danger Zone */}
-      <Card className="border-2 border-skin-rose/20 bg-skin-rose/5 rounded-[2.5rem] p-8 relative z-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="space-y-1 text-center md:text-left">
-            <h3 className="font-outfit font-black text-xl tracking-tight text-skin-dark">Sign Out</h3>
-            <p className="text-sm text-skin-muted font-bold opacity-80">You can always sign back in later.</p>
+        <PremiumCard className="border-red-500/20 bg-red-500/5 p-10 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div className="space-y-4 text-center md:text-left">
+              <h3 className="text-2xl font-black text-red-500 uppercase italic tracking-tighter leading-none">Terminate Session</h3>
+              <p className="text-label text-red-500/40 italic">Disconnect from the SkinMinder intelligence grid.</p>
+            </div>
+            <Button variant="ghost" className="rounded-2xl px-16 h-20 font-black uppercase tracking-[0.25em] shadow-elite hover:bg-red-500/10 hover:text-red-500 transition-all text-red-500/30 border border-red-500/20 italic text-sm">
+              <LogOut className="mr-6" size={24} /> End Protocol
+            </Button>
           </div>
-          <Button variant="destructive" className="rounded-2xl px-10 h-14 font-black shadow-lg shadow-skin-rose/10 hover:bg-skin-rose hover:text-white transition-all bg-transparent text-skin-rose border-2 border-skin-rose/20">
-            <LogOut className="mr-2" size={18} /> Sign Out
-          </Button>
-        </div>
-      </Card>
+        </PremiumCard>
+      </div>
     </div>
   );
 }
