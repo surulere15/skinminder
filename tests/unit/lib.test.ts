@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { checkIngredientConflicts, INGREDIENT_CONFLICTS } from '../../lib/ingredient-conflicts';
+import { compareRoutines, generateChangelog } from '../../lib/routine-versioning';
+import { config, isMockMode, getMockDelay } from '../../lib/config';
+import { checkRateLimit } from '../../lib/rate-limit';
 
 describe('Ingredient Conflicts', () => {
   it('should detect retinol + AHA conflict', () => {
@@ -42,8 +45,6 @@ describe('Ingredient Conflicts', () => {
 });
 
 describe('Routine Versioning', () => {
-  const { compareRoutines, generateChangelog } = require('../../lib/routine-versioning');
-
   it('should detect changes between routines', () => {
     const oldRoutine = {
       morning: [{ productType: 'Cleanser' }, { productType: 'Moisturizer' }],
@@ -79,8 +80,6 @@ describe('Routine Versioning', () => {
 });
 
 describe('Config', () => {
-  const { config, isMockMode, getMockDelay } = require('../../lib/config');
-
   it('should have correct mock config', () => {
     expect(config.mock).toBeDefined();
     expect(config.mock.delayMs).toBeGreaterThan(0);
@@ -93,8 +92,6 @@ describe('Config', () => {
 });
 
 describe('Rate Limiting', () => {
-  const { checkRateLimit } = require('../../lib/rate-limit');
-
   it('should allow requests within limit', async () => {
     const request = new Request('http://localhost:3000/api/test');
     // Note: In real tests, we'd need to mock the headers
